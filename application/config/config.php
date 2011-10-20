@@ -226,7 +226,7 @@ $config['cache_path'] = '';
  | MUST set an encryption key.  See the user guide for info.
  |
  */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'myclientbase';
 
 /*
  |--------------------------------------------------------------------------
@@ -359,6 +359,17 @@ $config['rewrite_short_tags'] = FALSE;
  */
 $config['proxy_ips'] = '';
 
+/*
+|--------------------------------------------------------------------------
+| HMVC modules path
+|--------------------------------------------------------------------------
+|
+| Define where HMVC modules are stored
+|
+*/
+$config['modules_locations'] = array(
+APPPATH.'modules_core/' => '../modules_core/',
+APPPATH.'modules_custom/' => '../modules_custom/');
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

@@ -194,7 +194,7 @@ class CI_Loader {
 		// couldn't find the model
 		show_error('Unable to locate the model you have specified: '.$model);
 	}
-
+	
 	// --------------------------------------------------------------------
 
 	/**
@@ -794,6 +794,8 @@ class CI_Loader {
 			foreach ($this->_ci_library_paths as $path)
 			{
 				$filepath = $path.'libraries/'.$subdir.$class.EXT;
+				
+				//FIXME what about the "core" subfolder???
 
 				// Does the file exist?  No?  Bummer...
 				if ( ! file_exists($filepath))

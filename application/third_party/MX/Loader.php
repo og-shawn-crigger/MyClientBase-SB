@@ -87,7 +87,8 @@ class MX_Loader extends CI_Loader
 		if (class_exists('CI_DB', FALSE) AND $return == FALSE AND $active_record == NULL AND isset(CI::$APP->db) AND is_object(CI::$APP->db))
 			return;
 
-		require_once BASEPATH.'database/DB'.EXT;
+		$filename = BASEPATH.'database/DB'.EXT;
+		require_once $filename;
 
 		if ($return === TRUE) return DB($params, $active_record);
 
@@ -151,7 +152,6 @@ class MX_Loader extends CI_Loader
 		}
 
 		if ($path === FALSE) {
-
 			$this->_ci_load_class($library, $params, $object_name);
 			$_alias = $this->_ci_classes[$class];
 
@@ -184,11 +184,12 @@ class MX_Loader extends CI_Loader
 					if(is_dir(SPARKPATH.$item.'/'.$subitem) and $subitem != '.' and $subitem != '..')
 					{
 						Modules::$locations[SPARKPATH.$item.'/'.$subitem.'/'] = '../sparks/'.$item;
+						$b = Modules::$locations; //TODO delme
 					}
 				}
 			}
 		}
-		//$b = Modules::$locations;
+		$b = Modules::$locations; //TODO delme
 	}
 	
 	/** Load a module spark **/
@@ -230,7 +231,10 @@ class MX_Loader extends CI_Loader
 		include_once($autoload_path);
 		
 		//DAM
-		if(isset($autoload)) $this->load->_autoloader($autoload);
+		if(isset($autoload)) 
+		{
+			$this->load->_autoloader($autoload);
+		}
 		//setting back the old module value
 		$this->_module = $old_module;
     }	
@@ -270,6 +274,7 @@ class MX_Loader extends CI_Loader
 			Modules::load_file($_model, $path);
 
 			$model = ucfirst($_model);
+			//dam if(!isset(CI::$APP->$_alias)) 
 			CI::$APP->$_alias = new $model();
 
 			$this->_ci_models[] = $_alias;
