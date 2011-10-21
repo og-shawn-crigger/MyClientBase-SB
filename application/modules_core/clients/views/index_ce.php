@@ -63,9 +63,9 @@
                     <?php } ?>
             </table>
 
-            <?php if ($this->mdl_clients_ce->page_links) { ?>
+            <?php if ($this->mdl_clients->page_links) { ?>
             <div id="pagination">
-            <?php echo $this->mdl_clients_ce->page_links; ?>
+            <?php echo $this->mdl_clients->page_links; ?>
             </div>
             <?php } ?>
 

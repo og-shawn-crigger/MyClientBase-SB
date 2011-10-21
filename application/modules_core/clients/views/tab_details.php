@@ -4,7 +4,7 @@
 </dl>
 
 <dl>
-	<dt>* <?php echo $this->lang->line('client_name'); ?>: </dt>
+	<dt><?php echo $this->lang->line('client_name'); ?>: </dt>
 	<dd><input type="text" name="client_name" id="client_name" value="<?php echo $this->mdl_clients->form_value('client_name'); ?>" /></dd>
 </dl>
 

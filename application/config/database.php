@@ -47,9 +47,9 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'agataclone';
+$db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = 'JNyM4vTi';
+$db['default']['password'] = 'pippo';
 $db['default']['database'] = 'mcbce';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
