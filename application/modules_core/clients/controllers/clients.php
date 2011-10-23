@@ -10,7 +10,8 @@ class Clients extends Admin_Controller {
 
         $this->_post_handler();
 
-        //$this->load->model('mdl_clients');
+        //TODO Ideally you would autoload the parser
+        $this->load->driver('plenty_parser');
 
         $this->load->model('mdl_clients');
     }
@@ -46,10 +47,12 @@ class Clients extends Admin_Controller {
         }
 
         $data = array(
-            'clients'	=>	$this->mdl_clients->get($params),
+            'contacts'	=>	$this->mdl_clients->get($params),
         );
+        $data['people'] = $contacts['people']['0'];
         
         $this->load->view('index_ce', $data);
+        //$this->plenty_parser->parse('index_ce.tpl', $data, false, 'smarty', 'clients');
 
     }
 

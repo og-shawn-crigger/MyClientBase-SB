@@ -29,6 +29,7 @@ body {
 	position: relative; /*--Set relative positioning on the unordered list itself - not on the list item--*/
 	width: 980px !important;
 }
+
 #navigation li {
 	color: #fff;
 	float: left;
@@ -36,6 +37,7 @@ body {
 	border-right: 1px solid #141414;
 	border-left: 1px solid #3d3d3d;
 }
+
 #navigation li a {
 	color: #fff;
 	font-weight: bold;
@@ -43,6 +45,7 @@ body {
 	display: block;
 	text-decoration: none;
 }
+
 #navigation li:hover { background: url(../img/navigation_hover_bg.jpg) repeat-x; }
 #navigation li:hover a { }
 #navigation li.selected a { color: #000; }
@@ -66,37 +69,59 @@ body {
 	clear: both;
 	margin-top: 20px;
 }
+
 .section_wrapper {
 	margin-bottom: 20px;
 }
+
 .content {
 	background: #fff;
 	padding: 20px;
 	border: 1px solid #dadada;
 }
+
 .toggleLink {
 	position: absolute;
 	right: 20px;
 	top: 18px;
 }
+
 table {
 	width: 678px;
 	margin-bottom: 20px;
 }
+
+.table-clients, .table-orgs {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.first {
+	width: 10px;
+}
+
+.last {
+	width: 205px;
+}
+
 table tr td {
 	height : 34px;
 	line-height : 34px;
 	padding: 0 10px;
 }
+
 table tr td.client {
 	overflow: hidden;
 }
+
 table tr .first{
 	padding-left: 20px !important;
 }
+
 table tr .last {
 	padding-right: 20px !important;
 }
+
 table th {
 	background: url(../img/th_bg.jpg) repeat-x;
 	height : 34px;
@@ -104,17 +129,39 @@ table th {
 	padding: 0 10px;
 	text-align: left;
 }
+
 tr.hoverall:hover {background:#EFEFEF;}
 .quicklinks {
 	padding-top: 0 !important;
 }
+
 .quicklinks li {
 		padding: 10px 0;
 		border-bottom: 1px solid #dadada;
 }
+
 .quicklinks li.last {
 	border: none;
 }
+
 .quicklinks li a {
 	font-size: 14px;
+}
+
+.left-block {
+	float: left;
+	/* position: relative; */
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: white;
+	width: 540px;
+}
+
+.right-block {
+	float: right;
+	/* position: relative; */
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: white;
+	width: 540px;	
 }

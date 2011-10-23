@@ -4,11 +4,14 @@
 
 class Mdl_Clients extends MY_Model {
 
+	protected $person;
+	protected $organization;
+	
     public function __construct() {
 
         parent::__construct();
         
-        // Load curl
+/*         // Load curl
         $this->load->spark('curl/1.2.0');
         
         // Load the configuration file
@@ -17,18 +20,19 @@ class Mdl_Clients extends MY_Model {
         // Load the rest client
         $this->load->spark('restclient/2.0.0');
         
-        $this->load->helper('url');
+        //$this->load->helper('url'); */
+        
+        $this->load->model('Mdl_Contact');
+        $this->contact = new Mdl_Contact();
+        
+        $this->load->model('Mdl_Person');
+		$this->person = new Mdl_Person();
+		
+		$this->load->model('Mdl_Organization');
+		$this->organization = new Mdl_Organization();
+	
     }
 
-    private function getReturnValue($attribute,$person)
-    {
-    	if(isset($person[$attribute]))
-    	{
-    		return is_array($person[$attribute]) ? implode(',',$person[$attribute]) : $person[$attribute];
-    	}
-    	 
-    	return 'n.d.';
-    }
 
     //overriding _prep_pagination function
     private function _prep_pagination($params) {
@@ -58,22 +62,27 @@ class Mdl_Clients extends MY_Model {
     
     public function get($params = NULL) {
     	
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
+    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/'));
     	
     	$input=array();
     	
-    	//TODO add oid/uid distinction
-    	if(empty($params['uid']))
+    	if(empty($params['uid']) && empty($params['oid']))
     	{
     		//looking for all contacts
     		$input['filter'] = '(objectClass=*)';
     	} else {
     		//looking for a specific contact
-    		$input['filter'] = '(uid='.$params['uid'].')';
+    		if(!empty($param['uid'])) 
+    		{
+    			$input['filter'] = '(uid='.$params['uid'].')';
+    			/*
+    			$input['attributes'] = array('uid','sn', 'givenName','homePostalAddress','mozillaHomeLocalityName',
+    			    						 'mozillaHomeState','mozillaHomeCountryName','mozillaHomePostalCode',
+    			    	        			 'companyPhone','facsimileTelephoneNumber','mobile','mail','labeledURI','note','enabled','objectClass');
+    			*/
+    		}
+    		if(!empty($param['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
     	}
-    	$input['attributes'] = array(	'uid','sn', 'givenName','homePostalAddress','mozillaHomeLocalityName',
-    									'mozillaHomeState','mozillaHomeCountryName','mozillaHomePostalCode',
-    	        						'companyPhone','facsimileTelephoneNumber','mobile','mail','labeledURI','note','enabled');
     	
     	//defaults
     	isset($params['method']) ? $input['method'] = $params['method'] : $input['method'] = 'POST';
@@ -82,12 +91,9 @@ class Mdl_Clients extends MY_Model {
     	isset($params['wanted_page']) ? $input['wanted_page'] = $params['wanted_page'] : $input['wanted_page'] = '0';
     	isset($params['items_page']) ? $input['items_page'] = $params['items_page'] :$input['items_page'] = '12';
 
-		//performing the query to contact engine    	
-    	//$url = 'api/exposeObj/person/read/';
-    	$rest_return = $this->rest->post('read', $input, 'serialize'); //TODO this should be $this->rest->get
+		$rest_return = $this->Mdl_Contact->get($input);
     	
     	//retrieving query info  
-    	//$rest_info = array_pop($rest_return); //last item in the returned array contains info about the query
     	$rest_info = $rest_return['status'];										
     	
     	//pagination
@@ -95,42 +101,68 @@ class Mdl_Clients extends MY_Model {
     	$this->_prep_pagination($params);
     	
     	//prepare return for output
-    	$clients = array();
+    	$people = array();
+    	$orgs = array();
     	$num = count($rest_return['data']);
     	
     	//TODO what happens when I get 0 contacts? or went I get an error?
     	if (is_array($rest_return['data'])) {
-	    	foreach ($rest_return['data'] as $item => $person) {
-	    		//TODO this association shouldn't be hardcode and stay somewhere else so that the user can modify it, not mentioning the fact that I can get
-	    		//the person attributes throught the getProperties method
-	    		$this->client_id = $this->getReturnValue('uid', $person); //$person['uid']['0'];
-	    		$this->client_name = $this->getReturnValue('sn', $person).' '.$this->getReturnValue('givenName', $person); //$person['cn']['0'];
-	    		$this->client_address = $this->getReturnValue('homePostalAddress', $person); //$person['homePostalAddress']['0'];
-	    		$this->client_address_2 = ''; //there is not such a thing is LDAP
-	    		$this->client_city = $this->getReturnValue('mozillaHomeLocalityName', $person); //$person['mozillaHomeLocalityName'];
-	    		$this->client_state = $this->getReturnValue('mozillaHomeState', $person); //$person['mozillaHomeState'];
-	    		$this->client_country = $this->getReturnValue('mozillaHomeCountryName', $person); //$person['mozillaHomeCountryName'];
-	    		$this->client_zip = $this->getReturnValue('mozillaHomePostalCode', $person); //$person['mozillaHomePostalCode'];
-	    		$this->client_phone_number = $this->getReturnValue('companyPhone', $person); //$person['companyPhone']['0'];
-	    		$this->client_fax_number = $this->getReturnValue('facsimileTelephoneNumber', $person); //$person['facsimileTelephoneNumber']['0'];
-	    		$this->client_mobile_number = $this->getReturnValue('mobile', $person); //$person['mobile']['0'];
-	    		$this->client_email_address = $this->getReturnValue('mail', $person); //$person['mail']['0'];
-	    		$this->client_web_address = $this->getReturnValue('labeledURI', $person); //$person['labeledURI']['0'];
-	    		$this->client_notes = $this->getReturnValue('note', $person); //$person['note']['0'];
-	    		$this->client_tax_id = '0';
-	    		$this->client_active = $this->getReturnValue('enabled', $person); //$person['enabled'];
-	    		//$this->join_client_id = '';
-	    		$this->client_total_invoice = '0.0';
-	    		$this->client_total_payment = '0.0';
-	    		$this->client_total_balance = '0.0';
+	    	foreach ($rest_return['data'] as $item => $contact) {
+	    		//$objectClass = explode(',',$this->getReturnValue('objectClass', $contact));
+	    		if(in_array('dueviPerson', $contact['objectClass']))
+	    		{
+	    			//It's a person
+					if($this->person->arrayToObject($contact)) 
+					{
+						$people[] = clone $this->person;	    			
+					}
+	    			
+		    		//TODO this association shouldn't be hardcoded and stay somewhere else so that the user can modify it, not mentioning the fact that I can get
+		    		//the person attributes throught the getProperties method
+// 		    		$this->client_id = $this->getReturnValue('uid', $contact); //$contact['uid']['0'];
+// 		    		$this->client_name = $this->getReturnValue('sn', $contact).' '.$this->getReturnValue('givenName', $contact); //$contact['cn']['0'];
+// 		    		$this->client_address = $this->getReturnValue('homePostalAddress', $contact); //$contact['homePostalAddress']['0'];
+// 		    		$this->client_address_2 = ''; //there is not such a thing is LDAP
+// 		    		$this->client_city = $this->getReturnValue('mozillaHomeLocalityName', $contact); //$contact['mozillaHomeLocalityName'];
+// 		    		$this->client_state = $this->getReturnValue('mozillaHomeState', $contact); //$contact['mozillaHomeState'];
+// 		    		$this->client_country = $this->getReturnValue('mozillaHomeCountryName', $contact); //$contact['mozillaHomeCountryName'];
+// 		    		$this->client_zip = $this->getReturnValue('mozillaHomePostalCode', $contact); //$contact['mozillaHomePostalCode'];
+// 		    		$this->client_phone_number = $this->getReturnValue('companyPhone', $contact); //$contact['companyPhone']['0'];
+// 		    		$this->client_fax_number = $this->getReturnValue('facsimileTelephoneNumber', $contact); //$contact['facsimileTelephoneNumber']['0'];
+// 		    		$this->client_mobile_number = $this->getReturnValue('mobile', $contact); //$contact['mobile']['0'];
+// 		    		$this->client_email_address = $this->getReturnValue('mail', $contact); //$contact['mail']['0'];
+// 		    		$this->client_web_address = $this->getReturnValue('labeledURI', $contact); //$contact['labeledURI']['0'];
+// 		    		$this->client_notes = $this->getReturnValue('note', $contact); //$contact['note']['0'];
+// 		    		$this->client_tax_id = '0';
+// 		    		$this->client_active = $this->getReturnValue('enabled', $contact); //$contact['enabled'];	    		
+//		    		$this->join_client_id = '';
+// 		    		$this->person->total_invoice = '0.0';
+// 		    		$this->person->total_payment = '0.0';
+// 		    		$this->person->total_balance = '0.0';
+		    		
+		    		
+	    		}
 	    		
-	    		$clients[$item] = clone $this;
+	    		if(in_array('dueviOrganization', $contact['objectClass']))
+	    		{
+	    			if($this->organization->arrayToObject($contact)) $orgs[] = clone $this->organization;
+	    			//It's an organization
+// 	    			$this->org_id = $this->getReturnValue('oid', $contact); 
+// 	    			$this->org_name = $this->getReturnValue('o', $contact);	    			
+// 	    			$this->org_total_invoice = '0.0';
+// 	    			$this->org_total_payment = '0.0';
+// 	    			$this->org_total_balance = '0.0';
+	    			
+// 	    			$orgs[] = clone $this;
+	    		}
 	    	}    	
     	}
     	    	
-    	if(empty($params['uid']))
+    	$output = array('people' => $people, 'orgs' => $orgs);
+    	
+    	if(empty($params['uid']) || empty($params['oid']))
     	{
-	        return $clients;
+	        return $output;
     	} else {
     		return $this;
     	} 

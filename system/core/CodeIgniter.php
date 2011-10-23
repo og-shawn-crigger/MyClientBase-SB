@@ -68,6 +68,7 @@
  * ------------------------------------------------------
  */
 	set_error_handler('_exception_handler');
+	//set_error_handler('var_dump');
 
 	if ( ! is_php('5.3'))
 	{
