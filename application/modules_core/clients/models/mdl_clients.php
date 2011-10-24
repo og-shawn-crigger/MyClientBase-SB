@@ -4,8 +4,8 @@
 
 class Mdl_Clients extends MY_Model {
 
-	protected $person;
-	protected $organization;
+	public $person;
+	public $organization;
 	
     public function __construct() {
 

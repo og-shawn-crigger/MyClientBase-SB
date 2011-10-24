@@ -37,7 +37,7 @@
 	<table class="table-clients">
 	{foreach $people as $key => $person}
     <tr class="hoverall">
-    	{assign 'url' value="$baseurl/clients/index/uid/{$person->uid}"}
+    	{assign 'url' value="$baseurl/clients/details/uid/{$person->uid}"}
     	<td class="counter" rowspan="2">{counter}</td>
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
     	<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'n.d.'}</td>
@@ -73,7 +73,7 @@
 	<table class="table-orgs">
 	{foreach $orgs as $key => $organization}
     <tr class="hoverall">
-    	{assign 'url' value="$baseurl/clients/index/oid/{$organization->oid}"}
+    	{assign 'url' value="$baseurl/clients/details/oid/{$organization->oid}"}
     	<td class="counter" rowspan="2">{counter}</td>
     	<td class="name">{a url=$url text=$organization->o|truncate:32:" [...]":true}</td>
     	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'n.d.'}</td>

@@ -35,9 +35,11 @@ class Clients extends Admin_Controller {
         $search = $this->input->post('search');
         if(!$search)
         {
-	        $array = $this->uri->uri_to_assoc(3);
-	        $uid = $array['uid'];
-	        $oid = $array['oid'];
+// 	        $array = $this->uri->uri_to_assoc(3);
+// 	        $uid = $array['uid'];
+// 	        $oid = $array['oid'];
+        	$uid = uri_assoc('uid');
+        	$oid = uri_assoc('oid');
         }
         
         unset($array);
@@ -147,31 +149,64 @@ class Clients extends Admin_Controller {
 
     function details() {
 
-        $this->redir->set_last_index();
+        $this->redir->set_last_index();  //TODO What is this?
 
-        $this->load->helper('text');
+        $this->load->helper('text');  //TODO why not autoload?
 
         $this->load->model(
             array(
             'invoices/mdl_invoices',
-            'mdl_contacts',
+            //'mdl_contacts',
             'templates/mdl_templates'
             )
         );
 
-        $client_id = uri_assoc('client_id');
-
+        $uid = uri_assoc('uid');
+        $oid = uri_assoc('oid');
+        if($uid) 
+        {
+        	$client_id = $uid;
+        	$params = array('uid' => $uid);
+        	
+        	//get Person Properties
+        	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
+        	$rest_return = $this->rest->get('getProperties', null, 'serialize');        	
+        	$properties = $rest_return['data'];
+        }
+        
+        if($oid) 
+        {
+        	$client_id = $oid;
+        	$params = array('oid' => $oid);
+        	
+        	//get Organization Properties
+        	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/organization/'));
+        	$rest_return = $this->rest->get('getProperties', null, 'serialize');
+        	$properties = $rest_return['data'];        	
+        }
+                
+        if(!$client_id) return false;
+        
+        //perform the request to Contact Engine
+        $rest_return = $this->mdl_clients->get($params);
+        
+        //TODO add check on rest_status
+        
+		if($uid) $client = $rest_return['people']['0'];
+		
+		if($oid) $client = $rest_return['orgs']['0'];
+                
 //         $client_params = array(
 //             'where'	=>	array(
 //                 'mcb_clients.client_id'	=>	$client_id
 //             )
 //         );
 
-        $contact_params = array(
-            'where'	=>	array(
-                'mcb_contacts.client_id'    =>  $client_id
-            )
-        );
+//         $contact_params = array(
+//             'where'	=>	array(
+//                 'mcb_contacts.client_id'    =>  $client_id
+//             )
+//         );
 
         $invoice_params = array(
             'where'	=>	array(
@@ -185,14 +220,6 @@ class Clients extends Admin_Controller {
             $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
 
         }
-
-        //$client = $this->mdl_clients->get($client_params);
-        //perform the request to Contact Engine
-        $params = array('uid' => $client_id);
-        $client = $this->mdl_clients->get($params);
-        
-
-        $contacts = $this->mdl_contacts->get($contact_params);
 
         $invoices = $this->mdl_invoices->get($invoice_params);
 
@@ -210,10 +237,21 @@ class Clients extends Admin_Controller {
 
         $data = array(
             'client'	=>	$client,
-            'contacts'	=>	$contacts,
+            'properties' => $properties,
+            //'contacts'	=>	$contacts,
             'invoices'	=>	$invoices,
             'tab_index'	=>	$tab_index
         );
+        
+        //template workaround to allow the usage of Smarty
+        //$data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
+        $data['baseurl'] = site_url();
+        $data['pager'] = $this->mdl_clients->page_links;
+        //if($search) $data['searched_string'] = $search;
+        //if($search || $uid || $oid) $data['made_search'] = true;
+        
+        //loading Smarty template
+        $data['middle'] = $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'clients');        
 
         $this->load->view('details', $data);
 

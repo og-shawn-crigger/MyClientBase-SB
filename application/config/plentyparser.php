@@ -56,7 +56,7 @@ $config['parser.smarty.cache_dir'] = APPPATH . "cache/smarty";
 $config['parser.smarty.config_dir'] = APPPATH."third_party/Smarty/configs";
 
 // Smarty caching enabled by default unless explicitly set to 0
-$config['parser.smarty.cache_status'] = 1;
+$config['parser.smarty.cache_status'] = 0;
 
 // Cache lifetime. Default value is 3600 seconds (1 hour) Smarty's default value
 $config['parser.smarty.cache_lifetime'] = 3600;

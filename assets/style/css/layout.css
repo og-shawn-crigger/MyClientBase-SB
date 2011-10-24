@@ -104,13 +104,46 @@ table tr td {
 	border-bottom: 1px solid #d8d8d8;
 }
 
-
-.table-clients tr .name {
-	width: 180px;
+table .contact-details-container {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
 }
 
-.table-orgs tr .name {
-	width: 200px;
+table .contact-details-container tr td {
+	margin: 0px;
+	padding: 0px;
+}
+
+table .contact-details-left{
+	width: 600px;
+}
+
+table .contact-details-right {
+	width: 360px;
+}
+
+table .contact-details-left, table .contact-details-right {
+	margin: 10px;
+	padding: 10px;
+	border-spacing:2em 0.25em;
+}
+
+table .contact-details-left tr, .contact-details-right tr { 
+	height : 16px;
+	line-height : 16px;
+	padding:5px;
+}
+
+td .field { 
+	width : 200px;
+	text-align: right;
+	padding:5px; 
+}
+
+td .value { 
+	padding:5px; 
+	text-align: left;
 }
 
 tr.actions {
@@ -140,12 +173,16 @@ td.counter {
 	border-bottom: 1px solid #d8d8d8;
 }
 
-.city{
+td.name{
+	width: 200px;
+}
+
+td.city{
 	width: 200px;
 }
 
 
-.tel{
+td.tel{
 	width: 80px;
 }
 
