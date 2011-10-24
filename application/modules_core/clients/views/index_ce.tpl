@@ -10,7 +10,7 @@
 <div class="contact_search">
 <form method="post" action="">
 	<div>
-		<p>{citranslate lang=$language text='Search'}: <input class="contact_search" type="text" name="search" value="">
+		<p>{citranslate lang=$language text='Search'}:{t}Hello World{/t} <input class="contact_search" type="text" name="search" value="">
 	</div>
 </form>
 </div>
