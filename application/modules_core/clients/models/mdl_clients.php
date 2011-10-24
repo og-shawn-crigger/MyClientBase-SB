@@ -11,17 +11,6 @@ class Mdl_Clients extends MY_Model {
 
         parent::__construct();
         
-/*         // Load curl
-        $this->load->spark('curl/1.2.0');
-        
-        // Load the configuration file
-        $this->load->config('rest');
-         
-        // Load the rest client
-        $this->load->spark('restclient/2.0.0');
-        
-        //$this->load->helper('url'); */
-        
         $this->load->model('Mdl_Contact');
         $this->contact = new Mdl_Contact();
         
@@ -34,7 +23,7 @@ class Mdl_Clients extends MY_Model {
     }
 
 
-    //overriding _prep_pagination function
+    //overrides _prep_pagination function
     private function _prep_pagination($params) {
     
     	if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
@@ -60,28 +49,27 @@ class Mdl_Clients extends MY_Model {
     	}
     }
     
-    public function get($params = NULL) {
+    public function get(array $params) {
     	
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/'));
+    	if(!is_array($params)) return false;
+    	
+    	//I demand to search something before making a request to contact engine (it doesn't make sense to get the whole customer list)
+    	//otherwise I require an uid or an oid
+    	if(!$params['search'] && empty($params['uid']) && empty($params['oid']) ) return false;
     	
     	$input=array();
     	
     	if(empty($params['uid']) && empty($params['oid']))
     	{
     		//looking for all contacts
-    		$input['filter'] = '(objectClass=*)';
+    		$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'))';
     	} else {
     		//looking for a specific contact
-    		if(!empty($param['uid'])) 
+    		if(!empty($params['uid'])) 
     		{
     			$input['filter'] = '(uid='.$params['uid'].')';
-    			/*
-    			$input['attributes'] = array('uid','sn', 'givenName','homePostalAddress','mozillaHomeLocalityName',
-    			    						 'mozillaHomeState','mozillaHomeCountryName','mozillaHomePostalCode',
-    			    	        			 'companyPhone','facsimileTelephoneNumber','mobile','mail','labeledURI','note','enabled','objectClass');
-    			*/
     		}
-    		if(!empty($param['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
+    		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
     	}
     	
     	//defaults
@@ -159,13 +147,14 @@ class Mdl_Clients extends MY_Model {
     	}
     	    	
     	$output = array('people' => $people, 'orgs' => $orgs);
-    	
-    	if(empty($params['uid']) || empty($params['oid']))
-    	{
-	        return $output;
-    	} else {
-    		return $this;
-    	} 
+
+    	return $output;
+//     	if(empty($params['uid']) || empty($params['oid']))
+//     	{
+// 	        return $output;
+//     	} else {
+//     		return $this;
+//     	} 
 
     }
 

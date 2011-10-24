@@ -9,16 +9,16 @@ $config = array(
         'clients'   =>  array(
             'title'     =>  'clients',
             'href'      =>  'clients/index',
-            'submenu'   =>  array(
-                'clients'  =>  array(
-                    'title' =>  'view_clients',
-                    'href'  =>  'clients/index'
-                ),
-                'clients/form'   =>  array(
-                    'title' =>  'add_client',
-                    'href'  =>  'clients/form'
-                )
-            )
+//             'submenu'   =>  array(
+//                 'clients'  =>  array(
+//                     'title' =>  'view_clients',
+//                     'href'  =>  'clients/index'
+//                 ),
+//                 'clients/form'   =>  array(
+//                     'title' =>  'add_client',
+//                     'href'  =>  'clients/form'
+//                 )
+//             )
         ),
         'invoices'  =>  array(
             'title'     =>  'invoices',

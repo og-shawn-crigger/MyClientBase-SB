@@ -179,3 +179,47 @@ pre 			{	margin:1.5em 0;white-space:pre;}
 .invoice_3 {
 	color: silver;
 }
+
+input.contact_search { 
+    background: white; 
+    border: 1px solid #323232;
+    margin-left: 5px;
+    color: black; 
+    height: 30px;
+    line-height: 30px; 
+    width: 100px; 
+    padding: 0 5px;
+    font-size: 20px;
+}
+
+.myButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #4ddb90) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #4ddb90 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#009246;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#000;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 6px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}
+.myButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 10%, #26ff8c 80% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}s

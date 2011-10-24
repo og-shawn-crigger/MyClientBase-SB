@@ -30,12 +30,25 @@ class Clients extends Admin_Controller {
 
         $this->load->helper('text');
 
-        $this->redir->set_last_index();
+        $this->redir->set_last_index(); //TODO what is this?
+        
+        $search = $this->input->post('search');
+        if(!$search)
+        {
+	        $array = $this->uri->uri_to_assoc(3);
+	        $uid = $array['uid'];
+	        $oid = $array['oid'];
+        }
+        
+        unset($array);
         
         $params = array(
         			'paginate'		=>	TRUE,
                     'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
-                    'wanted_page'	=>	$this->get_wanted_page(), 
+                    'wanted_page'	=>	$this->get_wanted_page(),
+                    'search'		=>  $search,
+        			'uid' 			=>  $uid,
+        			'oid' 			=>  $oid,
         );
         
         //if the user clicked on the top of the table column to change the display order ...
@@ -45,14 +58,22 @@ class Clients extends Admin_Controller {
         	$params['order_by'] = $user_order['0'];
         	$params['flow_order'] = $user_order['1'];
         }
-
+		
         $data = array(
             'contacts'	=>	$this->mdl_clients->get($params),
         );
-        $data['people'] = $contacts['people']['0'];
+        
+        //template workaround to allow the usage of Smarty
+        $data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
+        $data['baseurl'] = site_url();
+        $data['pager'] = $this->mdl_clients->page_links;
+        if($search || $uid || $oid) $data['made_search'] = true;
+        
+        //loading Smarty template
+        $data['middle'] = $this->plenty_parser->parse('index_ce.tpl', $data, true, 'smarty', 'clients');
         
         $this->load->view('index_ce', $data);
-        //$this->plenty_parser->parse('index_ce.tpl', $data, false, 'smarty', 'clients');
+        
 
     }
 
