@@ -13,9 +13,8 @@
  * Purpose:  print out a translated sentence using the common CI method (just a workaround)
  * @author Damiano Venturin 
  * @param array parameters
- * @param Smarty
  * @param object $template template object
- * @return string|null
+ * @return string
  */
 function smarty_function_citranslate($params, $template)
 {

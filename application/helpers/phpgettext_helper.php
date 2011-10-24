@@ -8,13 +8,15 @@ function setupPhpGettext() {
 	
 	// define constants
 	if(!defined('PROJECT_DIR')) define('PROJECT_DIR', realpath($CI->config->item('gettextProjectDir')));
-	if(!defined('LOCALE_DIR')) define('LOCALE_DIR', PROJECT_DIR .$CI->config->item('gettextLocaleDir'));
+	if(!defined('LOCALE_DIR')) define('LOCALE_DIR', realpath($CI->config->item('gettextLocaleDir')));
 	if(!defined('DEFAULT_LOCALE')) define('DEFAULT_LOCALE', $CI->config->item('gettextDefaultLocale'));
 	
-	require_once($CI->config->item('gettextInc'));
-
-	$config['gettextSupportedLocales'] = array('en_US', 'it_IT', 'de_CH');
-	$config['gettextEncoding'] = 'UTF-8';
+	if(is_file($CI->config->item('gettextInc')))
+	{
+		require_once($CI->config->item('gettextInc'));
+	} else {
+		log_message('debug','File '.$CI->config->item('gettextInc').' can not be found.');
+	}
 	
 	$supported_locales = $CI->config->item('gettextSupportedLocales');
 	$encoding = $CI->config->item('gettextEncoding');

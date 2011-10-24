@@ -1,0 +1,33 @@
+# Sample translation for PHP-gettext 1.0
+# Copyright (c) 2003 Damiano Venturin <dam@venturin.net>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: myclientbase-sm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-25 11:50+0200\n"
+"PO-Revision-Date: 2011-10-25 23:40+0100\n"
+"Last-Translator: Damiano Venturin <dam@venturin.net>\n"
+"Language-Team: Italian (sr) <dam@venturin.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+#"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "last search"
+msgstr "ultima ricerca"
+
+msgid "people"
+msgstr "persone"
+
+msgid "organizations"
+msgstr "organizzazioni"
+
+msgid "search"
+msgstr "cerca"
+
+msgid "No person found"
+msgstr "Non trovo nessuna persona"
+
+msgid "No organization found"
+msgstr "Non trovo nessuna organizzazione"

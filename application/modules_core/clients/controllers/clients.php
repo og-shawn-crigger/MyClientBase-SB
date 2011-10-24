@@ -67,6 +67,7 @@ class Clients extends Admin_Controller {
         $data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
         $data['baseurl'] = site_url();
         $data['pager'] = $this->mdl_clients->page_links;
+        if($search) $data['searched_string'] = $search;
         if($search || $uid || $oid) $data['made_search'] = true;
         
         //loading Smarty template

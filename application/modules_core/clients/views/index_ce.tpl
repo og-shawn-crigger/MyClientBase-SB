@@ -1,4 +1,3 @@
-
 {assign 'people' $contacts.people}
 {assign 'orgs' $contacts.orgs}
 {assign 'language' 'it'}
@@ -6,11 +5,16 @@
 {assign 'baseurl' $baseurl}
 {assign 'pager' $pager}
 {assign 'made_search' $made_search}
+{assign 'searched_string' $searched_string}
 
 <div class="contact_search">
 <form method="post" action="">
 	<div>
-		<p>{citranslate lang=$language text='Search'}:{t}Hello World{/t} <input class="contact_search" type="text" name="search" value="">
+		
+		{t capitalize=1}search{/t}<input class="contact_search" type="text" name="search" value="">
+		{if $searched_string != ""}
+		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}"</em>
+		{/if}
 	</div>
 </form>
 </div>
@@ -22,7 +26,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{citranslate lang=$language text='people'} 		
+		<h3 class="title_black">{t capitalize=1}people{/t} 		
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
@@ -48,7 +52,7 @@
 
 {else}
 	{if $made_search}
-	<p>{citranslate lang=$languge text="No person found"}</p>
+	<p>{t}No person found{/t}</p>
 	{/if}
 {/if}
 </div>
@@ -58,7 +62,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{citranslate lang=$language text='organizations'} 		
+		<h3 class="title_black">{t capitalize=1}organizations{/t}
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
@@ -83,7 +87,7 @@
     </table>    
 {else}
 	{if $made_search}
-	<p>{citranslate lang=$languge text="No organization found"}</p>
+	<p>{t}No organization found{/t}</p>
 	{/if}
 {/if}
 </div>

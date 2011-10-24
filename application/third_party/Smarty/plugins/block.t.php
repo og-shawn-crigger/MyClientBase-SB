@@ -139,6 +139,11 @@ function smarty_block_t($params, $text, &$smarty)
 		}
 	}
 	
+	if(isset($params['capitalize']) and $params['capitalize'] == '1') 
+	{
+		$text = ucwords($text);
+	}
+	
 	return $text;
 }
 
