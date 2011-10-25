@@ -32,7 +32,14 @@ class Mdl_Person extends Mdl_Contact {
     	$this->show_fields = $this->config->item('person_show_fields');
     	$this->hidden_fields = $this->config->item('person_hidden_fields');
     }
-	
+    
+    public function update($input)
+    {	
+    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
+    	$rest_return = $this->rest->get('update', $input, 'serialize');
+    
+    	return $rest_return;
+    }    
 }
 
 ?>

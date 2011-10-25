@@ -40,9 +40,7 @@ class Clients extends Admin_Controller {
         	$uid = uri_assoc('uid');
         	$oid = uri_assoc('oid');
         }
-        
-        unset($array);
-        
+       
         $params = array(
         			'paginate'		=>	TRUE,
                     'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),

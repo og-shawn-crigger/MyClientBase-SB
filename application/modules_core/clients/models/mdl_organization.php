@@ -33,6 +33,13 @@ class Mdl_Organization extends Mdl_Contact {
     	$this->hidden_fields = $this->config->item('organization_hidden_fields');
     }    
 
+    public function update($input)
+    {
+    	$rest_return = $this->rest->post('update', $input, 'serialize');
+    
+    	return $rest_return;
+    }
+    
 }
 
 ?>

@@ -23,35 +23,33 @@ class Mdl_Clients extends MY_Model {
     	//otherwise I require an uid or an oid
     	if(empty($params['search']) && empty($params['uid']) && empty($params['oid']) && empty($params['client_id'])) return false;
     	
-    	extract($params);
-    	
     	$input=array();
     	
-    	if(empty($uid) && empty($oid))
+    	if(empty($params['uid']) && empty($params['oid']))
     	{
     		if(empty($params['client_id']))
     		{
 	    		//looking for all contacts
-	    		$input['filter'] = '(|(cn=*'.$search.'*)(o=*'.$search.'*))';
+	    		$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'*))';
     		} else {
     			//looking for a single contact but I don't know if it's an organization or a person
     			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))'; //TODO why the $client_id is not extracted?
     		}
     	} else {
     		//looking for a specific contact
-    		if(!empty($uid)) 
+    		if(!empty($params['uid'])) 
     		{
-    			$input['filter'] = '(uid='.$uid.')';
+    			$input['filter'] = '(uid='.$params['uid'].')';
     		}
-    		if(!empty($oid)) $input['filter'] = '(oid='.$oid.')';
+    		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
     	}
     	
     	//defaults
-    	isset($method) ? $input['method'] = $method : $input['method'] = 'POST';
-    	isset($sort_by) ? $input['sort_by'] = $sort_by : $input['sort_by'] = array('sn');
-    	isset($flow_order) ? $input['flow_order'] = $flow_order : $input['flow_order'] = 'asc';
-    	isset($wanted_page) ? $input['wanted_page'] = $wanted_page : $input['wanted_page'] = '0';
-    	isset($items_page) ? $input['items_page'] = $items_page :$input['items_page'] = '12';
+    	isset($params['method']) ? $input['method'] = $params['method'] : $input['method'] = 'POST';
+    	isset($params['sort_by']) ? $input['sort_by'] = $params['sort_by'] : $input['sort_by'] = array('sn');
+    	isset($params['flow_order']) ? $input['flow_order'] = $params['flow_order'] : $input['flow_order'] = 'asc';
+    	isset($params['wanted_page']) ? $input['wanted_page'] = $params['wanted_page'] : $input['wanted_page'] = '0';
+    	isset($params['items_page']) ? $input['items_page'] = $params['items_page'] :$input['items_page'] = '12';
 
 		$rest_return = $this->contact->get($input);
     	
@@ -84,7 +82,7 @@ class Mdl_Clients extends MY_Model {
 	    	}    	
     	}
     	
-    	if(empty($params['client_id']) && empty($uid) && empty($oid))
+    	if(empty($params['client_id']) && empty($params['uid']) && empty($params['oid']))
     	{
     		//this is the return for the contact search form
     		$output = array('people' => $people, 'orgs' => $orgs);
@@ -193,43 +191,45 @@ class Mdl_Clients extends MY_Model {
     }
 
     public function save() {
-		
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
-    	
-        $db_array = parent::db_array();            
-        
-        //TODO I don't like this hardcoded stuff
+	
+    	//TODO this function is ok for the UPDATE but not for the CREATE yet
         $data = array();
-        $data['sn'] = $db_array['client_name'];
-        $data['givenName'] = 'giveName';
-        $data['homePostalAddress'] = $db_array['client_address'];
-        $data['mozillaHomeLocalityName'] = $db_array['client_city'];
-        $data['mozillaHomeState'] = $db_array['client_state'];
-        $data['mozillaHomeCountryName'] = $db_array['client_country'];
-        $data['mozillaHomePostalCode'] = $db_array['client_zip'];
-        $data['companyPhone'] = $db_array['client_phone_number'];
-        $data['facsimileTelephoneNumber'] = $db_array['client_fax_number'];
-        $data['client_mobile_number'] = $db_array['client_mobile_number'];
-        $data['mail'] = $db_array['client_email_address'];
-        $data['labeledURI'] = $db_array['client_web_address'];
-        $data['note'] = $db_array['client_notes'];
-        $data['client_tax_id'] = $db_array['client_tax_id'];
         
-        //mandatory for ldap
-        $data['entryCreatedBy'] = 'dam';
-        $data['category'] = 'mycategory';
-        $data['cn'] = $data['sn'].' '.$data['givenName'];
-        $data['displayName'] = $data['cn'];
-        $data['fileAs'] = $data['cn'];        
-        //uid is automatically set, so not needed
-        //$data['uid'] = rand(10000000,99999999);
-        $data['userPassword'] = 'mypassword';
-        $this->input->post('client_active') ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
+        if(isset($this->form_values['uid'])) $obj = 'person';
         
-        $rest_return = $this->rest->post('create', $data, 'serialize'); 
-        
-        //parent::save($db_array, uri_assoc('client_id'));
+        if(isset($this->form_values['oid'])) $obj = 'organization';
 
+        $this->contact->getProperties($obj);
+        $properties = $this->contact->properties;
+        
+        foreach ($this->form_values as $property => $value) {
+        	if(in_array($property, array_keys($properties)))
+        	{
+        		$data[$property] = $value;
+        	}
+        }
+        
+        //mandatory fields for ldap
+        if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
+        if(!isset($data['entryUpdatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
+        if(!isset($data['category'])) $data['category'] = 'mycategory';
+        $data['cn'] = $data['sn'].' '.$data['givenName'];
+        $data['displayName'] = $data['givenName'].' '.$data['sn'];
+        $data['fileAs'] = $data['cn'];        
+        
+        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?
+        ($this->form_values->enabled == 'TRUE') ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
+        
+        
+        if(isset($this->form_values['uid']))
+        {
+        	$this->person->update($data);
+        }
+        
+        if(isset($this->form_values['uid']))
+        {
+        	$this->organization->update($data);
+        }
     }
     
     

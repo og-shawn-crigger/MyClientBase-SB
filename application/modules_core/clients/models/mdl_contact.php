@@ -33,12 +33,12 @@ class Mdl_Contact extends MY_Model {
     	
     	//performing the query to contact engine
     	//TODO this should be $this->rest->get
-    	$rest_return = $this->rest->post('read', $input, 'serialize'); 
+    	$rest_return = $this->rest->post('read', $input, 'serialize');
 
     	return $rest_return;
     }
     
-    protected function getProperties($obj)
+    public function getProperties($obj)
     {
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$obj.'/'));
     	$rest_result = $this->rest->post('getProperties', null, 'serialize');
@@ -69,10 +69,16 @@ class Mdl_Contact extends MY_Model {
 	{
 		if(isset($contact[$attribute]))
 		{
-			return is_array($contact[$attribute]) ? implode(',',$contact[$attribute]) : $contact[$attribute];
+			if(is_array($contact[$attribute]))
+			{
+				$value = implode(',',$contact[$attribute]);
+			} else {
+				$value = $contact[$attribute];
+			}
+			return $value;
 		}
 	
-		return 'n.d.';
+		return '';
 	}
 
 }
