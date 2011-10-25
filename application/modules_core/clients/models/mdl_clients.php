@@ -4,49 +4,15 @@
 
 class Mdl_Clients extends MY_Model {
 
-	public $person;
-	public $organization;
-	
     public function __construct() {
 
         parent::__construct();
+       
+        $this->load->model('clients/mdl_contact','contact');
         
-        $this->load->model('Mdl_Contact');
-        $this->contact = new Mdl_Contact();
-        
-        $this->load->model('Mdl_Person');
-		$this->person = new Mdl_Person();
+        $this->load->model('clients/mdl_person','person');
 		
-		$this->load->model('Mdl_Organization');
-		$this->organization = new Mdl_Organization();
-	
-    }
-
-
-    //overrides _prep_pagination function
-    private function _prep_pagination($params) {
-    
-    	if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
-    
-    		$this->load->library('pagination');
-    
-    		$config = array(
-    		   					'base_url'			=>	base_url(),
-    		   					'total_rows'		=>	$params['total_rows'],
-    		   					'per_page'			=>	$params['items_page'],
-    		   					'next_link'			=>	$this->lang->line('next') . ' >',
-    		   					'prev_link'			=>	'< ' . $this->lang->line('prev'),
-    		   					'cur_tag_open'		=>	'<span class="active_link">',
-    		   					'cur_tag_close'		=>	'</span>',
-    		   					'num_links'			=>	3,
-    		   					'cur_page'			=>  uri_assoc('page'), //$this->offset;
-    		);
-    		
-    		$this->pagination->initialize($config);
-    		$this->page_links = $this->pagination->create_links();
-    		$params['items_page'] > 0 ? $this->current_page = (uri_assoc('page') / $params['items_page']) + 1 : $this->current_page = 0;
-    		$params['items_page'] > 0 ? $this->num_pages = ceil($params['total_rows'] / $params['items_page']) : $this->num_pages = 0;
-    	}
+		$this->load->model('clients/mdl_organization','organization');	
     }
     
     public function get(array $params) {
@@ -55,31 +21,39 @@ class Mdl_Clients extends MY_Model {
     	
     	//I demand to search something before making a request to contact engine (it doesn't make sense to get the whole customer list)
     	//otherwise I require an uid or an oid
-    	if(!$params['search'] && empty($params['uid']) && empty($params['oid']) ) return false;
+    	if(empty($params['search']) && empty($params['uid']) && empty($params['oid']) && empty($params['client_id'])) return false;
+    	
+    	extract($params);
     	
     	$input=array();
     	
-    	if(empty($params['uid']) && empty($params['oid']))
+    	if(empty($uid) && empty($oid))
     	{
-    		//looking for all contacts
-    		$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'))';
+    		if(empty($params['client_id']))
+    		{
+	    		//looking for all contacts
+	    		$input['filter'] = '(|(cn=*'.$search.'*)(o=*'.$search.'*))';
+    		} else {
+    			//looking for a single contact but I don't know if it's an organization or a person
+    			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))'; //TODO why the $client_id is not extracted?
+    		}
     	} else {
     		//looking for a specific contact
-    		if(!empty($params['uid'])) 
+    		if(!empty($uid)) 
     		{
-    			$input['filter'] = '(uid='.$params['uid'].')';
+    			$input['filter'] = '(uid='.$uid.')';
     		}
-    		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
+    		if(!empty($oid)) $input['filter'] = '(oid='.$oid.')';
     	}
     	
     	//defaults
-    	isset($params['method']) ? $input['method'] = $params['method'] : $input['method'] = 'POST';
-    	isset($params['sort_by']) ? $input['sort_by'] = $params['sort_by'] : $input['sort_by'] = array('sn');
-    	isset($params['flow_order']) ? $input['flow_order'] = $params['flow_order'] : $input['flow_order'] = 'asc';
-    	isset($params['wanted_page']) ? $input['wanted_page'] = $params['wanted_page'] : $input['wanted_page'] = '0';
-    	isset($params['items_page']) ? $input['items_page'] = $params['items_page'] :$input['items_page'] = '12';
+    	isset($method) ? $input['method'] = $method : $input['method'] = 'POST';
+    	isset($sort_by) ? $input['sort_by'] = $sort_by : $input['sort_by'] = array('sn');
+    	isset($flow_order) ? $input['flow_order'] = $flow_order : $input['flow_order'] = 'asc';
+    	isset($wanted_page) ? $input['wanted_page'] = $wanted_page : $input['wanted_page'] = '0';
+    	isset($items_page) ? $input['items_page'] = $items_page :$input['items_page'] = '12';
 
-		$rest_return = $this->Mdl_Contact->get($input);
+		$rest_return = $this->contact->get($input);
     	
     	//retrieving query info  
     	$rest_info = $rest_return['status'];										
@@ -100,111 +74,73 @@ class Mdl_Clients extends MY_Model {
 	    		if(in_array('dueviPerson', $contact['objectClass']))
 	    		{
 	    			//It's a person
-					if($this->person->arrayToObject($contact)) 
-					{
-						$people[] = clone $this->person;	    			
-					}
-	    			
-		    		//TODO this association shouldn't be hardcoded and stay somewhere else so that the user can modify it, not mentioning the fact that I can get
-		    		//the person attributes throught the getProperties method
-// 		    		$this->client_id = $this->getReturnValue('uid', $contact); //$contact['uid']['0'];
-// 		    		$this->client_name = $this->getReturnValue('sn', $contact).' '.$this->getReturnValue('givenName', $contact); //$contact['cn']['0'];
-// 		    		$this->client_address = $this->getReturnValue('homePostalAddress', $contact); //$contact['homePostalAddress']['0'];
-// 		    		$this->client_address_2 = ''; //there is not such a thing is LDAP
-// 		    		$this->client_city = $this->getReturnValue('mozillaHomeLocalityName', $contact); //$contact['mozillaHomeLocalityName'];
-// 		    		$this->client_state = $this->getReturnValue('mozillaHomeState', $contact); //$contact['mozillaHomeState'];
-// 		    		$this->client_country = $this->getReturnValue('mozillaHomeCountryName', $contact); //$contact['mozillaHomeCountryName'];
-// 		    		$this->client_zip = $this->getReturnValue('mozillaHomePostalCode', $contact); //$contact['mozillaHomePostalCode'];
-// 		    		$this->client_phone_number = $this->getReturnValue('companyPhone', $contact); //$contact['companyPhone']['0'];
-// 		    		$this->client_fax_number = $this->getReturnValue('facsimileTelephoneNumber', $contact); //$contact['facsimileTelephoneNumber']['0'];
-// 		    		$this->client_mobile_number = $this->getReturnValue('mobile', $contact); //$contact['mobile']['0'];
-// 		    		$this->client_email_address = $this->getReturnValue('mail', $contact); //$contact['mail']['0'];
-// 		    		$this->client_web_address = $this->getReturnValue('labeledURI', $contact); //$contact['labeledURI']['0'];
-// 		    		$this->client_notes = $this->getReturnValue('note', $contact); //$contact['note']['0'];
-// 		    		$this->client_tax_id = '0';
-// 		    		$this->client_active = $this->getReturnValue('enabled', $contact); //$contact['enabled'];	    		
-//		    		$this->join_client_id = '';
-// 		    		$this->person->total_invoice = '0.0';
-// 		    		$this->person->total_payment = '0.0';
-// 		    		$this->person->total_balance = '0.0';
-		    		
-		    		
+					if($this->person->arrayToObject($contact)) $people[] = clone $this->person;	    			
 	    		}
 	    		
 	    		if(in_array('dueviOrganization', $contact['objectClass']))
 	    		{
 	    			if($this->organization->arrayToObject($contact)) $orgs[] = clone $this->organization;
-	    			//It's an organization
-// 	    			$this->org_id = $this->getReturnValue('oid', $contact); 
-// 	    			$this->org_name = $this->getReturnValue('o', $contact);	    			
-// 	    			$this->org_total_invoice = '0.0';
-// 	    			$this->org_total_payment = '0.0';
-// 	    			$this->org_total_balance = '0.0';
-	    			
-// 	    			$orgs[] = clone $this;
 	    		}
 	    	}    	
     	}
-    	    	
-    	$output = array('people' => $people, 'orgs' => $orgs);
+    	
+    	if(empty($params['client_id']) && empty($uid) && empty($oid))
+    	{
+    		//this is the return for the contact search form
+    		$output = array('people' => $people, 'orgs' => $orgs);
+    		return $output;
+    	} else {
+ 			//this is the return for invoices, quotes, whatever
+    		if(count($people)>0) return $people['0'];
+    		if(count($orgs)>0) return $orgs['0'];
+    	}
+    }
 
-    	return $output;
-//     	if(empty($params['uid']) || empty($params['oid']))
-//     	{
-// 	        return $output;
-//     	} else {
-//     		return $this;
-//     	} 
+    public function get_active($params = NULL) {
+
+         if (!$params) {
+			
+         	$params = array();
+			
+         	$segs = $this->uri->segment_array();
+         	
+         	foreach ($segs as $key => $item)
+         	{
+         		$segmnent = $key;
+         		switch ($item) {
+         			case 'uid':
+         				$var = 'uid';
+         			break;
+
+         			case 'oid':
+         				$var = 'oid';
+         			break;
+
+         			case 'client_id':
+         				$var = 'client_id';
+         			break;         				         			
+         		}         		
+         	}
+
+         	if($var) 
+         	{
+         		$params[$var] = $this->uri->segment($segmnent);
+         		return $this->get($params);
+         	}
+         	
+        }
+        
+        return $this->get($params);
 
     }
 
-//     public function get_active($params = NULL) {
-
-//         if (!$params) {
-
-//             $params = array(
-//                 'where'	=>	array(
-//                     'client_active'	=>	1
-//                 )
-//             );
-
-//         }
-
-//         else {
-
-//             $params['where']['client_active'] = 1;
-
-//         }
-
-//         return $this->get($params);
-
-//     }
-
     public function validate() {
 
-        $this->form_validation->set_rules('client_active', $this->lang->line('client_active'));
-        $this->form_validation->set_rules('client_name', $this->lang->line('client_name'), 'required');
-        $this->form_validation->set_rules('client_tax_id', $this->lang->line('tax_id_number'));
-        $this->form_validation->set_rules('client_address', $this->lang->line('street_address'));
-        $this->form_validation->set_rules('client_address_2', $this->lang->line('street_address_2'));
-        $this->form_validation->set_rules('client_city', $this->lang->line('city'));
-        $this->form_validation->set_rules('client_state', $this->lang->line('state'));
-        $this->form_validation->set_rules('client_zip', $this->lang->line('zip'));
-        $this->form_validation->set_rules('client_country', $this->lang->line('country'));
-        $this->form_validation->set_rules('client_phone_number', $this->lang->line('phone_number'));
-        $this->form_validation->set_rules('client_fax_number',	$this->lang->line('fax_number'));
-        $this->form_validation->set_rules('client_mobile_number', $this->lang->line('mobile_number'));
-        $this->form_validation->set_rules('client_email_address', $this->lang->line('email_address'), 'valid_email');
-        $this->form_validation->set_rules('client_web_address', $this->lang->line('web_address'));
-        $this->form_validation->set_rules('client_notes', $this->lang->line('notes'));
-
-		//no custom fields here
-//         foreach ($this->custom_fields as $custom_field) {
-
-//             $this->form_validation->set_rules($custom_field->column_name, $custom_field->field_name);
-
-//         }
-
+    	//TODO some work needed here!
+        //validation rules for person
+  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required');
+        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
+        
         return parent::validate($this);
 
     }
@@ -295,6 +231,33 @@ class Mdl_Clients extends MY_Model {
         //parent::save($db_array, uri_assoc('client_id'));
 
     }
+    
+    
+    //overrides _prep_pagination function
+    private function _prep_pagination($params) {
+    
+    	if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
+    
+    		$this->load->library('pagination');
+    
+    		$config = array(
+        		   					'base_url'			=>	base_url(),
+        		   					'total_rows'		=>	$params['total_rows'],
+        		   					'per_page'			=>	$params['items_page'],
+        		   					'next_link'			=>	$this->lang->line('next') . ' >',
+        		   					'prev_link'			=>	'< ' . $this->lang->line('prev'),
+        		   					'cur_tag_open'		=>	'<span class="active_link">',
+        		   					'cur_tag_close'		=>	'</span>',
+        		   					'num_links'			=>	3,
+        		   					'cur_page'			=>  uri_assoc('page'), //$this->offset;
+    		);
+    
+    		$this->pagination->initialize($config);
+    		$this->page_links = $this->pagination->create_links();
+    		$params['items_page'] > 0 ? $this->current_page = (uri_assoc('page') / $params['items_page']) + 1 : $this->current_page = 0;
+    		$params['items_page'] > 0 ? $this->num_pages = ceil($params['total_rows'] / $params['items_page']) : $this->num_pages = 0;
+    	}
+    }    
 
 }
 

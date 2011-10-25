@@ -5,6 +5,9 @@
 class Mdl_Contact extends MY_Model {
 
 	public $properties;
+	public $client_id;
+	public $show_fields;
+	public $hidden_fields;	
 	public $total_invoice = '0.0';
 	public $total_payment = '0.0';
 	public $total_balance = '0.0';	
@@ -38,7 +41,7 @@ class Mdl_Contact extends MY_Model {
     protected function getProperties($obj)
     {
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$obj.'/'));
-    	$rest_result = $this->rest->post('getProperties', $input, 'serialize');
+    	$rest_result = $this->rest->post('getProperties', null, 'serialize');
     	if($rest_result['status']['status_code'] == 200) 
     	{
     		$this->properties = $rest_result['data'];

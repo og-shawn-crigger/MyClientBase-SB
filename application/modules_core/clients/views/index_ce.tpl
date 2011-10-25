@@ -45,7 +45,7 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="4">{a url=$url text="View"} | {a url=$url text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
+    	<td class="actions" colspan="4">{a url=$url text="View"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
     </tr>
     {/foreach}
     </table>
@@ -81,7 +81,7 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="3">{a url=$url text="View"} | {a url=$url text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
+    	<td class="actions" colspan="3">{a url=$url text="View"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
     </tr>    
     {/foreach}
     </table>    

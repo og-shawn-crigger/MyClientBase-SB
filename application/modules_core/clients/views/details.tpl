@@ -1,4 +1,5 @@
-{assign 'client' $client}
+{assign 'contact' $contact}
+{assign 'properties' $contact->properties}
 {assign 'language' 'it'}
 {assign 'baseurl' $baseurl}
 
@@ -8,7 +9,7 @@
 
 		<div class="section_wrapper">
 			<div>
-			<h3 class="title_black">{$client->cn}
+			<h3 class="title_black">{$contact->cn}
 				
 				<form method="post" action="" style="display: inline;">
 				<input type="submit" name="btn_edit_client" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='edit_client'}" />
@@ -25,7 +26,7 @@
 					
 					<ul>
 						<li><a href="#tab_client">{citranslate lang=$language text='client'}</a></li>
-						{if $client->objectClass == "dueviOrganization"}
+						{if $contact->objectClass == "dueviOrganization"}
 						<li><a href="#tab_contacts">{citranslate lang=$language text='contacts'}</a></li>
 						{/if}
 						<li><a href="#tab_invoices">{citranslate lang=$language text='invoices'}</a></li>
@@ -36,13 +37,19 @@
 							<tr valign="top"><td valign="top">	
 							<table class="contact-details-left">
 								{foreach $properties as $property_name => $property_details}
-									{if $client->$property_name != ""}
+									{if $contact->$property_name != ""}
 									<tr valign="top">
 										<td class="field">
-											<i>{$property_name}</i> :
+											<!-- Let's see if we have a translation for the current property name -->
+											{assign property_translated "{citranslate lang=$language text=$property_name}"}
+											{if $property_translated != ""}
+												<i>{$property_translated}</i> :
+											{else}
+												<i>{$property_name}</i> :
+											{/if}
 										</td>
 										<td class="value"> 
-											{$client->$property_name|wordwrap:60:"<br/>":true}
+											{$contact->$property_name|wordwrap:60:"<br/>":true}
 										</td>
 									</tr>
 									{/if}
@@ -77,7 +84,7 @@
 					</table>
 					</div>
 					
-					{if $client->objectClass == "dueviOrganization"}
+					{if $contact->objectClass == "dueviOrganization"}
 					<div id="tab_contacts">
 						ORGANIZATION CONTACTS - to be finished -
 					</div>

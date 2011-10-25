@@ -274,8 +274,16 @@ class MX_Loader extends CI_Loader
 			Modules::load_file($_model, $path);
 
 			$model = ucfirst($_model);
-			//dam if(!isset(CI::$APP->$_alias)) 
+
 			CI::$APP->$_alias = new $model();
+			
+// 			try {
+//				CI::$APP->$_alias = new $model();				
+// 			} catch (Exception $e) {
+// 				$model = ucwords($_model);
+// 				CI::$APP->$_alias = new $model();
+// 			}			 
+			
 
 			$this->_ci_models[] = $_alias;
 		}

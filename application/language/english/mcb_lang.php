@@ -470,4 +470,43 @@ $lang['item_tax_option_1'] = 'Include in Amount';
 $lang['my_profile'] = 'My Profile';
 $lang['visible_to_all_users'] = 'Visible to All Users';
 
+
+/* SMALL BUSINESS */
+$lang['anniversary'] = 'Anniversary';
+$lang['assistantName'] = 'Assistant Name';
+$lang['assistantPhone'] = 'Assistant Phone';
+$lang['birthDate'] = 'Birthdate';
+$lang['businessRole'] = 'Business Role';
+$lang['codiceFiscale'] = 'Codice Fiscale';
+$lang['cn'] = 'Common Name';
+$lang['enabled'] = 'Activate';
+$lang['fileAs'] = 'File As'; 
+$lang['givenName'] = 'First Name';
+$lang['homeFacsimileTelephoneNumber'] = 'Fax (home)';
+$lang['mail'] = 'Email';
+$lang['mobile'] = 'Mobile';
+$lang['mozillaHomeCountryName'] = 'Country';
+$lang['mozillaHomeLocalityName'] = 'City';
+$lang['mozillaHomePostalCode'] = 'Zip';
+$lang['mozillaHomeState'] = 'State';
+$lang['note'] = 'Note'; 
+$lang['o'] = 'Organization';
+$lang['preferredLanguage'] = 'Preferred Language';
+$lang['sn'] = 'Last Name';
+$lang['title'] = 'Title';
+$lang['businessActivity'] = 'Business Activity';
+$lang['c'] = 'Country';
+$lang['description'] = 'Description';
+$lang['facsimileTelephoneNumber'] = 'Fax';
+$lang['l'] = 'City';
+$lang['o'] = 'Organization';
+$lang['oURL'] = 'Web Site';
+$lang['omail'] = 'Email';
+$lang['postalAddress'] = 'Address';
+$lang['postalCode'] = 'Zip';
+$lang['st'] = 'State';
+$lang['telephoneNumber'] = 'Telephone';
+$lang['vatNumber'] = 'Vat Number';
+$lang['entryCreatedBy'] = 'Created by';
+$lang['homePostalAddress'] = 'Address';
 ?>

@@ -20,7 +20,7 @@
 
 			<div class="content toggle">
 
-				<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
+				<form method="post" action="<?php echo site_url('clients/form'); //echo site_url($this->uri->uri_string()); ?>">
 
 				<div id="tabs">
 
@@ -30,7 +30,7 @@
 					</ul>
 
 					<div id="tab_details">
-						<?php $this->load->view('tab_details'); ?>
+						<?php $this->load->view('tab_details_tpl'); ?>
 					</div>
 
                     <div id="tab_settings">
@@ -48,6 +48,6 @@
 	</div>
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>'clients/sidebar')); ?>
+<?php //$this->load->view('dashboard/sidebar', array('side_block'=>'clients/sidebar')); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

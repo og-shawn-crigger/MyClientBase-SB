@@ -18,9 +18,20 @@ class Mdl_Organization extends Mdl_Contact {
     public function arrayToObject(array $organization)
     {
     	$return = parent::arrayToObject($organization,'organization');
+    
+    	//this is for MCB compatibility
+    	$this->client_id = $this->oid;
+    	$this->client_name = $this->o;	 
     	
     	return (!empty($this->oid) && !empty($this->o)) ? $return : false;    
     }
+    
+    public function prepareShow()
+    {
+    	$this->load->config('organization');
+    	$this->show_fields = $this->config->item('organization_show_fields');
+    	$this->hidden_fields = $this->config->item('organization_hidden_fields');
+    }    
 
 }
 

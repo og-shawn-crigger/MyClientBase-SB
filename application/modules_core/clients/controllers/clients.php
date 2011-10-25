@@ -33,11 +33,10 @@ class Clients extends Admin_Controller {
         $this->redir->set_last_index(); //TODO what is this?
         
         $search = $this->input->post('search');
+        
+        //TODO I think this is not necessary ... we go with the  search only right?
         if(!$search)
         {
-// 	        $array = $this->uri->uri_to_assoc(3);
-// 	        $uid = $array['uid'];
-// 	        $oid = $array['oid'];
         	$uid = uri_assoc('uid');
         	$oid = uri_assoc('oid');
         }
@@ -84,8 +83,6 @@ class Clients extends Admin_Controller {
     
     function form() {
 
-        $client_id = uri_assoc('client_id');
-
         $this->load->model(
             array(
             'mcb_data/mdl_mcb_client_data',
@@ -93,28 +90,24 @@ class Clients extends Admin_Controller {
             )
         );
 
-        if ($client_id) {
-            //perform the request to Contact Engine
-            $params = array('uid' => $client_id);
-        	$client = $this->mdl_clients->get($params);
-        }
-
+        $contact = $this->retrieve_contact();
+        
         if ($this->mdl_clients->validate()) {
 
         	//it's a submit
             $this->mdl_clients->save();
             
-//             $client_id = ($client_id) ? $client_id : $this->db->insert_id();
+//             $contact_id = ($contact_id) ? $contact_id : $this->db->insert_id();
 //             foreach ($this->input->post('client_settings') as $key=>$value) {
 //                 if ($value) {
-//                     $this->mdl_mcb_client_data->save($client_id, $key, $value);
+//                     $this->mdl_mcb_client_data->save($contact_id, $key, $value);
 //                 }
 //                 else {
-//                     $this->mdl_mcb_client_data->delete($client_id, $key);
+//                     $this->mdl_mcb_client_data->delete($contact_id, $key);
 //                 }
 //             }
 
-            redirect($this->session->userdata('last_index'));
+            redirect($this->session->userdata('last_index'));  //TODO what is this?
 
         }
 
@@ -124,19 +117,20 @@ class Clients extends Admin_Controller {
             $this->load->model('templates/mdl_templates');
 
             $this->load->helper('form');
-
-            if (!$_POST AND $client_id) {
-
-                //$this->mdl_clients->prep_validation($client_id);
-            	foreach ($client as $key => $value) {
-            		$this->mdl_clients->form_values[$key] = $value;
+			
+ 			
+            if (!$_POST) {
+                //$this->mdl_clients->prep_validation($contact_id);
+            	foreach ($contact as $key => $value) {
+            		if($key != "properties") $this->mdl_clients->form_values[$key] = $value;
             	}
             	//TODO maybe it's better to use mdl_client_ce and then to modify the template accordingly
-            	$this->mdl_clients->custom_fields = array(); //we don't need custom fields any more because they can be defined in the ldap schema
+            	//$this->mdl_clients->custom_fields = array(); //we don't need custom fields any more because they can be defined in the ldap schema
             }
 
             $data = array(
-                'custom_fields'     =>	$this->mdl_clients->custom_fields,
+                //'custom_fields'     =>	$this->mdl_clients->custom_fields,
+            	'contact'			=>  $contact,
                 'invoice_templates' =>  $this->mdl_templates->get('invoices'),
                 'invoice_groups'    =>  $this->mdl_invoice_groups->get()
             );
@@ -149,68 +143,22 @@ class Clients extends Admin_Controller {
 
     function details() {
 
-        $this->redir->set_last_index();  //TODO What is this?
+        $this->redir->set_last_index();
 
         $this->load->helper('text');  //TODO why not autoload?
 
         $this->load->model(
             array(
             'invoices/mdl_invoices',
-            //'mdl_contacts',
             'templates/mdl_templates'
             )
         );
 
-        $uid = uri_assoc('uid');
-        $oid = uri_assoc('oid');
-        if($uid) 
-        {
-        	$client_id = $uid;
-        	$params = array('uid' => $uid);
-        	
-        	//get Person Properties
-        	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
-        	$rest_return = $this->rest->get('getProperties', null, 'serialize');        	
-        	$properties = $rest_return['data'];
-        }
-        
-        if($oid) 
-        {
-        	$client_id = $oid;
-        	$params = array('oid' => $oid);
-        	
-        	//get Organization Properties
-        	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/organization/'));
-        	$rest_return = $this->rest->get('getProperties', null, 'serialize');
-        	$properties = $rest_return['data'];        	
-        }
-                
-        if(!$client_id) return false;
-        
-        //perform the request to Contact Engine
-        $rest_return = $this->mdl_clients->get($params);
-        
-        //TODO add check on rest_status
-        
-		if($uid) $client = $rest_return['people']['0'];
-		
-		if($oid) $client = $rest_return['orgs']['0'];
-                
-//         $client_params = array(
-//             'where'	=>	array(
-//                 'mcb_clients.client_id'	=>	$client_id
-//             )
-//         );
-
-//         $contact_params = array(
-//             'where'	=>	array(
-//                 'mcb_contacts.client_id'    =>  $client_id
-//             )
-//         );
+		$contact = $this->retrieve_contact();
 
         $invoice_params = array(
             'where'	=>	array(
-                'mcb_invoices.client_id'        =>	$client_id,
+                'mcb_invoices.client_id'        =>	$contact->client_id,
                 'mcb_invoices.invoice_is_quote' =>  0
             )
         );
@@ -227,34 +175,57 @@ class Clients extends Admin_Controller {
 
             $tab_index = $this->session->flashdata('tab_index');
 
-        }
-
-        else {
+        } else {
 
             $tab_index = 0;
 
         }
 
+        //preparing output for views
         $data = array(
-            'client'	=>	$client,
-            'properties' => $properties,
-            //'contacts'	=>	$contacts,
+            'contact'	=>	$contact,
             'invoices'	=>	$invoices,
-            'tab_index'	=>	$tab_index
+            'tab_index'	=>	$tab_index,
+            'baseurl'	=>	site_url(),
         );
         
-        //template workaround to allow the usage of Smarty
-        //$data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
-        $data['baseurl'] = site_url();
-        $data['pager'] = $this->mdl_clients->page_links;
-        //if($search) $data['searched_string'] = $search;
-        //if($search || $uid || $oid) $data['made_search'] = true;
-        
         //loading Smarty template
-        $data['middle'] = $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'clients');        
-
+        $data['middle']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'clients');
+         
+        //loading CI template
         $this->load->view('details', $data);
 
+    }
+    
+    function retrieve_contact()
+    {
+    	$uid = uri_assoc('uid');
+    	$oid = uri_assoc('oid');
+    	if(empty($uid) && empty($oid)) $client_id = uri_assoc('client_id');
+    	
+    	if($uid) $params = array('uid' => $uid);
+    	if($oid) $params = array('oid' => $oid);    		 
+    	if($client_id) $params = array('client_id' => $client_id);
+    	
+    	if(!$oid && !$uid && !$client_id) return false;
+    	
+    	//perform the request to Contact Engine
+    	$rest_return = $this->mdl_clients->get($params);      	//TODO add check on rest_status
+    	
+    	//when the request is performed using client_id || uid || oid as input I get an object in return, not an array
+    	if(is_object($rest_return))
+    	{
+    		$contact = $rest_return;
+    		
+    		if($rest_return->uid) $obj = 'person';
+    		if($rest_return->oid) $obj = 'organization';
+    		
+    		$this->$obj->prepareShow();
+    		$contact->show_fields = $this->$obj->show_fields;
+    		$contact->hidden_fields = $this->$obj->hidden_fields;    			
+    	}
+    	
+    	return $contact;
     }
 
     function delete() {
