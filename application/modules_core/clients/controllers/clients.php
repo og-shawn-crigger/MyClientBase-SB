@@ -89,8 +89,10 @@ class Clients extends Admin_Controller {
         );
 
         $contact = $this->retrieve_contact();
+        if(isset($contact->uid)) $obj = 'person';
+        if(isset($contact->oid)) $obj = 'organization';
         
-        if ($this->mdl_clients->validate()) {
+        if ($this->mdl_clients->validate($obj)) {
 
         	//it's a submit
             $this->mdl_clients->save();
@@ -199,7 +201,15 @@ class Clients extends Admin_Controller {
     {
     	$uid = uri_assoc('uid');
     	$oid = uri_assoc('oid');
-    	if(empty($uid) && empty($oid)) $client_id = uri_assoc('client_id');
+    	if(empty($uid) && empty($oid)) 
+    	{
+    		if(uri_assoc('client_id'))
+    		{
+    			$client_id = uri_assoc('client_id');
+    		} else {
+    			if($this->input->post('client_id')) $client_id = $this->input->post('client_id');
+    		}
+    	}
     	
     	if($uid) $params = array('uid' => $uid);
     	if($oid) $params = array('oid' => $oid);    		 

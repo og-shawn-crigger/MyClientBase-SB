@@ -132,13 +132,24 @@ class Mdl_Clients extends MY_Model {
 
     }
 
-    public function validate() {
+    public function validate($obj) {
+		switch ($obj) {
+			case 'person':
+		        //validation rules for person
+		  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required');
+		        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
+			break;
 
-    	//TODO some work needed here!
-        //validation rules for person
-  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required');
-        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
-        
+			case 'organization':
+		        //validation rules for organization
+		  		$this->form_validation->set_rules('o', $this->lang->line('o'), 'required');
+		        //$this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
+			break;			
+		}
+		
+		//Common validation rules for both the objects
+		//$this->form_validation->set_rules('enabled', $this->lang->line('enabled'), 'required');
+		
         return parent::validate($this);
 
     }
@@ -210,23 +221,31 @@ class Mdl_Clients extends MY_Model {
         }
         
         //mandatory fields for ldap
-        if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
-        if(!isset($data['entryUpdatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
-        if(!isset($data['category'])) $data['category'] = 'mycategory';
-        $data['cn'] = $data['sn'].' '.$data['givenName'];
-        $data['displayName'] = $data['givenName'].' '.$data['sn'];
-        $data['fileAs'] = $data['cn'];        
+        if($obj == 'person')
+        {
+	        if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
+	        if(!isset($data['entryUpdatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
+	        if(!isset($data['category'])) $data['category'] = 'mycategory';
+	        $data['cn'] = $data['sn'].' '.$data['givenName'];
+	        $data['displayName'] = $data['givenName'].' '.$data['sn'];
+	        $data['fileAs'] = $data['cn'];
+	        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?    
+        }        
+
+        if($obj == 'organization')
+        {
+        	
+        }   
         
-        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?
-        ($this->form_values->enabled == 'TRUE') ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
+        //common mandatory fields
+        ($this->form_values->enabled == FALSE) ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
         
-        
-        if(isset($this->form_values['uid']))
+        if($obj == 'person')
         {
         	$this->person->update($data);
         }
         
-        if(isset($this->form_values['uid']))
+        if($obj == 'organization')
         {
         	$this->organization->update($data);
         }
