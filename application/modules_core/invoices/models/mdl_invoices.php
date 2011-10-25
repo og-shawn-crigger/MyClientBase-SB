@@ -17,9 +17,10 @@ class Mdl_Invoices extends MY_Model {
         $this->select_fields = "
 		SQL_CALC_FOUND_ROWS
 		mcb_invoices.*,
-		mcb_invoice_amounts.*,
-        mcb_clients.*,
-		mcb_users.username,
+		mcb_invoice_amounts.*,".
+		//DAM
+        //mcb_clients.*,
+		"mcb_users.username,
 	    mcb_users.company_name AS from_company_name,
 	    mcb_users.last_name AS from_last_name,
 	    mcb_users.first_name AS from_first_name,
@@ -70,7 +71,8 @@ class Mdl_Invoices extends MY_Model {
                 'left'
             ),
             'mcb_invoice_amounts'	=>	'mcb_invoice_amounts.invoice_id = mcb_invoices.invoice_id',
-            'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id'
+            //DAM
+            //'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id'
         );
 
         $this->date_formats = array(
@@ -312,7 +314,8 @@ class Mdl_Invoices extends MY_Model {
         $this->db->where('invoice_id', $invoice_id);
 
         $db_array = array(
-            'client_id'					=>	$this->input->post('client_id'),
+        	//dam
+            //'client_id'					=>	$this->input->post('client_id'),
             'invoice_date_entered'		=>	strtotime(standardize_date($this->input->post('invoice_date_entered'))),
             'invoice_notes'				=>	$this->input->post('invoice_notes'),
             'user_id'                   =>  $this->input->post('user_id'),

@@ -8,6 +8,7 @@
 	});
 </script>
 
+<!-- $middle contains details.tpl -->
 <?php echo $middle; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

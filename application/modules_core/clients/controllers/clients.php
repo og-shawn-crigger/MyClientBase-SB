@@ -190,6 +190,7 @@ class Clients extends Admin_Controller {
         );
         
         //loading Smarty template
+        $data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
         $data['middle']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'clients');
          
         //loading CI template

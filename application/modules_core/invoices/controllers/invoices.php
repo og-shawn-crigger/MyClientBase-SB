@@ -126,7 +126,7 @@ class Invoices extends Admin_Controller {
             $this->load->helper('text');
 
             $data = array(
-                'clients'			=>	$this->mdl_clients->get_active(),
+                'clients'		=>	$this->mdl_clients->get_active(),
                 'invoice_groups'	=>	$this->mdl_invoice_groups->get()
             );
 
@@ -207,11 +207,15 @@ class Invoices extends Admin_Controller {
             redirect('dashboard/record_not_found');
 
         }
-
-        $client_params = array(
-            'select' =>  'mcb_clients.client_id, mcb_clients.client_name'
-        );
-
+//DAM
+//         $client_params = array(
+//             'select' =>  'mcb_clients.client_id, mcb_clients.client_name'
+//         );
+		
+        $client_params = array('client_id' => $invoice->client_id);
+        $clients = $this->mdl_clients->get_active($client_params);
+        $invoice->client_name = $clients['0']->client_name;  //trick
+        
         $user_params = array(
             'where' =>  array(
                 'mcb_users.client_id'   =>  0
@@ -231,7 +235,8 @@ class Invoices extends Admin_Controller {
             'invoice_items'     =>  $this->mdl_invoices->get_invoice_items($invoice->invoice_id),
             'invoice_tax_rates' =>  $this->mdl_invoices->get_invoice_tax_rates($invoice->invoice_id),
             'tags'              =>  $this->mdl_invoices->get_invoice_tags($invoice->invoice_id),
-            'clients'			=>	$this->mdl_clients->get_active($client_params),
+            //'clients'			=>	$this->mdl_clients->get_active($client_params),
+        	'clients'			=>  $clients,
             'tax_rates'			=>	$this->mdl_tax_rates->get(),
             'invoice_statuses'	=>	$this->mdl_invoice_statuses->get(),
             'tab_index'			=>	$tab_index,

@@ -2,6 +2,7 @@
 {assign 'properties' $contact->properties}
 {assign 'language' 'it'}
 {assign 'baseurl' $baseurl}
+{assign 'invoices_html' $invoices_html}
 
 <div class="grid_14" id="content_wrapper">
 
@@ -90,7 +91,8 @@
 					</div>
 					{/if}
 					<div id="tab_invoices">
-						INVOICE TABLE
+						<!-- INVOICE TABLE -->
+						{$invoices_html}
 					</div>
 
 				</div>

@@ -88,9 +88,17 @@ class Mdl_Clients extends MY_Model {
     		$output = array('people' => $people, 'orgs' => $orgs);
     		return $output;
     	} else {
- 			//this is the return for invoices, quotes, whatever
-    		if(count($people)>0) return $people['0'];
-    		if(count($orgs)>0) return $orgs['0'];
+
+    		if($params['active'])
+    		{
+    			//this is the return for for invoices, quotes ...
+    			if(count($people)>0) return $people;
+    			if(count($orgs)>0) return $orgs;
+    		} else {
+	 			//this is the return for contact details, contact form
+	    		if(count($people)>0) return $people['0'];
+	    		if(count($orgs)>0) return $orgs['0'];
+    		}
     	}
     }
 
@@ -123,11 +131,13 @@ class Mdl_Clients extends MY_Model {
          	if($var) 
          	{
          		$params[$var] = $this->uri->segment($segmnent);
+         		$params['active'] = true;
          		return $this->get($params);
          	}
          	
         }
         
+        $params['active'] = true;
         return $this->get($params);
 
     }
