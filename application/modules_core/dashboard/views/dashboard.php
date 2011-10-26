@@ -76,7 +76,7 @@
 
 <?php $this->load->view('dashboard/sidebar',
 	array('side_block'=>array('dashboard/sidebar_custom_modules'),
-	'show_quicklinks'=>TRUE,
+	//'show_quicklinks'=>TRUE, //DAM
 	'side_widgets'=>array('dashboard/dashboard_widgets/total_balance', 'dashboard/dashboard_widgets/total_paid'))); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

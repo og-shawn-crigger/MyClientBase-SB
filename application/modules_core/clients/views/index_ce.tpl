@@ -26,8 +26,10 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{t capitalize=1}people{/t} 		
+		<h3 class="title_black">{t capitalize=1}people{/t} 
+			<!-- 
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			 -->
 		</h3>
 		{/if}
 		</form>
@@ -45,7 +47,7 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="4">{a url=$url text="View"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
+    	<td class="actions" colspan="4">{a url=$url text="View"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="Edit"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="Invoice"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="Quote"}</td>
     </tr>
     {/foreach}
     </table>
@@ -63,7 +65,9 @@
 		<form method="post" action="">
 		{if $made_search}
 		<h3 class="title_black">{t capitalize=1}organizations{/t}
+			<!--
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			-->
 		</h3>
 		{/if}
 		</form>
@@ -81,7 +85,7 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="3">{a url=$url text="View"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="Edit"} | {a url=$url text="Invoice"} | {a url=$url text="Quote"}</td>
+    	<td class="actions" colspan="3">{a url=$url text="View"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="Edit"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="Invoice"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="Quote"}</td>
     </tr>    
     {/foreach}
     </table>    
