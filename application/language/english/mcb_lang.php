@@ -472,6 +472,12 @@ $lang['visible_to_all_users'] = 'Visible to All Users';
 
 
 /* SMALL BUSINESS */
+$lang['mysearch'] = 'Search';
+$lang['lastsearch'] = 'Last search';
+$lang['people'] = 'People';
+$lang['No person found'] = 'No person found';
+$lang['organizations'] = 'Organizations';
+$lang['No organization found'] = 'No organization found';
 $lang['anniversary'] = 'Anniversary';
 $lang['assistantName'] = 'Assistant Name';
 $lang['assistantPhone'] = 'Assistant Phone';

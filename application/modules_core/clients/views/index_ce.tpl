@@ -11,9 +11,9 @@
 <form method="post" action="">
 	<div>
 		
-		{t capitalize=1}search{/t}<input class="contact_search" type="text" name="search" value="">
+		{citranslate lang=$language text="mysearch"}<input class="contact_search" type="text" name="search" value="">
 		{if $searched_string != ""}
-		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}"</em>
+		<em style="font-size: 0.7em; margin-left: 15px;">{citranslate lang=$language text='lastsearch'}: "{$searched_string}"</em>
 		{/if}
 	</div>
 </form>
@@ -26,7 +26,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{t capitalize=1}people{/t} 
+		<h3 class="title_black">{citranslate lang=$language text='people'} 
 			<!-- 
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 			 -->
@@ -54,7 +54,7 @@
 
 {else}
 	{if $made_search}
-	<p>{t}No person found{/t}</p>
+	<p>{citranslate lang=$language text='No person found'}</p>
 	{/if}
 {/if}
 </div>
@@ -64,7 +64,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{t capitalize=1}organizations{/t}
+		<h3 class="title_black">{citranslate lang=$language text='organizations'}
 			<!--
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 			-->
@@ -91,7 +91,7 @@
     </table>    
 {else}
 	{if $made_search}
-	<p>{t}No organization found{/t}</p>
+	<p>{citranslate lang=$language text='No organization found'}</p>
 	{/if}
 {/if}
 </div>

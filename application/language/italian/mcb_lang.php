@@ -457,6 +457,12 @@ $lang['footer'] = 'Pi&egrave; Pagina';
 $lang['inventory_type_in_use'] = 'La categoria merceologica specificata &egrave; gi&agrave; in uso.';
 
 /* SMALL BUSINESS */
+$lang['mysearch'] = 'Cerca';
+$lang['lastsearch'] = 'Ultima ricerca';
+$lang['people'] = 'Persone';
+$lang['No person found'] = 'Non trovo nessuna persona';
+$lang['organizations'] = 'Organizzazioni';
+$lang['No organization found'] = 'Non trovo nessuna organizzazione';
 $lang['anniversary'] = 'Anniversario';
 $lang['assistantName'] = 'Assistente';
 $lang['assistantPhone'] = 'Telefono Assistente';

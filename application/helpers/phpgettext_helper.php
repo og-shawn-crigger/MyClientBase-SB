@@ -14,6 +14,7 @@ function setupPhpGettext() {
 	if(is_file($CI->config->item('gettextInc')))
 	{
 		require_once($CI->config->item('gettextInc'));
+		log_message('debug','File '.$CI->config->item('gettextInc').' has been included.');
 	} else {
 		log_message('debug','File '.$CI->config->item('gettextInc').' can not be found.');
 	}
@@ -24,7 +25,13 @@ function setupPhpGettext() {
 	//TODO maybe this should be set through GET or POST or SESSION ... will see
 	$locale = $CI->config->item('gettextDefaultLocale'); //(isset($_GET['lang']))? $_GET['lang'] : DEFAULT_LOCALE;
 
-	return $locale;
+	return array('locale' => $locale,
+				 'encoding' => $encoding,
+				 'supported_locales' => $supported_locales,
+				 'project_dir' => PROJECT_DIR,
+				 'locale_dir' => LOCALE_DIR,
+				 'default_locale' => DEFAULT_LOCALE,
+				 );
 }
 
 /* End of file phpgettext_helper.php */
