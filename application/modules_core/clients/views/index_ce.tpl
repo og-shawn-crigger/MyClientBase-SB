@@ -1,19 +1,14 @@
 {assign 'people' $contacts.people}
 {assign 'orgs' $contacts.orgs}
 {assign 'language' 'it'}
-{assign 'button_add' $button_add}
-{assign 'baseurl' $baseurl}
-{assign 'pager' $pager}
-{assign 'made_search' $made_search}
-{assign 'searched_string' $searched_string}
 
 <div class="contact_search">
 <form method="post" action="">
 	<div>
 		
-		{citranslate lang=$language text="mysearch"}<input class="contact_search" type="text" name="search" value="">
+		{"{t}search{/t}"|capitalize}: <input class="contact_search" type="text" name="search" value="">
 		{if $searched_string != ""}
-		<em style="font-size: 0.7em; margin-left: 15px;">{citranslate lang=$language text='lastsearch'}: "{$searched_string}"</em>
+		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}"</em>
 		{/if}
 	</div>
 </form>
@@ -26,7 +21,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{citranslate lang=$language text='people'} 
+		<h3 class="title_black">{"{t}people{/t}"|capitalize} 
 			<!-- 
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 			 -->
@@ -47,14 +42,14 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="4">{a url=$url text="View"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="Edit"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="Invoice"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="Quote"}</td>
+    	<td class="actions" colspan="4">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="{"{t}quote{/t}"|capitalize}"}</td>
     </tr>
     {/foreach}
     </table>
 
 {else}
 	{if $made_search}
-	<p>{citranslate lang=$language text='No person found'}</p>
+	<p>{t}No person found{/t}</p>
 	{/if}
 {/if}
 </div>
@@ -64,7 +59,7 @@
 	<div style="width: 100%;">
 		<form method="post" action="">
 		{if $made_search}
-		<h3 class="title_black">{citranslate lang=$language text='organizations'}
+		<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
 			<!--
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
 			-->
@@ -85,13 +80,13 @@
     </tr>
     <tr class="actions">
     	<td></td>
-    	<td class="actions" colspan="3">{a url=$url text="View"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="Edit"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="Invoice"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="Quote"}</td>
+    	<td class="actions" colspan="3">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="{"{t}quote{/t}"|capitalize}"}</td>
     </tr>    
     {/foreach}
     </table>    
 {else}
 	{if $made_search}
-	<p>{citranslate lang=$language text='No organization found'}</p>
+	<p>{t}No organization found{/t}</p>
 	{/if}
 {/if}
 </div>

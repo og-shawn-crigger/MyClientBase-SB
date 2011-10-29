@@ -28,6 +28,10 @@
  */
  
 /**
+ * NOTE: this block has been modified to use ONLY phpgettext even if gettext is compiled in 
+ */
+
+/**
  * Replaces arguments in a string with their values.
  * Arguments are represented by % followed by their number.
  *
@@ -80,20 +84,20 @@ function smarty_block_t($params, $text, &$smarty)
 	$settings = setupPhpGettext();
 	
 	extract($settings);
-	
+/*	
 	if(!defined('PROJECT_DIR')) define('PROJECT_DIR', $project_dir);
 	if(!defined('LOCALE_DIR')) define('LOCALE_DIR', $locale_dir);
 	if(!defined('DEFAULT_LOCALE')) define('DEFAULT_LOCALE', $default_locale);
-	
+*/
 	// gettext setup
 	T_setlocale(LC_MESSAGES, $locale);
 	// Set the text domain as 'messages'
 	$domain = 'messages';
-	bindtextdomain($domain, LOCALE_DIR);
+	_bindtextdomain($domain, LOCALE_DIR);
 	// bind_textdomain_codeset is supported only in PHP 4.2.0+
 	if (function_exists('bind_textdomain_codeset'))
-	bind_textdomain_codeset($domain, $encoding);
-	textdomain($domain);	
+	_bind_textdomain_codeset($domain, $encoding);
+	_textdomain($domain);	
 	
 	// end PHP-GETTEXT SUPPORT
 	
@@ -119,9 +123,9 @@ function smarty_block_t($params, $text, &$smarty)
 	
 	// use plural if required parameters are set
 	if (isset($count) && isset($plural)) {
-		$text = ngettext($text, $plural, $count);
+		$text = _ngettext($text, $plural, $count);
 	} else { // use normal
-		$text = gettext($text);
+		$text = _gettext($text);
 	}
 
 	// run strarg if there are parameters
@@ -144,12 +148,7 @@ function smarty_block_t($params, $text, &$smarty)
 				break;
 		}
 	}
-	
-	if(isset($params['capitalize']) and $params['capitalize'] == '1') 
-	{
-		$text = ucwords($text);
-	}
-	
+
 	return $text;
 }
 

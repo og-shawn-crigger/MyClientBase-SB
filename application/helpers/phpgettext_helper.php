@@ -13,8 +13,10 @@ function setupPhpGettext() {
 	
 	if(is_file($CI->config->item('gettextInc')))
 	{
-		require_once($CI->config->item('gettextInc'));
-		log_message('debug','File '.$CI->config->item('gettextInc').' has been included.');
+		if (!function_exists('_gettext')) {
+			require_once($CI->config->item('gettextInc'));
+			log_message('debug','File '.$CI->config->item('gettextInc').' has been included.');
+		}
 	} else {
 		log_message('debug','File '.$CI->config->item('gettextInc').' can not be found.');
 	}

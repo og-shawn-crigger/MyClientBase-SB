@@ -31,3 +31,15 @@ msgstr "Non trovo nessuna persona"
 
 msgid "No organization found"
 msgstr "Non trovo nessuna organizzazione"
+
+msgid "view"
+msgstr "mostra"
+
+msgid "invoice"
+msgstr "fattura"
+
+msgid "quote"
+msgstr "preventivo"
+
+msgid "edit"
+msgstr "modifica"
