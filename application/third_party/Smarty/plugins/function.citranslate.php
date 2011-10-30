@@ -20,19 +20,8 @@ function smarty_function_citranslate($params, $template)
 {
 	$lang = array();
 	
- 	switch ($params['lang']) {
- 		case 'en':
- 			$dirname='/home/damko/development/code/php/myclientbase-sb/application/language/english/';
- 		break;
- 		
- 		case 'it':
-			$dirname='/home/damko/development/code/php/myclientbase-sb/application/language/italian/'; 			
- 		break;
- 		
- 		default:
- 			$dirname='/home/damko/development/code/php/myclientbase-sb/application/language/english/';
- 		break;
- 	}
+	$dirname = setupCiTranslate($params['lang']);
+	
  	$filename = $dirname.'mcb_lang.php';
  	if(is_file($filename))
  	{

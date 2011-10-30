@@ -78,7 +78,11 @@ class Plenty_parser_smarty extends CI_Driver {
         // Check we haven't got cached variables to use
         if (is_array($data))
         {
-            $data = array_merge($data, $this->ci->load->_ci_cached_vars);
+        	//DAM
+        	if(isset($this->ci->load->_ci_cached_vars))
+        	{
+        		$data = array_merge($data, $this->ci->load->_ci_cached_vars);
+        	}
         }
         
         // If we have variables to assign, lets assign them
