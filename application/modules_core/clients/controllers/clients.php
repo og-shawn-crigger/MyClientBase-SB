@@ -19,20 +19,45 @@ class Clients extends Admin_Controller {
     //work around to make CI pagination to fit CE pagination
     private function get_wanted_page()
     {
-    	//$this->load->helper('text');
-    	if($this->mdl_mcb_data->setting('results_per_page') == 0) return 0;
-    	$page = ceil(uri_assoc('page') / $this->mdl_mcb_data->setting('results_per_page'));
+    	$results_per_page = $this->mdl_mcb_data->setting('results_per_page');
+    	
+    	if($results_per_page == 0) return 0;
+    	
+    	$uripage = uri_assoc('page');
+    	$page = ceil(uri_assoc('page') / $results_per_page);
+    	
     	if($page <= 0) return 0;
+    	
     	return $page; 
     }
     
     function index() {
 
         $this->load->helper('text');
-
-        $this->redir->set_last_index(); //TODO what is this?
         
         $search = $this->input->post('search');
+        
+        if(!$search)
+        {
+        	//try to retrieve from session
+        	$search = $this->session->userdata('search');
+        	$wanted_page = $this->get_wanted_page();
+        } else {
+        	//the user just hit the ENTER in the input box
+        	//set into session
+        	$this->session->set_userdata('search', $search);
+        	$this->redir->set_last_index(site_url('clients/index'));
+        	$wanted_page = 0;
+        }
+        
+        $params = array(
+                   			'paginate'		=>	TRUE,
+                            'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
+                            'wanted_page'	=>	$wanted_page,
+                            'search'		=>  $search,
+                  			'uid' 			=>  $uid,
+                  			'oid' 			=>  $oid,
+        				);
         
         //TODO I think this is not necessary ... we go with the  search only right?
         if(!$search)
@@ -40,15 +65,6 @@ class Clients extends Admin_Controller {
         	$uid = uri_assoc('uid');
         	$oid = uri_assoc('oid');
         }
-       
-        $params = array(
-        			'paginate'		=>	TRUE,
-                    'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
-                    'wanted_page'	=>	$this->get_wanted_page(),
-                    'search'		=>  $search,
-        			'uid' 			=>  $uid,
-        			'oid' 			=>  $oid,
-        );
         
         //if the user clicked on the top of the table column to change the display order ...
         $user_order = explode('_', uri_assoc('order_by')); 

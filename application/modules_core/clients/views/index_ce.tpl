@@ -1,14 +1,15 @@
 {assign 'people' $contacts.people}
 {assign 'orgs' $contacts.orgs}
+{assign 'total_number' $contacts.total_number}
 {assign 'language' 'it'}
 
 <div class="contact_search">
-<form method="post" action="">
+<form method="post" name="search" action="">
 	<div>
 		
-		{"{t}search{/t}"|capitalize}: <input class="contact_search" type="text" name="search" value="">
+		{"{t}search{/t}"|capitalize}: <input class="contact_search" type="text" name="q" value="">
 		{if $searched_string != ""}
-		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}"</em>
+		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}" {t}produced{/t} {$total_number|default:0} {t}results{/t}</em>
 		{/if}
 	</div>
 </form>
@@ -74,7 +75,7 @@
     <tr class="hoverall">
     	{assign 'url' value="$baseurl/clients/details/oid/{$organization->oid}"}
     	<td class="counter" rowspan="2">{counter}</td>
-    	<td class="name">{a url=$url text=$organization->o|truncate:32:" [...]":true}</td>
+    	<td class="name">{a url=$url text=$organization->o|truncate:30:" [...]":true}</td>
     	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'n.d.'}</td>
     	<td class="tel">{$organization->telephoneNumber|default:'n.d.'}</td>
     </tr>

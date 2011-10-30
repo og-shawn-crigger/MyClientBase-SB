@@ -31,7 +31,8 @@
         </script>
 
 	</head>
-	<body>
+	<!-- DAM -->
+	<body OnLoad="document.search.q.focus();">
 
 		<div id="header_wrapper">
 

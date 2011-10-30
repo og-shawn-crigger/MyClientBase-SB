@@ -57,7 +57,20 @@ class Mdl_Clients extends MY_Model {
     	$rest_info = $rest_return['status'];										
     	
     	//pagination
-    	isset($rest_info['results_number']) ? $params['total_rows'] = $rest_info['results_number'] : $params['total_rows'] = 0; 
+    	isset($rest_info['results_number']) ? $params['total_rows'] = $rest_info['results_number'] : $params['total_rows'] = 0;
+
+    	//when retrieving contacts I get the total number of items (orgs + people) and the total number of items per people and orgs
+    	//I take as good result the highest between total number people and orgs
+    	if(!empty($rest_info['result_number_people']) && !empty($rest_info['result_number_orgs']))
+    	{
+    		if($rest_info['result_number_people'] >= $rest_info['result_number_orgs'])
+    		{
+    			$params['total_rows'] = $rest_info['result_number_people'];
+    		} else {
+    			$params['total_rows'] = $rest_info['result_number_orgs'];
+    		}
+    	}
+    	
     	$this->_prep_pagination($params);
     	
     	//prepare return for output
@@ -85,7 +98,7 @@ class Mdl_Clients extends MY_Model {
     	if(empty($params['client_id']) && empty($params['uid']) && empty($params['oid']))
     	{
     		//this is the return for the contact search form
-    		$output = array('people' => $people, 'orgs' => $orgs);
+    		$output = array('people' => $people, 'orgs' => $orgs, 'total_number' => $rest_info['results_number']);
     		return $output;
     	} else {
 
@@ -261,16 +274,17 @@ class Mdl_Clients extends MY_Model {
         }
     }
     
-    
     //overrides _prep_pagination function
     private function _prep_pagination($params) {
     
     	if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
     
     		$this->load->library('pagination');
-    
+    		
+    		empty($params['page']) ? $page = uri_assoc('page') : $page = $params['page'];
+    		
     		$config = array(
-        		   					'base_url'			=>	base_url(),
+        		   					'base_url'			=>	site_url('/clients/index/page'), //TODO aaaaa
         		   					'total_rows'		=>	$params['total_rows'],
         		   					'per_page'			=>	$params['items_page'],
         		   					'next_link'			=>	$this->lang->line('next') . ' >',
@@ -278,12 +292,12 @@ class Mdl_Clients extends MY_Model {
         		   					'cur_tag_open'		=>	'<span class="active_link">',
         		   					'cur_tag_close'		=>	'</span>',
         		   					'num_links'			=>	3,
-        		   					'cur_page'			=>  uri_assoc('page'), //$this->offset;
+        		   					'cur_page'			=>  $page, //$this->offset;
     		);
-    
+    		
     		$this->pagination->initialize($config);
     		$this->page_links = $this->pagination->create_links();
-    		$params['items_page'] > 0 ? $this->current_page = (uri_assoc('page') / $params['items_page']) + 1 : $this->current_page = 0;
+    		$params['items_page'] > 0 ? $this->current_page = ($page / $params['items_page']) + 1 : $this->current_page = 0;
     		$params['items_page'] > 0 ? $this->num_pages = ceil($params['total_rows'] / $params['items_page']) : $this->num_pages = 0;
     	}
     }    
