@@ -43,3 +43,9 @@ msgstr "preventivo"
 
 msgid "edit"
 msgstr "modifica"
+
+msgid "produced"
+msgstr "ha prodotto"
+
+msgid "results"
+msgstr "risultati"

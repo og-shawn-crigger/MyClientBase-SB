@@ -4,10 +4,9 @@
 {assign 'language' 'it'}
 
 <div class="contact_search">
-<form method="post" name="search" action="">
+<form method="post" action="">
 	<div>
-		
-		{"{t}search{/t}"|capitalize}: <input class="contact_search" type="text" name="q" value="">
+		{"{t}search{/t}"|capitalize}: <input class="contact_search" type="text" name="search" id="search-box" value="">
 		{if $searched_string != ""}
 		<em style="font-size: 0.7em; margin-left: 15px;">{t}last search{/t}: "{$searched_string}" {t}produced{/t} {$total_number|default:0} {t}results{/t}</em>
 		{/if}

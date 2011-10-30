@@ -1,4 +1,5 @@
 <?php $this->load->view('dashboard/header'); ?>
+<?php echo $js_autofocus; ?>
 
 <div class="grid_14" id="content_wrapper">
 

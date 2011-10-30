@@ -86,6 +86,7 @@ class Clients extends Admin_Controller {
         if($search || $uid || $oid) $data['made_search'] = true;
         
         //loading Smarty template
+        $data['js_autofocus'] = $this->load->view('dashboard/jquery_set_focus', array('id'=>'search-box'), true);
         $data['middle'] = $this->plenty_parser->parse('index_ce.tpl', $data, true, 'smarty', 'clients');
         
         $this->load->view('index_ce', $data);

@@ -254,11 +254,11 @@ div.contact_search {
 	color: #fff;
 	background: url(../img/section_bg.jpg) repeat-x;
 	height: 50px;
-	line-height:50px;
+	line-height: 50px;
 	padding-left: 20px;
 	margin-top: 0px;
 	margin-bottom: 10px;
-	font-size: 20px;
+	font-size: 12px;
 	font-weight: bold;
 	position: relative;
 	/*--Top right rounded corner--*/
