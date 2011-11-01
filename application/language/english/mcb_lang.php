@@ -514,5 +514,6 @@ $lang['st'] = 'State';
 $lang['telephoneNumber'] = 'Telephone';
 $lang['vatNumber'] = 'Vat Number';
 $lang['entryCreatedBy'] = 'Created by';
+$lang['entryUpdatedBy'] = 'Updated by';
 $lang['homePostalAddress'] = 'Address';
 ?>

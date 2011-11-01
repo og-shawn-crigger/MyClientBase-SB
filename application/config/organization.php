@@ -8,7 +8,7 @@ $config['organization_show_fields'] = array(
 										 'businessActivity', 
 										 'c','codiceFiscale',
 										 'description', 
-										 'enabled', 
+										 'enabled', 'entryUpdatedBy', 'entryCreatedBy',
 										 'facsimileTelephoneNumber',
 										 'l',
 										 'o', 'oURL', 'omail',
@@ -17,6 +17,6 @@ $config['organization_show_fields'] = array(
 										 'vatNumber',
 									);
 
-$config['organization_hidden_fields'] = array( 'oid');
+$config['organization_hidden_fields'] = array( 'oid','client_id');
 
 /* End of person.php */

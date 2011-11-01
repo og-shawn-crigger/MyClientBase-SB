@@ -105,14 +105,21 @@ class Clients extends Admin_Controller {
             )
         );
 
-        $contact = $this->retrieve_contact();
-        if(isset($contact->uid)) $obj = 'person';
+        $obj = uri_assoc('add'); //new contact request => prepare empty form
+        
+        $uid = $this->input->post('uid');
+        $oid = $this->input->post('oid');
+        if(isset($uid) and $uid !== false) $obj = 'person';  //the empty form has been submitted and now it's ready for save
+        if(isset($oid) and $oid !== false) $obj = 'organization';
+        
+        $contact = $this->retrieve_contact();  
+        if(isset($contact->uid)) $obj = 'person'; // a contact has been selected to be edited
         if(isset($contact->oid)) $obj = 'organization';
         
         if ($this->mdl_clients->validate($obj)) {
 
         	//it's a submit
-            $this->mdl_clients->save();
+            $this->mdl_clients->save($obj);
             
 //             $contact_id = ($contact_id) ? $contact_id : $this->db->insert_id();
 //             foreach ($this->input->post('client_settings') as $key=>$value) {
@@ -135,14 +142,27 @@ class Clients extends Admin_Controller {
 
             $this->load->helper('form');
 			
- 			
+ 			//preparing the form
             if (!$_POST) {
                 //$this->mdl_clients->prep_validation($contact_id);
-            	foreach ($contact as $key => $value) {
-            		if($key != "properties") $this->mdl_clients->form_values[$key] = $value;
-            	}
-            	//TODO maybe it's better to use mdl_client_ce and then to modify the template accordingly
-            	//$this->mdl_clients->custom_fields = array(); //we don't need custom fields any more because they can be defined in the ldap schema
+                if(!is_object($contact)) {
+                	//preparing empty form to add a new com
+                	$this->contact->getProperties($obj);
+                	//creating an empty contact
+                	$contact = new Mdl_Person();
+                	$properties = $this->contact->properties;
+                	foreach ($properties as $key => $value) {
+                		$contact->$key = '';
+                	}
+                	$contact->properties = $properties;
+					$contact = $this->prepareShow($obj,$contact);
+                	
+                	//$contact = array_keys($properties);
+                } else {
+	            	foreach ($contact as $key => $value) {
+	            		if($key != "properties") $this->mdl_clients->form_values[$key] = $value;
+	            	}
+                }
             }
 
             $data = array(
@@ -245,15 +265,20 @@ class Clients extends Admin_Controller {
     		
     		if($rest_return->uid) $obj = 'person';
     		if($rest_return->oid) $obj = 'organization';
-    		
-    		$this->$obj->prepareShow();
-    		$contact->show_fields = $this->$obj->show_fields;
-    		$contact->hidden_fields = $this->$obj->hidden_fields;    			
+    		$contact = $this->prepareShow($obj,$contact);
     	}
     	
     	return $contact;
     }
 
+    function prepareShow($obj, &$contact)
+    {
+    	$this->$obj->prepareShow();
+    	$contact->show_fields = $this->$obj->show_fields;
+    	$contact->hidden_fields = $this->$obj->hidden_fields;
+    	return $contact;
+    }
+    
     function delete() {
 
         $client_id = uri_assoc('client_id');

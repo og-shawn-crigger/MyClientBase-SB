@@ -33,13 +33,21 @@ class Mdl_Person extends Mdl_Contact {
     	$this->hidden_fields = $this->config->item('person_hidden_fields');
     }
     
-    public function update($input)
-    {	
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));
-    	$rest_return = $this->rest->get('update', $input, 'serialize');
+//     public function update($input)
+//     {	
+//     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/')); //TODO is this necessary?
+//     	$rest_return = $this->rest->get('update', $input, 'serialize');
     
-    	return $rest_return;
-    }    
+//     	return $rest_return;
+//     }
+
+//     public function create($input)
+//     {
+//     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/')); //TODO is this necessary?
+//     	$rest_return = $this->rest->get('create', $input, 'serialize');
+    
+//     	return $rest_return;
+//     }    
 }
 
 ?>

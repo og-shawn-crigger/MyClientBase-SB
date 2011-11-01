@@ -19,12 +19,10 @@
 <div class="left-block">
 
 	<div style="width: 100%;">
-		<form method="post" action="">
+		<form method="post" action="{$baseurl}/clients/form/add/person">
 		{if $made_search}
 		<h3 class="title_black">{"{t}people{/t}"|capitalize} 
-			<!-- 
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
-			 -->
 		</h3>
 		{/if}
 		</form>
@@ -57,12 +55,10 @@
 <div class="right-block">
 
 	<div style="width: 100%;">
-		<form method="post" action="">
+		<form method="post" action="{$baseurl}/clients/form/add/organization">
 		{if $made_search}
 		<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
-			<!--
 			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
-			-->
 		</h3>
 		{/if}
 		</form>

@@ -224,15 +224,18 @@ class Mdl_Clients extends MY_Model {
 
     }
 
-    public function save() {
+    public function save($obj = null) {
 	
     	//TODO this function is ok for the UPDATE but not for the CREATE yet
         $data = array();
         
-        if(isset($this->form_values['uid'])) $obj = 'person';
-        
-        if(isset($this->form_values['oid'])) $obj = 'organization';
-
+   		if(is_null($obj))
+   		{
+	        if(isset($this->form_values['uid'])) $obj = 'person';
+	        
+	        if(isset($this->form_values['oid'])) $obj = 'organization';
+   		}
+   		
         $this->contact->getProperties($obj);
         $properties = $this->contact->properties;
         
@@ -243,11 +246,12 @@ class Mdl_Clients extends MY_Model {
         	}
         }
         
-        //mandatory fields for ldap
+        //mandatory fields for ldap for both objects
+        $data['entryUpdatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+        
+        //for person
         if($obj == 'person')
         {
-	        if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
-	        if(!isset($data['entryUpdatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
 	        if(!isset($data['category'])) $data['category'] = 'mycategory';
 	        $data['cn'] = $data['sn'].' '.$data['givenName'];
 	        $data['displayName'] = $data['givenName'].' '.$data['sn'];
@@ -255,6 +259,7 @@ class Mdl_Clients extends MY_Model {
 	        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?    
         }        
 
+        //for organization
         if($obj == 'organization')
         {
         	
@@ -265,12 +270,24 @@ class Mdl_Clients extends MY_Model {
         
         if($obj == 'person')
         {
-        	$this->person->update($data);
+        	if(!empty($data['uid'])) 
+        	{
+        		$this->person->update($data);
+        	} else {
+        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+        		$this->person->create($data);
+        	}
         }
         
         if($obj == 'organization')
         {
-        	$this->organization->update($data);
+        	if(!empty($data['oid'])) 
+        	{
+        		$this->organization->update($data);
+        	} else {
+        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
+        		$this->organization->create($data);
+        	}	
         }
     }
     

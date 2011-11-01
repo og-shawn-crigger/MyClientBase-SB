@@ -499,5 +499,6 @@ $lang['st'] = 'Provincia';
 $lang['telephoneNumber'] = 'Telefono';
 $lang['vatNumber'] = 'Partita Iva';
 $lang['entryCreatedBy'] = 'Creato da';
+$lang['entryUpdatedBy'] = 'Aggiornato da';
 $lang['homePostalAddress'] = 'Indirizzo';
 ?>
