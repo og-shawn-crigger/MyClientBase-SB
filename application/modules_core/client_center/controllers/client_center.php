@@ -124,8 +124,10 @@ class Client_Center extends Client_Center_Controller {
 		}
 
 		$this->load->library('invoices/lib_output');
+		
+		$this->load->model('invoices/mdl_invoice_history');
 
-        $this->mdl_invoices->save_invoice_history($invoice_id, $this->session->userdata('user_id'), $this->lang->line('client_generated_invoice_pdf'));
+        $this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('client_generated_invoice_pdf'));
 
 		$this->lib_output->pdf($invoice_id, $this->_get_invoice_template());
 
@@ -142,8 +144,10 @@ class Client_Center extends Client_Center_Controller {
 		}
 
 		$this->load->library('invoices/lib_output');
+		
+		$this->load->model('invoices/mdl_invoice_history');
 
-		$this->mdl_invoices->save_invoice_history($invoice_id, $this->session->userdata('user_id'), $this->lang->line('client_generated_invoice_html'));
+		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('client_generated_invoice_html'));
 
 		$this->lib_output->html($invoice_id, $this->_get_invoice_template());
 

@@ -2,74 +2,62 @@
 
 class Client_Statement extends Admin_Controller {
 
-    public function __construct() {
+	public function __construct() {
 
-        parent::__construct();
+		parent::__construct();
 
-    }
+	}
 
-    public function index() {
+	public function index() {
 
-        $this->load->model('clients/mdl_clients');
+		$this->load->model('clients/mdl_clients');
 
-        $client_params = array(
-            'select'    =>  'mcb_clients.*'
-        );
+		$client_params = array(
+			'select' => 'mcb_clients.*'
+		);
 
-        $data = array(
-            'output_types'  =>  array('pdf','view'),
-            'clients'       =>  $this->mdl_clients->get($client_params)
-        );
+		$data = array(
+			'output_types' => array('pdf', 'view'),
+			'clients' => $this->mdl_clients->get($client_params)
+		);
 
-        $this->load->view('client_statement', $data);
+		$this->load->view('client_statement', $data);
 
-    }
+	}
 
-    public function jquery_display_results($output_type = 'view', $client_id = NULL, $include_closed_invoices = 'false', $include_quotes = 'false') {
+	public function jquery_display_results($output_type = 'view', $client_id = NULL, $include_closed_invoices, $include_quotes) {
 
-        $this->load->model('invoices/mdl_invoices');
+		$this->load->model(array('invoices/mdl_invoices', 'reports/mdl_client_statement'));
 
-        $params = array();
+		$include_closed_invoices = ($include_closed_invoices == 'undefined') ? FALSE : TRUE;
+		$include_quotes = ($include_quotes == 'undefined') ? FALSE : TRUE;
 
-        if ($include_closed_invoices == 'false') {
+		$invoices = $this->mdl_client_statement->get_invoices($client_id, $include_closed_invoices, $include_quotes);
 
-            $params['where']['invoice_status_type'] = 1;
+		$totals = $this->mdl_client_statement->get_totals($invoices);
 
-        }
-		
-		if ($include_quotes == 'false') {
+		$data = array(
+			'invoices' => $invoices,
+			'totals' => $totals
+		);
 
-            $params['where']['invoice_is_quote'] = 0;
+		if ($output_type == 'view') {
 
-        }
+			$this->load->view('client_statement_view', $data);
 
-        if ($client_id) {
+		}
 
-            $params['where']['mcb_invoices.client_id'] = $client_id;
+		elseif ($output_type == 'pdf') {
 
-        }
+			$this->load->helper($this->mdl_mcb_data->setting('pdf_plugin'));
 
-        $data = array(
-            'invoices'  =>  $this->mdl_invoices->get($params)
-        );
+			$html = $this->load->view('client_statement_pdf', $data, TRUE);
 
-        if ($output_type == 'view') {
+			pdf_create($html, url_title($this->lang->line('client_statement'), '_'), TRUE);
 
-            $this->load->view('client_statement_view', $data);
+		}
 
-        }
-
-        elseif ($output_type == 'pdf') {
-
-            $this->load->helper($this->mdl_mcb_data->setting('pdf_plugin'));
-
-            $html = $this->load->view('client_statement_pdf', $data, TRUE);
-
-            pdf_create($html, url_title($this->lang->line('client_statement'), '_'), TRUE);
-
-        }
-
-    }
+	}
 
 }
 

@@ -1,7 +1,5 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
-
 class Mdl_MCB_Client_Data extends MY_Model {
 
     public $settings;

@@ -12,7 +12,9 @@ class Admin_Controller extends MX_Controller {
 
         $this->load->helper('url');
 
-        if (!$this->session->userdata('user_id')) {
+		$user_id = $this->session->userdata('user_id');
+
+        if (!$user_id) {
 
             redirect('sessions/login');
 
@@ -23,6 +25,9 @@ class Admin_Controller extends MX_Controller {
 			self::$is_loaded = TRUE;
 
             $this->load->config('mcb_menu/mcb_menu');
+            
+            //DAM
+            $this->load->config('mcb_menu/active_modules');
 
             modules::run('mcb_menu/check_permission', $this->uri->uri_string(), $this->session->userdata('global_admin'));
 
@@ -30,11 +35,13 @@ class Admin_Controller extends MX_Controller {
 
 			$this->load->helper(array('uri', 'mcb_currency', 'mcb_invoice', 'mcb_date', 'mcb_icon', 'mcb_custom', 'mcb_app'));
 
-            $this->load->model(array('mcb_modules/mdl_mcb_modules','mcb_data/mdl_mcb_data'));
+            $this->load->model(array('mcb_modules/mdl_mcb_modules','mcb_data/mdl_mcb_data','mcb_data/mdl_mcb_userdata'));
 
 			$this->mdl_mcb_modules->set_module_data();
 
             $this->mdl_mcb_data->set_session_data();
+
+			$this->mdl_mcb_userdata->set_session_data($user_id);
 
 			$this->mdl_mcb_modules->load_custom_languages();
 

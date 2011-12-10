@@ -56,7 +56,7 @@ class Invoice_Mailer extends Admin_Controller {
                 $this->mdl_mailer->set_form_value('email_from_name', $invoice->from_first_name . ' ' . $invoice->from_last_name);
                 $this->mdl_mailer->set_form_value('email_from_email', $invoice->from_email_address);
                 $this->mdl_mailer->set_form_value('email_subject', $email_subject);
-                $this->mdl_mailer->set_form_value('email_body', '');
+                $this->mdl_mailer->set_form_value('email_body', $this->mdl_mcb_data->setting('email_body'));
                 $this->mdl_mailer->set_form_value('invoice_template', uri_assoc('invoice_template', 4));
                 $this->mdl_mailer->set_form_value('email_cc', $this->mdl_mcb_data->setting('default_cc'));
                 $this->mdl_mailer->set_form_value('email_bcc', $this->mdl_mcb_data->setting('default_bcc'));

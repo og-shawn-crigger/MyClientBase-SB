@@ -46,7 +46,7 @@
                     <dd>
                         <select name="client_id" id="client_id">
 
-                            <option value=""></option>
+                            <option value="0"><?php echo $this->lang->line('all_clients'); ?></option>
 
                             <?php foreach ($clients as $client) { ?>
 

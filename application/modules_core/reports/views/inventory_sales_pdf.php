@@ -1,23 +1,17 @@
-<?php $this->load->view('css'); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<h1><?php echo $this->lang->line('inventory_sales'); ?></h1>
+		<?php $this->load->view('css'); ?>
 
-<table style="width: 100%;">
+	</head>
+	<body>
 
-    <tr>
-        <th><?php echo $this->lang->line('item'); ?></th>
-        <th><?php echo $this->lang->line('quantity'); ?></th>
-        <th><?php echo $this->lang->line('amount'); ?></th>
-    </tr>
+		<h1><?php echo $this->lang->line('inventory_sales'); ?></h1>
 
-    <?php foreach ($items as $item) { ?>
+		<?php $this->load->view('inventory_sales_view'); ?>
 
-    <tr>
-        <td><?php echo $item->inventory_name; ?></td>
-        <td><?php echo format_number($item->inventory_sum_quantity); ?></td>
-        <td><?php echo display_currency($item->inventory_sum_amount); ?></td>
-    </tr>
-
-    <?php } ?>
-
-</table>
+	</body>
+</html>

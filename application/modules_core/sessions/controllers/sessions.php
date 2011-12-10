@@ -9,6 +9,14 @@ class Sessions extends CI_Controller {
         $this->load->library(array('session'));
 
         $this->load->database();
+		
+		if (!$this->db->table_exists('mcb_users')) {
+
+			$this->load->helper('url');
+
+			redirect('setup');
+
+		}
 
         $this->load->helper('mcb_app');
 
@@ -62,9 +70,9 @@ class Sessions extends CI_Controller {
                 }
 
                 else {
-
-                    redirect('dashboard');
-
+					//DAM's quickie
+                    //redirect('dashboard');
+                	redirect('clients');
                 }
 
             }

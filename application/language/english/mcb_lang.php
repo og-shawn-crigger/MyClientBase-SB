@@ -1,4 +1,4 @@
-<?php //if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $lang['actions'] = 'Actions';
 $lang['active_client'] = 'Active Client';
@@ -460,60 +460,35 @@ $lang['inventory_type_in_use'] = 'The Inventory Type specified is already in use
 /* NEW FOR 0.9.6 */
 //$lang['item_tax_option_0'] = 'Add to Total';
 //$lang['item_tax_option_1'] = 'Include in Total';
+$lang['account_deposits'] = 'Account Deposits';
+$lang['apply_credit'] = 'Apply Credit';
+$lang['calendar_view'] = 'Calendar View';
 $lang['control_center'] = 'Control Center';
 $lang['copy'] = 'Copy';
+$lang['credit_amount'] = 'Credit Amount';
+$lang['dashboard_show_quotes'] = 'Show Quotes';
 $lang['email_body_template'] = 'Default Body Template';
 $lang['email_footer_template'] = 'Default Footer Template';
+$lang['enter_deposit'] = 'Enter Deposit';
 $lang['initial_stock_quantity'] = 'Initial Stock Quantity';
+$lang['invoice_count'] = 'Invoice Count';
 $lang['item_tax_option_0'] = 'Add to Amount';
 $lang['item_tax_option_1'] = 'Include in Amount';
+$lang['list_view'] = 'List View';
 $lang['my_profile'] = 'My Profile';
-$lang['visible_to_all_users'] = 'Visible to All Users';
+$lang['sales'] = 'Sales';
+$lang['sales_with_tax'] = 'Sales With Tax';
+$lang['sales_by_customer'] = 'Sales by Customer';
+
+/* Calendar */
+$lang['calendarToday'] = 'Today';
+$lang['calendarDay'] = 'Day';
+$lang['calendarWeek'] = 'Week';
+$lang['calendarMonth'] = 'Month';
+$lang['months'] = array("January","February","March","April","May","June","July","August","September","October","November","December");
+$lang['monthsShort'] = array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+$lang['days'] = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+$lang['daysShort'] = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
 
-/* SMALL BUSINESS */
-$lang['mysearch'] = 'Search';
-$lang['lastsearch'] = 'Last search';
-$lang['people'] = 'People';
-$lang['No person found'] = 'No person found';
-$lang['organizations'] = 'Organizations';
-$lang['No organization found'] = 'No organization found';
-$lang['anniversary'] = 'Anniversary';
-$lang['assistantName'] = 'Assistant Name';
-$lang['assistantPhone'] = 'Assistant Phone';
-$lang['birthDate'] = 'Birthdate';
-$lang['businessRole'] = 'Business Role';
-$lang['codiceFiscale'] = 'Codice Fiscale';
-$lang['cn'] = 'Common Name';
-$lang['enabled'] = 'Activate';
-$lang['fileAs'] = 'File As'; 
-$lang['givenName'] = 'First Name';
-$lang['homeFacsimileTelephoneNumber'] = 'Fax (home)';
-$lang['mail'] = 'Email';
-$lang['mobile'] = 'Mobile';
-$lang['mozillaHomeCountryName'] = 'Country';
-$lang['mozillaHomeLocalityName'] = 'City';
-$lang['mozillaHomePostalCode'] = 'Zip';
-$lang['mozillaHomeState'] = 'State';
-$lang['note'] = 'Note'; 
-$lang['o'] = 'Organization';
-$lang['preferredLanguage'] = 'Preferred Language';
-$lang['sn'] = 'Last Name';
-$lang['title'] = 'Title';
-$lang['businessActivity'] = 'Business Activity';
-$lang['c'] = 'Country';
-$lang['description'] = 'Description';
-$lang['facsimileTelephoneNumber'] = 'Fax';
-$lang['l'] = 'City';
-$lang['o'] = 'Organization';
-$lang['oURL'] = 'Web Site';
-$lang['omail'] = 'Email';
-$lang['postalAddress'] = 'Address';
-$lang['postalCode'] = 'Zip';
-$lang['st'] = 'State';
-$lang['telephoneNumber'] = 'Telephone';
-$lang['vatNumber'] = 'Vat Number';
-$lang['entryCreatedBy'] = 'Created by';
-$lang['entryUpdatedBy'] = 'Updated by';
-$lang['homePostalAddress'] = 'Address';
 ?>

@@ -18,12 +18,12 @@ class Inventory_Sales extends Admin_Controller {
 
     }
 
-    public function jquery_display_results($output_type = 'view') {
+    public function jquery_display_results($output_type = 'view', $from_date, $to_date) {
 
         $this->load->model(array('invoices/mdl_items', 'mdl_inventory_sales'));
 
         $data = array(
-            'items'  =>  $this->mdl_inventory_sales->get()
+            'items'  =>  $this->mdl_inventory_sales->get($from_date, $to_date)
         );
 
         if ($output_type == 'view') {

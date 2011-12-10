@@ -33,6 +33,8 @@ class Inventory extends Admin_Controller {
     }
 
     public function form() {
+		
+		$inventory_id = uri_assoc('inventory_id');
 
         if (!$this->mdl_inventory->validate()) {
 
@@ -40,9 +42,9 @@ class Inventory extends Admin_Controller {
 
             $this->load->helper('form');
 
-            if (!$_POST AND uri_assoc('inventory_id')) {
+            if (!$_POST AND $inventory_id) {
 
-                $this->mdl_inventory->prep_validation(uri_assoc('inventory_id'));
+                $this->mdl_inventory->prep_validation($inventory_id);
 
             }
 
@@ -56,8 +58,14 @@ class Inventory extends Admin_Controller {
         }
 
         else {
+			
+			if (!$inventory_id) {
+				
+				$this->load->model('mdl_inventory_stock');
+				
+			}
 
-            $this->mdl_inventory->save($this->mdl_inventory->db_array(), uri_assoc('inventory_id'));
+            $this->mdl_inventory->save($this->mdl_inventory->db_array(), $inventory_id, $this->input->post('initial_stock_quantity'));
 
             $this->redir->redirect('inventory');
 
@@ -93,7 +101,7 @@ class Inventory extends Admin_Controller {
             'item_name'			=>	$item->inventory_name,
             'item_cost'			=>	format_number($item->inventory_unit_price, FALSE),
             'item_description'	=>	$item->inventory_description,
-            'tax_rate_id'       =>  $item->tax_rate_id
+            'tax_rate_id'       =>  $item->inventory_tax_rate_id
         );
 
         echo json_encode($array);
@@ -106,7 +114,7 @@ class Inventory extends Admin_Controller {
 
         $inventory_id = $this->input->post('inventory_id');
 
-        $inventory_stock_quantity = $this->input->post('inventory_stock_quantity');
+        $inventory_stock_quantity = standardize_number($this->input->post('inventory_stock_quantity'));
 
         $inventory_stock_notes = $this->input->post('inventory_stock_notes');
 
@@ -126,7 +134,7 @@ class Inventory extends Admin_Controller {
 
         $inventory = $this->mdl_inventory->get($params);
 
-        echo $inventory->inventory_stock;
+        echo format_number($inventory->inventory_stock);
 
     }
 

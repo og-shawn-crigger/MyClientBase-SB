@@ -121,15 +121,21 @@ class Clients extends Admin_Controller {
         	//it's a submit
             $this->mdl_clients->save($obj);
             
-//             $contact_id = ($contact_id) ? $contact_id : $this->db->insert_id();
-//             foreach ($this->input->post('client_settings') as $key=>$value) {
-//                 if ($value) {
-//                     $this->mdl_mcb_client_data->save($contact_id, $key, $value);
-//                 }
-//                 else {
-//                     $this->mdl_mcb_client_data->delete($contact_id, $key);
-//                 }
-//             }
+            if($uid)
+            {
+            	$contact_id = $uid;
+            } else {
+            	$contact_id = $oid;
+            }
+             
+            foreach ($this->input->post('client_settings') as $key=>$value) {
+                if ($value) {
+                    $this->mdl_mcb_client_data->save($contact_id, $key, $value);
+                }
+                else {
+                    $this->mdl_mcb_client_data->delete($contact_id, $key);
+                }
+            }
 
             redirect($this->session->userdata('last_index'));  //TODO what is this?
 

@@ -1,5 +1,5 @@
 <dl>
-	<dt><?php echo $this->lang->line('default_receipt_template'); ?></dt>
+	<dt><?php echo $this->lang->line('default_receipt_template'); ?>: </dt>
 	<dd>
 	<select name="payment_settings[default_receipt_template]">
 		<?php foreach ($receipt_templates as $template) { ?>

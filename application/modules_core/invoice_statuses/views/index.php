@@ -4,7 +4,11 @@
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('invoice_statuses'); ?><?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_status'))); ?></h3>
+		<h3 class="title_black"><?php echo $this->lang->line('invoice_statuses'); ?>
+		<span style="font-size: 60%;">
+		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_status'))); ?>
+		</span>
+		</h3>
 
 		<div class="content toggle no_padding">
 
@@ -44,6 +48,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('invoice_statuses/sidebar', 'settings/sidebar'),'hide_quicklinks'=>TRUE)); ?>
+<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('invoice_statuses/sidebar'))); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

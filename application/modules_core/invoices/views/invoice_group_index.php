@@ -4,7 +4,11 @@
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('invoice_groups'); ?><?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_group'))); ?></h3>
+		<h3 class="title_black"><?php echo $this->lang->line('invoice_groups'); ?>
+		<span style="font-size: 60%;">
+		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_group'))); ?>
+		</span>
+		</h3>
 
 		<?php $this->load->view('dashboard/system_messages'); ?>
 
@@ -46,6 +50,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('invoices/invoice_group_sidebar'),'hide_quicklinks'=>TRUE)); ?>
+<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('invoices/invoice_group_sidebar'))); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

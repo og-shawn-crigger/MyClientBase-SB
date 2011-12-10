@@ -2,7 +2,7 @@
 
 <?php $this->load->view('dashboard/jquery_date_picker'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_10" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -15,7 +15,7 @@
 		<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
 			<dl>
-				<dt><label><?php echo $this->lang->line('invoice'); ?>: </label></dt>
+				<dt><label><?php if (!uri_assoc('invoice_id')) { ?>* <?php } ?><?php echo $this->lang->line('invoice'); ?>: </label></dt>
 				<dd>
 					<?php if (!uri_assoc('invoice_id')) { ?>
 					<select name="invoice_id" id="invoice_id">
@@ -33,12 +33,12 @@
 			</dl>
 
 			<dl>
-				<dt><label><?php echo $this->lang->line('amount'); ?>: </label></dt>
+				<dt><label>* <?php echo $this->lang->line('amount'); ?>: </label></dt>
 				<dd><input type="text" name="payment_amount" value="<?php echo format_number($this->mdl_payments->form_value('payment_amount')); ?>" /></dd>
 			</dl>
 
 			<dl>
-				<dt><label><?php echo $this->lang->line('payment_date'); ?>: </label></dt>
+				<dt><label>* <?php echo $this->lang->line('payment_date'); ?>: </label></dt>
 				<dd><input type="text" name="payment_date" class="datepicker" value="<?php echo $this->mdl_payments->form_value('payment_date'); ?>" /></dd>
 			</dl>
 
@@ -47,6 +47,7 @@
 				<dd>
 					<select name="payment_method_id">
 						<option <?php if (!$this->mdl_payments->form_value('payment_method_id')) { ?>selected="selected"<?php } ?>></option>
+						<option value="9999" <?php if ($this->mdl_payments->form_value('payment_method_id') == '9999') { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('apply_credit'); ?></option>
 						<?php foreach ($payment_methods as $payment_method) { ?>
 						<option value="<?php echo $payment_method->payment_method_id; ?>" <?php if ($this->mdl_payments->form_value('payment_method_id') == $payment_method->payment_method_id) { ?>selected="selected"<?php } ?>><?php echo $payment_method->payment_method; ?></option>
 						<?php } ?>
@@ -79,6 +80,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>'payments/sidebar')); ?>
+<?php $this->load->view('dashboard/sidebar'); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

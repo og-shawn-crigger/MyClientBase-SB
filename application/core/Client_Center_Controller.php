@@ -22,7 +22,7 @@ class Client_Center_Controller extends MX_Controller {
 
         if ($var_required and (!$this->session->userdata($var_required))) {
 
-            redirect('client_center/sessions/login');
+            redirect('sessions/login');
 
         }
 

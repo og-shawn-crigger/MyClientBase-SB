@@ -67,7 +67,7 @@ body {
 
 #center_wrapper {
 	clear: both;
-	margin-top: 20px;
+	margin-top: 10px;
 }
 
 .section_wrapper {
@@ -92,8 +92,8 @@ table {
 }
 
 table tr td {
-	/* height : 34px;
-	line-height : 34px; */ 
+	height : 34px;
+	line-height : 34px;
 	padding: 0 10px;
 }
 
@@ -205,16 +205,7 @@ table th {
 	padding: 0 10px;
 	text-align: left;
 }
-
-tr.hoverall {
-	height : 34px;
-	line-height : 34px; 
-}
-
-tr.hoverall:hover {
-	background:#EFEFEF;
-}
-
+tr.hoverall:hover {background:#EFEFEF;}
 .quicklinks {
 	padding-top: 0 !important;
 }

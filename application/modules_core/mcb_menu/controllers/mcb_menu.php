@@ -2,18 +2,23 @@
 
 class MCB_Menu extends Admin_Controller {
 
-    function __construct() {
+	function __construct() {
 
-        parent::__construct();
+		parent::__construct();
 
-    }
+	}
 
-    function generate() {
+	function generate() {
 
         $menu_items = $this->config->item('mcb_menu');
-
+		
+        //DAM
+        $status_items = $this->config->item('mcb_module');
+        
         foreach ($menu_items as $key=>$menu_item) {
-
+		//DAM
+        	if($status_items[$key]=="disabled") unset($menu_items[$key]); 
+        	        	
             if (!$this->session->userdata('global_admin')) {
 
                 if (isset($menu_item['global_admin'])) {
@@ -44,52 +49,111 @@ class MCB_Menu extends Admin_Controller {
 
     }
 
-    function display($params) {
+	function generate_control_center() {
 
-        $data = array(
-            'menu_items'    =>  $this->generate()
-        );
+		$control_center = $this->config->item('control_center');
 
-        $this->load->view($params['view'], $data);
+		foreach ($control_center as $key=>$item) {
 
-    }
+			if (!$this->session->userdata('global_admin')) {
 
-    function check_permission($uri_string, $global_admin) {
+				if (isset($item['global_admin'])) {
 
-        foreach ($this->config->item('mcb_menu') as $menu_item) {
+					unset($control_center[$key]);
 
-            if (strpos($menu_item['href'], $uri_string) === 0) {
+				}
 
-                if (isset($menu_item['global_admin']) and !$global_admin) {
+			}
 
-                    redirect('dashboard');
+		}
 
-                }
+		return $control_center;
 
-            }
+	}
 
-            if (isset($menu_item['submenu'])) {
+	function display($params) {
 
-                foreach ($menu_item['submenu'] as $sub_item) {
+		$data = array(
+			'menu_items'    =>  $this->generate()
+		);
 
-                    if (strpos($sub_item['href'], $uri_string) === 0) {
+		$this->load->view($params['view'], $data);
 
-                        if (isset($sub_item['global_admin']) and !$global_admin) {
+	}
 
-                            redirect('dashboard');
+	function display_control_center($params) {
 
-                        }
+		if ($this->uri->segment(1) == 'dashboard') {
 
-                    }
+			$data = array(
+				'menu_items'    =>  $this->generate_control_center()
+			);
+
+			$this->load->view($params['view'], $data);
+
+		}
+
+	}
+
+	function check_permission($uri_string, $global_admin) {
+
+		foreach ($this->config->item('mcb_menu') as $menu_item) {
+
+        	//DAM's quickie :)
+        	$status_items = $this->config->item('mcb_module');
+        	//if the requested page is part of a disabled module, than redirects to the dashboard        
+        	if(preg_match_all('/^'.$key.'/', $uri_string, $matches) && $status_items[$key]=="disabled")	
+        	{
+        		redirect('clients');;
+        		break;
+        	}
+
+			if (strpos($menu_item['href'], $uri_string) === 0) {
+
+				if (isset($menu_item['global_admin']) and !$global_admin) {
+
+					redirect('dashboard');
+
+				}
+
+			}
+
+			if (isset($menu_item['submenu'])) {
+
+				foreach ($menu_item['submenu'] as $sub_item) {
+
+					if (strpos($sub_item['href'], $uri_string) === 0) {
+
+						if (isset($sub_item['global_admin']) and !$global_admin) {
+
+							redirect('dashboard');
+
+						}
+
+					}
 
 
-                }
+				}
 
-            }
+			}
 
-        }
+		}
 
-    }
+		foreach ($this->config->item('control_center') as $menu_item) {
+
+			if (strpos($menu_item['href'], $uri_string) === 0) {
+
+				if (isset($menu_item['global_admin']) and !$global_admin) {
+
+					redirect('dashboard');
+
+				}
+
+			}
+
+		}
+
+	}
 
 }
 

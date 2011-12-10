@@ -1,29 +1,17 @@
-<?php $this->load->view('css'); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<h1><?php echo $this->lang->line('client_statement'); ?></h1>
+		<?php $this->load->view('css'); ?>
 
-<table style="width: 100%;">
+	</head>
+	<body>
 
-    <tr>
-        <th style="width: 25%;"><?php echo $this->lang->line('client'); ?></th>
-        <th style="width: 15%;"><?php echo $this->lang->line('invoice_number'); ?></th>
-        <th style="width: 15%;"><?php echo $this->lang->line('due_date'); ?></th>
-        <th style="width: 15%;"><?php echo $this->lang->line('total'); ?></th>
-        <th style="width: 15%;"><?php echo $this->lang->line('paid'); ?></th>
-        <th style="width: 15%;"><?php echo $this->lang->line('balance'); ?></th>
-    </tr>
+		<h1><?php echo $this->lang->line('client_statement'); ?></h1>
 
-    <?php foreach ($invoices as $invoice) { ?>
+		<?php $this->load->view('client_statement_view'); ?>
 
-    <tr>
-        <td class="first"><?php echo $invoice->client_name; ?></td>
-        <td><?php echo $invoice->invoice_number; ?></td>
-        <td><?php echo format_date($invoice->invoice_date_entered); ?></td>
-        <td><?php echo display_currency($invoice->invoice_total); ?></td>
-        <td><?php echo display_currency($invoice->invoice_paid); ?></td>
-        <td class="last"><?php echo display_currency($invoice->invoice_balance); ?></td>
-    </tr>
-
-    <?php } ?>
-
-</table>
+	</body>
+</html>

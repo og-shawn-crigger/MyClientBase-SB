@@ -1,32 +1,55 @@
 <?php $this->load->view('dashboard/header'); ?>
 
+<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+
 <script type="text/javascript">
-	$(function() {
 
-        $('#btn_submit').click(function() {
+	$(document).ready(function() {
 
-           var include_closed_invoices = $('#include_closed_invoices').attr('checked');
+		url = '<?php echo site_url('reports/standardize_date'); ?>';
 
-           var output_type = $('#output_type').val();
+		$('#btn_submit').click(function() {
 
-           var client_id = $('#client_id').val();
+			include_closed_invoices = $('#include_closed_invoices').attr('checked');
+			output_type = $('#output_type').val();
+			client_id = $('#client_id').val();
+			from_date = $('#from_date').val();
+			to_date = $('#to_date').val();
 
-           if (output_type == 'view') {
+			$.ajaxSetup({async:false});
 
-               $('#results').load('<?php echo site_url('reports/inventory_sales/jquery_display_results'); ?>' + '/' + output_type + '/' + client_id + '/' + include_closed_invoices);
+			$.post(url, {date: from_date }, function(data) {
+				ts_from_date = data;
+			});
 
-           }
+			$.post(url, {date: to_date }, function(data) {
+				ts_to_date = data;
+			});
 
-           else {
+			if (!ts_from_date) {
+				ts_from_date = 0;
+			}
 
-               window.open('<?php echo site_url('reports/inventory_sales/jquery_display_results'); ?>' + '/' + output_type + '/' + client_id + '/' + include_closed_invoices);
+			if (!ts_to_date) {
+				ts_to_date = 0;
+			}
 
-           }
-           
+			if (output_type == 'view') {
 
-        });
+				$('#results').load('<?php echo site_url('reports/inventory_sales/jquery_display_results'); ?>' + '/' + output_type + '/' + '/' + ts_from_date + '/' + ts_to_date);
+
+			}
+
+			else {
+
+				window.open('<?php echo site_url('reports/inventory_sales/jquery_display_results'); ?>' + '/' + output_type + '/' + ts_from_date + '/' + ts_to_date);
+
+			}
+
+		});
 
 	});
+
 </script>
 
 <div class="grid_10" id="content_wrapper">
@@ -38,6 +61,16 @@
 		<div class="content toggle">
 
 			<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
+
+                <dl>
+                    <dt><label><?php echo $this->lang->line('from_date'); ?>: </label></dt>
+                    <dd><input type="text" name="from_date" id="from_date" class="datepicker" /></dd>
+                </dl>
+
+                <dl>
+                    <dt><label><?php echo $this->lang->line('to_date'); ?>: </label></dt>
+                    <dd><input type="text" name="to_date" id="to_date" class="datepicker" /></dd>
+                </dl>
 
                 <?php $this->load->view('partial_output_type'); ?>
 

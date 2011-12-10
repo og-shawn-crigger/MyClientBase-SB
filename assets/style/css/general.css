@@ -2,7 +2,7 @@
 /* 52framework General StyleSheet - contains styles for all the HTML elements this framework supports */
 
 body {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Open Sans', sans-serif;
 	font-size:75%;
 }
 
@@ -100,6 +100,10 @@ p {margin:0 0 1.52em;}
 p img.left {float:left;margin:1.52em 1.52em 1.52em 0;padding:0;}
 p img.right {float:right;margin:1.52em 0 1.52em 1.52em;}
 
+select, #btn_submit, #btn_cancel {
+	font-family: 'Open Sans';
+}
+
 /* ** ** forms ** ** */
 form fieldset {
 	-webkit-border-radius: 5px;
@@ -191,6 +195,10 @@ input.contact_search {
     padding: 0px;
     padding-left: 5px;
     font-size: 15px;
+}
+
+.col_amount {
+	text-align: right;
 }
 
 .myButton {

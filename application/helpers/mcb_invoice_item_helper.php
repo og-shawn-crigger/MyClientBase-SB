@@ -49,7 +49,7 @@ function invoice_item_tax($item) {
 
 function invoice_item_tax_rate($item) {
 
-    return $item->tax_rate_percent . '%';
+    return format_number($item->tax_rate_percent) . '%';
 
 }
 
@@ -63,7 +63,7 @@ function invoice_item_tax_sum($sum) {
 function invoice_item_tax_sum_name($sum) {
 
     /* For display purposes */
-    return $sum->tax_rate_name . ' @ ' . $sum->tax_rate_percent . '%';
+    return $sum->tax_rate_name . ' @ ' . format_number($sum->tax_rate_percent) . '%';
 
 }
 function invoice_item_total($item) {

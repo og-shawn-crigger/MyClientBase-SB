@@ -2,7 +2,7 @@
 
 <?php $this->load->view('dashboard/jquery_date_picker'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_10" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -99,7 +99,5 @@
 	</div>
 
 </div>
-
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>'invoices/sidebar')); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

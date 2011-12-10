@@ -49,3 +49,6 @@ msgstr "ha prodotto"
 
 msgid "results"
 msgstr "risultati"
+
+msgid "Add"
+msgstr "Aggiungi"

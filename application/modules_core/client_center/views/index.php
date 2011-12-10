@@ -1,4 +1,4 @@
-<?php $this->load->view('header'); ?>
+<?php $this->load->view('header', array('header_insert'=>'jquery_hover_links')); ?>
 
 <?php $this->load->view('jquery_invoice_generate'); ?>
 

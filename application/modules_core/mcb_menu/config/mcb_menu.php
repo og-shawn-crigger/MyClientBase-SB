@@ -2,24 +2,20 @@
 
 $config = array(
     'mcb_menu'  =>  array(
-        'dashboard' =>  array(
-            'title' =>  'dashboard',
-            'href'  =>  'dashboard'
-        ),
         'clients'   =>  array(
             'title'     =>  'clients',
             'href'      =>  'clients/index',
-//             'submenu'   =>  array(
-//                 'clients'  =>  array(
-//                     'title' =>  'view_clients',
-//                     'href'  =>  'clients/index'
-//                 ),
-//                 'clients/form'   =>  array(
-//                     'title' =>  'add_client',
-//                     'href'  =>  'clients/form'
-//                 )
-//             )
-        ),
+            'submenu'   =>  array(
+                'clients'  =>  array(
+                    'title' =>  'view_clients',
+                    'href'  =>  'clients/index'
+                ),
+                'clients/form'   =>  array(
+                    'title' =>  'add_client',
+                    'href'  =>  'clients/form'
+                )
+            )
+        ),        
         'invoices'  =>  array(
             'title'     =>  'invoices',
             'href'      =>  'invoices/index',
@@ -103,6 +99,10 @@ $config = array(
         'reports'   =>  array(
             'title'         =>  'reports',
             'submenu'       =>  array(
+				'dashboard' =>  array(
+				            'title' =>  'dashboard',
+				            'href'  =>  'dashboard'
+				),            
                 'client_list'   =>  array(
                     'title' =>  'client_list',
                     'href'  =>  'reports/client_list'

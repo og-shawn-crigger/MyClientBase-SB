@@ -22,7 +22,7 @@
 		<form method="post" action="{$baseurl}/clients/form/add/person">
 		{if $made_search}
 		<h3 class="title_black">{"{t}people{/t}"|capitalize} 
-			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
 		</form>
@@ -37,11 +37,15 @@
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
     	<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'n.d.'}</td>
     	<td class="tel">{$person->mobile|default:'n.d.'}</td>
-    </tr>
+    </tr> 
     <tr class="actions">
     	<td></td>
+    	<td class="actions" colspan="4"></td>
+    	<!-- 
     	<td class="actions" colspan="4">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="{"{t}quote{/t}"|capitalize}"}</td>
+    	 -->
     </tr>
+         
     {/foreach}
     </table>
 
@@ -58,7 +62,7 @@
 		<form method="post" action="{$baseurl}/clients/form/add/organization">
 		{if $made_search}
 		<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
-			<input type="submit" class="myButton" name="" value="Add" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
 		</form>
@@ -76,7 +80,10 @@
     </tr>
     <tr class="actions">
     	<td></td>
+    	<td class="actions" colspan="4"></td>
+    	<!--     	
     	<td class="actions" colspan="3">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="{"{t}quote{/t}"|capitalize}"}</td>
+    	-->
     </tr>    
     {/foreach}
     </table>    

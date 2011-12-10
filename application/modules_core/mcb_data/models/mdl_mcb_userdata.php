@@ -70,7 +70,7 @@ class Mdl_MCB_Userdata extends MY_Model {
 		$this->db->where('mcb_userdata_user_id', $user_id);
 
 		$mcb_userdata = $this->db->get('mcb_userdata')->result();
-		
+
 		foreach ($mcb_userdata as $data) {
 
 			$this->settings->{$data->mcb_userdata_key} = $data->mcb_userdata_value;
