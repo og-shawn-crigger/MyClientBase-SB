@@ -14,6 +14,8 @@ class Settings extends Admin_Controller {
 
         $this->_post_handler();
 
+        $this->mdl_mcb_modules->refresh();
+        
 		$core_modules = $this->mdl_mcb_modules->core_modules;
 
 		$custom_modules = $this->mdl_mcb_modules->custom_modules;
@@ -24,7 +26,7 @@ class Settings extends Admin_Controller {
 
 		foreach ($core_modules as $core_module) {
 
-			if (isset($core_module->module_config['settings_view']) and isset($core_module->module_config['settings_save'])) {
+			if (isset($core_module->module_config['settings_view']) and isset($core_module->module_config['settings_save']) and ($core_module->module_enabled == "1")) {
 
 				$core_tabs[] = array(
 					'path'			=>	$core_module->module_path,
