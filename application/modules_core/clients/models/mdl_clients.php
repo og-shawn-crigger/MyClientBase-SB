@@ -1,323 +1,174 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
-
 class Mdl_Clients extends MY_Model {
 
-    public function __construct() {
+	public function __construct() {
 
-        parent::__construct();
-       
-        $this->load->model('clients/mdl_contact','contact');
-        
-        $this->load->model('clients/mdl_person','person');
-		
-		$this->load->model('clients/mdl_organization','organization');	
-    }
-    
-    public function get(array $params) {
-    	
-    	if(!is_array($params)) return false;
-    	
-    	//I demand to search something before making a request to contact engine (it doesn't make sense to get the whole customer list)
-    	//otherwise I require an uid or an oid
-    	if(empty($params['search']) && empty($params['uid']) && empty($params['oid']) && empty($params['client_id'])) return false;
-    	
-    	$input=array();
-    	
-    	if(empty($params['uid']) && empty($params['oid']))
-    	{
-    		if(empty($params['client_id']))
-    		{
-	    		//looking for all contacts
-	    		$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'*))';
-    		} else {
-    			//looking for a single contact but I don't know if it's an organization or a person
-    			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))'; //TODO why the $client_id is not extracted?
-    		}
-    	} else {
-    		//looking for a specific contact
-    		if(!empty($params['uid'])) 
-    		{
-    			$input['filter'] = '(uid='.$params['uid'].')';
-    		}
-    		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
-    	}
-    	
-    	//defaults
-    	isset($params['method']) ? $input['method'] = $params['method'] : $input['method'] = 'POST';
-    	isset($params['sort_by']) ? $input['sort_by'] = $params['sort_by'] : $input['sort_by'] = array('sn');
-    	isset($params['flow_order']) ? $input['flow_order'] = $params['flow_order'] : $input['flow_order'] = 'asc';
-    	isset($params['wanted_page']) ? $input['wanted_page'] = $params['wanted_page'] : $input['wanted_page'] = '0';
-    	isset($params['items_page']) ? $input['items_page'] = $params['items_page'] :$input['items_page'] = '12';
+		parent::__construct();
 
-		$rest_return = $this->contact->get($input);
-    	
-    	//retrieving query info  
-    	$rest_info = $rest_return['status'];										
-    	
-    	//pagination
-    	isset($rest_info['results_number']) ? $params['total_rows'] = $rest_info['results_number'] : $params['total_rows'] = 0;
+		$this->table_name = 'mcb_clients';
 
-    	//when retrieving contacts I get the total number of items (orgs + people) and the total number of items per people and orgs
-    	//I take as good result the highest between total number people and orgs
-    	if(!empty($rest_info['result_number_people']) && !empty($rest_info['result_number_orgs']))
-    	{
-    		if($rest_info['result_number_people'] >= $rest_info['result_number_orgs'])
-    		{
-    			$params['total_rows'] = $rest_info['result_number_people'];
-    		} else {
-    			$params['total_rows'] = $rest_info['result_number_orgs'];
-    		}
-    	}
-    	
-    	$this->_prep_pagination($params);
-    	
-    	//prepare return for output
-    	$people = array();
-    	$orgs = array();
-    	$num = count($rest_return['data']);
-    	
-    	//TODO what happens when I get 0 contacts? or went I get an error?
-    	if (is_array($rest_return['data'])) {
-	    	foreach ($rest_return['data'] as $item => $contact) {
-	    		//$objectClass = explode(',',$this->getReturnValue('objectClass', $contact));
-	    		if(in_array('dueviPerson', $contact['objectClass']))
-	    		{
-	    			//It's a person
-					if($this->person->arrayToObject($contact)) $people[] = clone $this->person;	    			
-	    		}
-	    		
-	    		if(in_array('dueviOrganization', $contact['objectClass']))
-	    		{
-	    			if($this->organization->arrayToObject($contact)) $orgs[] = clone $this->organization;
-	    		}
-	    	}    	
-    	}
-    	
-    	if(empty($params['client_id']) && empty($params['uid']) && empty($params['oid']))
-    	{
-    		//this is the return for the contact search form
-    		$output = array('people' => $people, 'orgs' => $orgs, 'total_number' => $rest_info['results_number']);
-    		return $output;
-    	} else {
+		$this->primary_key = 'mcb_clients.client_id';
 
-    		if($params['active'])
-    		{
-    			//this is the return for for invoices, quotes ...
-    			if(count($people)>0) return $people;
-    			if(count($orgs)>0) return $orgs;
-    		} else {
-	 			//this is the return for contact details, contact form
-	    		if(count($people)>0) return $people['0'];
-	    		if(count($orgs)>0) return $orgs['0'];
-    		}
-    	}
-    }
+		$this->select_fields = "
+		SQL_CALC_FOUND_ROWS
+		mcb_clients.*,
+		mcb_clients.client_id as join_client_id,
+		(SELECT SUM(invoice_total) FROM mcb_invoice_amounts WHERE invoice_id IN (SELECT invoice_id FROM mcb_invoices WHERE client_id = join_client_id AND invoice_is_quote = 0)) AS client_total_invoice,
+		IFNULL((SELECT SUM(payment_amount) FROM mcb_payments JOIN mcb_invoices ON mcb_invoices.invoice_id = mcb_payments.invoice_id WHERE mcb_invoices.client_id = mcb_clients.client_id AND invoice_is_quote = 0), 0.00) AS client_total_payment,
+		(SELECT ROUND(client_total_invoice - client_total_payment, 2)) AS client_total_balance,
+		(SELECT SUM(client_credit_amount) FROM mcb_client_credits WHERE client_credit_client_id = mcb_clients.client_id) AS client_credit_amount";
 
-    public function get_active($params = NULL) {
+		$this->order_by = 'client_name';
 
-         if (!$params) {
-			
-         	$params = array();
-			
-         	$segs = $this->uri->segment_array();
-         	
-         	foreach ($segs as $key => $item)
-         	{
-         		$segmnent = $key;
-         		switch ($item) {
-         			case 'uid':
-         				$var = 'uid';
-         			break;
+		$this->custom_fields = $this->mdl_fields->get_object_fields(3);
 
-         			case 'oid':
-         				$var = 'oid';
-         			break;
+	}
 
-         			case 'client_id':
-         				$var = 'client_id';
-         			break;         				         			
-         		}         		
-         	}
+	public function get($params = NULL) {
 
-         	if($var) 
-         	{
-         		$params[$var] = $this->uri->segment($segmnent);
-         		$params['active'] = true;
-         		return $this->get($params);
-         	}
-         	
-        }
-        
-        $params['active'] = true;
-        return $this->get($params);
+		$clients = parent::get($params);
 
-    }
+		if (is_array($clients)) {
 
-    public function validate($obj) {
-		switch ($obj) {
-			case 'person':
-		        //validation rules for person
-		  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required');
-		        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
-			break;
+			if (isset($params['set_client_data'])) {
 
-			case 'organization':
-		        //validation rules for organization
-		  		$this->form_validation->set_rules('o', $this->lang->line('o'), 'required');
-		        //$this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
-			break;			
+				foreach ($clients as $client) {
+
+					$this->db->where('client_id', $client->client_id);
+
+					$mcb_client_data = $this->db->get('mcb_client_data')->result();
+
+					foreach ($mcb_client_data as $client_data) {
+
+						$client->{$client_data->mcb_client_key} = $client_data->mcb_client_value;
+
+					}
+
+				}
+
+			}
+
 		}
-		
-		//Common validation rules for both the objects
-		//$this->form_validation->set_rules('enabled', $this->lang->line('enabled'), 'required');
-		
-        return parent::validate($this);
 
-    }
+		else {
 
-    public function delete($client_id) {
+			if (isset($params['set_client_data'])) {
 
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/'));
-    	
-    	//let's delete just the customer for now
-    	
-    	//TODO should I check if the customer exists before deleting him?
-    	
-    	//deleting customer
-    	//$url = 'api/exposeObj/person/delete/';
-    	$input = array('uid' => $client_id);
-    	$rest_return = $this->rest->post('delete', $input, 'serialize'); //TODO this should be $this->rest->delete
-		return $rest_return['0'];  //true or false
-		   	
-    	//TODO delete also invoices esteems and whatever
-    	
-//         $this->load->model('invoices/mdl_invoices');
+				$this->db->where('client_id', $clients->client_id);
 
-//         /* Delete the client record */
+				$mcb_client_data = $this->db->get('mcb_client_data')->result();
 
-//         parent::delete(array('client_id'=>$client_id));
+				foreach ($mcb_client_data as $client_data) {
 
-//         /* Delete any related contacts */
+					$clients->{$client_data->mcb_client_key} = $client_data->mcb_client_value;
 
-//         $this->db->where('client_id', $client_id);
+				}
 
-//         $this->db->delete('mcb_contacts');
+			}
 
-//         /*
-// 		 * Delete any related invoices, but use the invoice model so records
-// 		 * related to the invoice are also deleted
-//         */
+		}
 
-//         $this->db->select('invoice_id');
+		return $clients;
 
-//         $this->db->where('client_id', $client_id);
+	}
 
-//         $invoices = $this->db->get('mcb_invoices')->result();
+	public function get_active($params = NULL) {
 
-//         foreach ($invoices as $invoice) {
+		if (!$params) {
 
-//             $this->mdl_invoices->delete($invoice->invoice_id);
+			$params = array(
+				'where'	=>	array(
+					'client_active'	=>	1
+				)
+			);
 
-//         }
+		}
 
-    }
+		else {
 
-    public function save($obj = null) {
+			$params['where']['client_active'] = 1;
+
+		}
+
+		return $this->get($params);
+
+	}
+
+	public function validate() {
+
+		$this->form_validation->set_rules('client_active', $this->lang->line('client_active'));
+		$this->form_validation->set_rules('client_name', $this->lang->line('client_name'), 'required');
+		$this->form_validation->set_rules('client_tax_id', $this->lang->line('tax_id_number'));
+		$this->form_validation->set_rules('client_address', $this->lang->line('street_address'));
+		$this->form_validation->set_rules('client_address_2', $this->lang->line('street_address_2'));
+		$this->form_validation->set_rules('client_city', $this->lang->line('city'));
+		$this->form_validation->set_rules('client_state', $this->lang->line('state'));
+		$this->form_validation->set_rules('client_zip', $this->lang->line('zip'));
+		$this->form_validation->set_rules('client_country', $this->lang->line('country'));
+		$this->form_validation->set_rules('client_phone_number', $this->lang->line('phone_number'));
+		$this->form_validation->set_rules('client_fax_number',	$this->lang->line('fax_number'));
+		$this->form_validation->set_rules('client_mobile_number', $this->lang->line('mobile_number'));
+		$this->form_validation->set_rules('client_email_address', $this->lang->line('email_address'), 'valid_email');
+		$this->form_validation->set_rules('client_web_address', $this->lang->line('web_address'));
+		$this->form_validation->set_rules('client_notes', $this->lang->line('notes'));
+
+		foreach ($this->custom_fields as $custom_field) {
+
+			$this->form_validation->set_rules($custom_field->column_name, $custom_field->field_name);
+
+		}
+
+		return parent::validate($this);
+
+	}
+
+	public function delete($client_id) {
+
+		$this->load->model('invoices/mdl_invoices');
+
+		/* Delete the client record */
+
+		parent::delete(array('client_id'=>$client_id));
+
+		/* Delete any related contacts */
+
+		$this->db->where('client_id', $client_id);
+
+		$this->db->delete('mcb_contacts');
+
+		/*
+		 * Delete any related invoices, but use the invoice model so records
+		 * related to the invoice are also deleted
+		*/
+
+		$this->db->select('invoice_id');
+
+		$this->db->where('client_id', $client_id);
+
+		$invoices = $this->db->get('mcb_invoices')->result();
+
+		foreach ($invoices as $invoice) {
+
+			$this->mdl_invoices->delete($invoice->invoice_id);
+
+		}
+
+	}
 	
-    	//TODO this function is ok for the UPDATE but not for the CREATE yet
-        $data = array();
-        
-   		if(is_null($obj))
-   		{
-	        if(isset($this->form_values['uid'])) $obj = 'person';
-	        
-	        if(isset($this->form_values['oid'])) $obj = 'organization';
-   		}
-   		
-        $this->contact->getProperties($obj);
-        $properties = $this->contact->properties;
-        
-        foreach ($this->form_values as $property => $value) {
-        	if(in_array($property, array_keys($properties)))
-        	{
-        		$data[$property] = $value;
-        	}
-        }
-        
-        //mandatory fields for ldap for both objects
-        $data['entryUpdatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
-        
-        //for person
-        if($obj == 'person')
-        {
-	        if(!isset($data['category'])) $data['category'] = 'mycategory';
-	        $data['cn'] = $data['sn'].' '.$data['givenName'];
-	        $data['displayName'] = $data['givenName'].' '.$data['sn'];
-	        $data['fileAs'] = $data['cn'];
-	        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?    
-        }        
+	public function save() {
 
-        //for organization
-        if($obj == 'organization')
-        {
-        	
-        }   
-        
-        //common mandatory fields
-        ($this->form_values->enabled == FALSE) ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
-        
-        if($obj == 'person')
-        {
-        	if(!empty($data['uid'])) 
-        	{
-        		$this->person->update($data);
-        	} else {
-        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
-        		$this->person->create($data);
-        	}
-        }
-        
-        if($obj == 'organization')
-        {
-        	if(!empty($data['oid'])) 
-        	{
-        		$this->organization->update($data);
-        	} else {
-        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
-        		$this->organization->create($data);
-        	}	
-        }
-    }
-    
-    //overrides _prep_pagination function
-    private function _prep_pagination($params) {
-    
-    	if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
-    
-    		$this->load->library('pagination');
-    		
-    		empty($params['page']) ? $page = uri_assoc('page') : $page = $params['page'];
-    		
-    		$config = array(
-        		   					'base_url'			=>	site_url('/clients/index/page'), //TODO aaaaa
-        		   					'total_rows'		=>	$params['total_rows'],
-        		   					'per_page'			=>	$params['items_page'],
-        		   					'next_link'			=>	$this->lang->line('next') . ' >',
-        		   					'prev_link'			=>	'< ' . $this->lang->line('prev'),
-        		   					'cur_tag_open'		=>	'<span class="active_link">',
-        		   					'cur_tag_close'		=>	'</span>',
-        		   					'num_links'			=>	3,
-        		   					'cur_page'			=>  $page, //$this->offset;
-    		);
-    		
-    		$this->pagination->initialize($config);
-    		$this->page_links = $this->pagination->create_links();
-    		$params['items_page'] > 0 ? $this->current_page = ($page / $params['items_page']) + 1 : $this->current_page = 0;
-    		$params['items_page'] > 0 ? $this->num_pages = ceil($params['total_rows'] / $params['items_page']) : $this->num_pages = 0;
-    	}
-    }    
+		$db_array = parent::db_array();
+
+		if (!$this->input->post('client_active')) {
+
+			$db_array['client_active'] = 0;
+
+		}
+
+		parent::save($db_array, uri_assoc('client_id'));
+
+	}
 
 }
 

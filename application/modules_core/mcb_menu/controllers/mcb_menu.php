@@ -8,15 +8,34 @@ class MCB_Menu extends Admin_Controller {
 
 	}
 
+	//Get core modules status
+	public function get_core_modules_status()
+	{
+		$this->mdl_mcb_modules->refresh();
+		$modules = $this->mdl_mcb_modules->core_modules;
+		$status_items = array();
+		foreach ($modules as $key => $module)
+		{
+			if($module->module_enabled == "1")
+			{
+				$status_items[$key] = 'enabled';
+			} else {
+				$status_items[$key] = 'disabled';
+			}
+		}
+		return $status_items;
+	}
+	
 	function generate() {
 
         $menu_items = $this->config->item('mcb_menu');
 		
         //DAM
-        $status_items = $this->config->item('mcb_module');
+        $status_items = $this->get_core_modules_status();
+        //$status_items = $this->config->item('mcb_module');
         
         foreach ($menu_items as $key=>$menu_item) {
-		//DAM
+			//DAM
         	if($status_items[$key]=="disabled") unset($menu_items[$key]); 
         	        	
             if (!$this->session->userdata('global_admin')) {
@@ -46,7 +65,6 @@ class MCB_Menu extends Admin_Controller {
         }
 
         return $menu_items;
-
     }
 
 	function generate_control_center() {
@@ -99,15 +117,18 @@ class MCB_Menu extends Admin_Controller {
 
 		foreach ($this->config->item('mcb_menu') as $menu_item) {
 
-        	//DAM's quickie :)
-        	$status_items = $this->config->item('mcb_module');
-        	//if the requested page is part of a disabled module, than redirects to the dashboard        
-        	if(preg_match_all('/^'.$key.'/', $uri_string, $matches) && $status_items[$key]=="disabled")	
+        	//DAM
+			$status_items = $this->get_core_modules_status();
+			
+        	//if the requested page is part of a disabled module, than redirects to the dashboard
+        	foreach ($status_items as $key => $status)        
+        	if(preg_match_all('/^'.$key.'/', $uri_string, $matches) && $status=="disabled")	
         	{
-        		redirect('clients');;
+        		redirect('dashboard');
         		break;
         	}
-
+			//\DAM
+        	
 			if (strpos($menu_item['href'], $uri_string) === 0) {
 
 				if (isset($menu_item['global_admin']) and !$global_admin) {

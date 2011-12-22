@@ -1,7 +1,5 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
-
 class Contacts extends Admin_Controller {
 
 	function __construct() {
@@ -39,9 +37,9 @@ class Contacts extends Admin_Controller {
 
 			$this->mdl_contacts->save($this->mdl_contacts->db_array(), uri_assoc('contact_id', 4));
 
-			$this->session->set_flashdata('tab_index', 1);
+			$this->session->set_flashdata('tab_index', 2);
 
-			$this->redir->redirect('clients/details/client_id/' . uri_assoc('client_id', 4));
+			$this->redir->redirect('clients/form/client_id/' . uri_assoc('client_id', 4));
 
 		}
 
@@ -70,9 +68,9 @@ class Contacts extends Admin_Controller {
 
 		}
 
-		$this->session->set_flashdata('tab_index', 1);
+		$this->session->set_flashdata('tab_index', 2);
 
-		$this->redir->redirect('clients/details/client_id/' . uri_assoc('client_id', 4));
+		$this->redir->redirect('clients/form/client_id/' . uri_assoc('client_id', 4));
 
 	}
 
@@ -86,9 +84,9 @@ class Contacts extends Admin_Controller {
 
 		elseif ($this->input->post('btn_cancel')) {
 
-			$this->session->set_flashdata('tab_index', 1);
+			$this->session->set_flashdata('tab_index', 2);
 
-			$this->redir->redirect('clients/details/client_id/' . uri_assoc('client_id', 4));
+			$this->redir->redirect('clients/form/client_id/' . uri_assoc('client_id', 4));
 
 		}
 

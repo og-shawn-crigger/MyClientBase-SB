@@ -490,5 +490,59 @@ $lang['monthsShort'] = array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Se
 $lang['days'] = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
 $lang['daysShort'] = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 
+/* SMALL BUSINESS */
+$lang['mysearch'] = 'Search';
+$lang['lastsearch'] = 'Last search';
+$lang['people'] = 'People';
+$lang['No person found'] = 'No person found';
+$lang['organizations'] = 'Organizations';
+$lang['No organization found'] = 'No organization found';
+$lang['anniversary'] = 'Anniversary';
+$lang['assistantName'] = 'Assistente';
+$lang['assistantPhone'] = 'Telefono Assistente';
+$lang['birthDate'] = 'Data di Nascita';
+$lang['businessRole'] = 'Ruolo nella Organizzazione';
+$lang['codiceFiscale'] = 'Codice Fiscale';
+$lang['cn'] = 'Nome per intero';
+$lang['enabled'] = 'Attivo';
+$lang['fileAs'] = 'Registra come';
+$lang['givenName'] = 'Nome';
+$lang['homeFacsimileTelephoneNumber'] = 'Fax (casa)';
+$lang['mail'] = 'Email';
+$lang['mobile'] = 'Cellulare';
+$lang['mozillaHomeCountryName'] = 'Nazione';
+$lang['mozillaHomeLocalityName'] = 'Citta';
+$lang['mozillaHomePostalCode'] = 'Cap';
+$lang['mozillaHomeState'] = 'Provincia';
+$lang['note'] = 'Nota';
+$lang['o'] = 'Organizzazione';
+$lang['preferredLanguage'] = 'Lingua Preferita';
+$lang['sn'] = 'Cognome';
+$lang['title'] = 'Titolo';
+$lang['businessActivity'] = 'Attivita';
+$lang['c'] = 'Nazione';
+$lang['description'] = 'Descrizione';
+$lang['facsimileTelephoneNumber'] = 'Fax';
+$lang['l'] = 'Citta';
+$lang['o'] = 'Organizzazione';
+$lang['oURL'] = 'Sito Web';
+$lang['omail'] = 'Email';
+$lang['postalAddress'] = 'Indirizzo';
+$lang['postalCode'] = 'Cap';
+$lang['st'] = 'Provincia';
+$lang['telephoneNumber'] = 'Telefono';
+$lang['vatNumber'] = 'Partita Iva';
+$lang['entryCreatedBy'] = 'Creato da';
+$lang['entryUpdatedBy'] = 'Aggiornato da';
+$lang['homePostalAddress'] = 'Indirizzo';
 
+
+/* DAM */
+$lang['contact'] = 'Contact';
+$lang['core_modules'] = 'Core Modules';
+$lang['enable'] = 'Enable';
+$lang['disable'] = 'Disable';
+$lang['module_successfully_enabled'] = 'Module has been successfully enabled';
+$lang['module_successfully_disabled'] = 'Module has been successfully disabled';
+$lang['module_cant_change_status'] = 'The module status can not be modified';
 ?>

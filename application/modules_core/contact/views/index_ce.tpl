@@ -19,7 +19,7 @@
 <div class="left-block">
 
 	<div style="width: 100%;">
-		<form method="post" action="{$baseurl}/clients/form/add/person">
+		<form method="post" action="{$baseurl}/contact/form/add/person">
 		{if $made_search}
 		<h3 class="title_black">{"{t}people{/t}"|capitalize} 
 			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
@@ -32,7 +32,7 @@
 	<table class="table-clients">
 	{foreach $people as $key => $person}
     <tr class="hoverall">
-    	{assign 'url' value="$baseurl/clients/details/uid/{$person->uid}"}
+    	{assign 'url' value="$baseurl/contact/details/uid/{$person->uid}"}
     	<td class="counter" rowspan="2">{counter}</td>
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
     	<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'n.d.'}</td>
@@ -42,7 +42,7 @@
     	<td></td>
     	<td class="actions" colspan="4"></td>
     	<!-- 
-    	<td class="actions" colspan="4">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/uid/{$person->uid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="{"{t}quote{/t}"|capitalize}"}</td>
+    	<td class="actions" colspan="4">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/contact/form/uid/{$person->uid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="{"{t}quote{/t}"|capitalize}"}</td>
     	 -->
     </tr>
          
@@ -59,7 +59,7 @@
 <div class="right-block">
 
 	<div style="width: 100%;">
-		<form method="post" action="{$baseurl}/clients/form/add/organization">
+		<form method="post" action="{$baseurl}/contact/form/add/organization">
 		{if $made_search}
 		<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
 			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
@@ -72,7 +72,7 @@
 	<table class="table-orgs">
 	{foreach $orgs as $key => $organization}
     <tr class="hoverall">
-    	{assign 'url' value="$baseurl/clients/details/oid/{$organization->oid}"}
+    	{assign 'url' value="$baseurl/contact/details/oid/{$organization->oid}"}
     	<td class="counter" rowspan="2">{counter}</td>
     	<td class="name">{a url=$url text=$organization->o|truncate:30:" [...]":true}</td>
     	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'n.d.'}</td>
@@ -82,7 +82,7 @@
     	<td></td>
     	<td class="actions" colspan="4"></td>
     	<!--     	
-    	<td class="actions" colspan="3">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/clients/form/oid/{$organization->oid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="{"{t}quote{/t}"|capitalize}"}</td>
+    	<td class="actions" colspan="3">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/contact/form/oid/{$organization->oid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="{"{t}quote{/t}"|capitalize}"}</td>
     	-->
     </tr>    
     {/foreach}

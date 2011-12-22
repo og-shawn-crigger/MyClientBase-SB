@@ -2,6 +2,8 @@
 
 class Mdl_MCB_Modules extends MY_Model {
 
+	//ALTER TABLE `mcb_modules` ADD `module_change_status` INT( 1 ) NOT NULL DEFAULT '1' AFTER `module_core` 
+	
     public $core_modules = array();
 
     public $custom_modules = array();

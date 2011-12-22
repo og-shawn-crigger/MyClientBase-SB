@@ -2,6 +2,10 @@
 
 $config = array(
     'mcb_menu'  =>  array(
+		'contact'   =>  array(
+		 	'title'     =>  'contact',
+		    'href'      =>  'contact/index',
+		),    
         'clients'   =>  array(
             'title'     =>  'clients',
             'href'      =>  'clients/index',
@@ -131,6 +135,11 @@ $config = array(
                     'href'          =>  'client_center/admin',
                     'global_admin'  =>  TRUE
                 ),
+				'mcb_core_modules'   =>  array(
+				                    'title'         =>  'core_modules',
+				                    'href'          =>  'mcb_modules/core',
+				                    'global_admin'  =>  TRUE,
+				),                
                 'mcb_modules'   =>  array(
                     'title'         =>  'custom_modules',
                     'href'          =>  'mcb_modules/index',

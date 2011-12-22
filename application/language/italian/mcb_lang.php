@@ -456,6 +456,7 @@ $lang['email_footer'] = 'Pi&egrave; Pagina Email';
 $lang['footer'] = 'Pi&egrave; Pagina';
 $lang['inventory_type_in_use'] = 'La categoria merceologica specificata &egrave; gi&agrave; in uso.';
 
+//FIXME delete
 /* SMALL BUSINESS */
 $lang['mysearch'] = 'Cerca';
 $lang['lastsearch'] = 'Ultima ricerca';
@@ -501,4 +502,12 @@ $lang['vatNumber'] = 'Partita Iva';
 $lang['entryCreatedBy'] = 'Creato da';
 $lang['entryUpdatedBy'] = 'Aggiornato da';
 $lang['homePostalAddress'] = 'Indirizzo';
+
+
+/* DAM */
+$lang['contact'] = 'Contatto';
+$lang['core_modules'] = 'Moduli Principali';
+$lang['enable'] = 'Abilita';
+$lang['disable'] = 'Disabilita';
+
 ?>

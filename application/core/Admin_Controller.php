@@ -26,10 +26,10 @@ class Admin_Controller extends MX_Controller {
 
             $this->load->config('mcb_menu/mcb_menu');
             
+            //FIXME: delete this line
             //DAM
-            $this->load->config('mcb_menu/active_modules');
+           // $this->load->config('mcb_menu/active_modules');
 
-            modules::run('mcb_menu/check_permission', $this->uri->uri_string(), $this->session->userdata('global_admin'));
 
 			$this->load->database();
 
@@ -37,6 +37,8 @@ class Admin_Controller extends MX_Controller {
 
             $this->load->model(array('mcb_modules/mdl_mcb_modules','mcb_data/mdl_mcb_data','mcb_data/mdl_mcb_userdata'));
 
+            modules::run('mcb_menu/check_permission', $this->uri->uri_string(), $this->session->userdata('global_admin'));
+            
 			$this->mdl_mcb_modules->set_module_data();
 
             $this->mdl_mcb_data->set_session_data();
@@ -59,6 +61,7 @@ class Admin_Controller extends MX_Controller {
 
             }
 
+            
 		}
 
 	}

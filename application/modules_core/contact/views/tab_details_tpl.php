@@ -25,7 +25,7 @@
 		//don't show fields which are not supposed to be modified by the customer  (it's stored in LDAP)
 		if($details['no-user-modification'] == '1') continue;
 		
-		$value = $this->mdl_clients->form_value($property);
+		$value = $this->mdl_contacts->form_value($property);
 		
 		//show an asterisk when a field is required  (it's stored in LDAP)
 		$required = $details['required'] == '1' ? '<em style="color: red;">*</em> ' : '';
