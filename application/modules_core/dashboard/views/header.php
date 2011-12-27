@@ -27,8 +27,7 @@
 
             });
 
-        </script>
-
+        </script>          
 		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>
 
 	</head>

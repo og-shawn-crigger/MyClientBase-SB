@@ -30,7 +30,299 @@ class Contact extends Admin_Controller {
     	
     	return $page; 
     }
+
+    private function update_config($obj,$configfile)
+    {
+    	//update the configuration file
+    	$this->load->helper('configfile');
+    	switch ($configfile) {
+    		case 'person':
+		    	$this->config->set_item('person_show_fields', $obj->show_fields);
+		    	write_config($configfile, array('person_show_fields','person_hidden_fields'),true);    			
+    		break;
+    		
+    		case 'organization':
+		    	$this->config->set_item('organization_show_fields', $obj->show_fields);
+		    	write_config($configfile, array('organization_show_fields','organization_hidden_fields'),true);    			
+    		break;
+       	}
+    }
     
+    public function display_settings($data=null)
+    {  	
+    	    	
+	    if(empty($data['settings_ldap'])) $data['settings_ldap'] = $this->display_settings_ldap();
+	    
+	    if(empty($data['settings_person'])) $data['settings_person'] = $this->display_settings_person();
+	    
+	    if(empty($data['settings_person_order'])) 
+	    {
+	    	$input = array('sort' => true);
+	    	$data['settings_person_order'] = $this->display_settings_person($input);
+	    }
+	    	    
+	    if(empty($data['settings_organization'])) $data['settings_organization'] = $this->display_settings_organization();
+
+	    if(empty($data['settings_organization_order']))
+	    {
+	    	$input = array('sort' => true);
+	    	$data['settings_organization_order'] = $this->display_settings_organization($input);
+	    }
+	    	    
+	    if(empty($data['settings_location'])) $data['settings_location'] = $this->display_settings_location();
+	
+    	if($this->input->post('action') == 'refresh')
+    	{
+    		echo $this->plenty_parser->parse('settings.tpl', $data, true, 'smarty', 'contact');
+    	} else {
+    		$this->plenty_parser->parse('settings.tpl', $data, false, 'smarty', 'contact');
+    	}
+    }
+    
+    private function display_settings_ldap($input=null)
+    {
+    	$data = array();
+    	return $this->plenty_parser->parse('settings_ldap.tpl', $data, true, 'smarty', 'contact');
+    }
+
+    private function display_settings_person($input=null)
+    {
+    	$person = new Mdl_Person();
+    	$person->getProperties('person');
+    	$person->prepareShow();
+    	 
+    	if(is_array($input)) extract($input);
+    	 
+    	if($addToVisible) {
+    		if(is_array($PersonAvailableAttributes))
+    		{
+    			$added_attribute = array_diff(array_keys($person->properties), $PersonAvailableAttributes);
+    		} else {
+    			if(!empty($PersonAvailableAttributes))
+    			{
+    				$added_attribute = array($PersonAvailableAttributes);
+    			}
+    		}
+    		foreach ($added_attribute as $key => $value) {
+    			if(!in_array($value, $person->show_fields)) array_push($person->show_fields, $value);
+    		}
+    		//asort($person->show_fields);
+    		$this->update_config($person,'person');
+    	}
+    	
+    	if($removeFromVisible) {
+    		if(is_array($PersonVisibleAttributes))
+    		{
+    			$person->show_fields = $PersonVisibleAttributes;    			
+    		} else {
+    			if(!empty($PersonVisibleAttributes))
+    			{
+    				//temporary array
+    				$a = array_flip($person->show_fields);
+    				if(count($a)>1)
+    				{
+    					unset($a[$PersonVisibleAttributes]);
+    					$person->show_fields = array_flip($a);
+    				}
+    			}
+    		}
+    		$this->update_config($person,'person');
+    	}
+    	
+    	$data = array(
+    	    			'person_all_attributes' => $person->properties,
+    	    			'person_available_attributes' => array_diff_key($person->properties, array_flip($person->show_fields)),
+    	    			'person_visible_attributes' => $person->show_fields,
+    	);
+    	
+    	if($sort)
+    	{
+    		return $this->plenty_parser->parse('settings_person_order.tpl', $data, true, 'smarty', 'contact');
+    	} else {
+    		return $this->plenty_parser->parse('settings_person.tpl', $data, true, 'smarty', 'contact');
+    	}
+    }
+    
+    private function display_settings_organization($input=null)
+    {
+    	$org = new Mdl_Organization();
+    	$org->getProperties('organization');
+    	$org->prepareShow();
+    	    	
+    	if(is_array($input)) extract($input);
+    	 
+    	if($addToVisible) {
+    		if(is_array($OrgAvailableAttributes))
+    		{
+    			$added_attribute = array_diff(array_keys($org->properties), $OrgAvailableAttributes);
+    		} else {
+    			if(!empty($OrgAvailableAttributes))
+    			{
+    				$added_attribute = array($OrgAvailableAttributes);
+    			}
+    		}
+    		foreach ($added_attribute as $key => $value) {
+    			if(!in_array($value, $org->show_fields)) array_push($org->show_fields, $value);
+    		}
+    		
+    		$this->update_config($org,'organization');
+    	}
+    	
+    	if($removeFromVisible) {
+    		if(is_array($OrgVisibleAttributes))
+    		{
+    			$org->show_fields = $OrgVisibleAttributes;    			
+    		} else {
+    			if(!empty($OrgVisibleAttributes))
+    			{
+    				//temporary array
+    				$a = array_flip($org->show_fields);
+    				if(count($a)>1)
+    				{
+    					unset($a[$OrgVisibleAttributes]);
+    					$org->show_fields = array_flip($a);
+    				}
+    			}
+    		}
+    		$this->update_config($org,'organization');
+    	}
+    	
+    	$data = array(
+    	    			'org_all_attributes' => $org->properties,
+    	    			'org_available_attributes' => array_diff_key($org->properties, array_flip($org->show_fields)),
+    	    			'org_visible_attributes' => $org->show_fields,
+    	);
+    	
+    	if($sort)
+    	{
+    		return $this->plenty_parser->parse('settings_organization_order.tpl', $data, true, 'smarty', 'contact');
+    	} else {
+    		return $this->plenty_parser->parse('settings_organization.tpl', $data, true, 'smarty', 'contact');
+    	}    	
+    	
+    }
+    
+    private function display_settings_location($input=null)
+    {
+    	$data = array();
+    	return $this->plenty_parser->parse('settings_location.tpl', $data, true, 'smarty', 'contact');
+    	
+    }
+    
+    /*
+     * This function is called by the javascript in the UI everytime there is a javascript event (drag, sort)
+     * This function updated accordingly the config file and returns the updated html content to the javascript which
+     * replaces the old content with the new one  
+     */
+    public function update_settings()
+    {
+    	$output = '';
+    	$data = array();
+    	switch ($this->input->post('action')) {
+    		case 'person_addToVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    								'addToVisible' => true,
+    								'PersonAvailableAttributes' => $split['1'],
+    								);
+    			}
+    			echo $this->display_settings_person($output);
+    		break;
+    		
+    		case 'person_removeFromVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    			    				'removeFromVisible' => true,
+    			    				'PersonVisibleAttributes' => $split['1'],
+    				);
+    			}
+    			echo $this->display_settings_person($output);    			
+    		break;
+    			    		
+    		case 'person_sort':    			
+    			if(is_array($this->input->post('PersonVisibleAttributes'))) 
+    			{
+    				$output = array(
+    								'removeFromVisible' => true,  
+    								'PersonVisibleAttributes' => $this->input->post('PersonVisibleAttributes'));
+    			}
+				$output['sort'] = true;
+    			echo $this->display_settings_person($output);
+    		break;
+    		
+    		case 'org_addToVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    			    								'addToVisible' => true,
+    			    								'OrgAvailableAttributes' => $split['1'],
+    				);
+    			}
+    			echo $this->display_settings_organization($output);    			
+    		break;
+
+    		case 'org_removeFromVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    		    			    				'removeFromVisible' => true,
+    		    			    				'OrgVisibleAttributes' => $split['1'],
+    				);
+    			}
+    			echo $this->display_settings_organization($output);
+    		break;
+    			
+    		case 'org_sort':
+    			if(is_array($this->input->post('OrgVisibleAttributes'))) 
+    			{
+    				$output = array(
+    								'removeFromVisible' => true,  
+    								'OrgVisibleAttributes' => $this->input->post('OrgVisibleAttributes'));
+    			}
+				$output['sort'] = true;
+    			echo $this->display_settings_organization($output);
+    		break;
+    			
+    		case 'location_addToVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    			    								'addToVisible' => true,
+    			    								'LocationAvailableAttributes' => $split['1'],
+    				);
+    			}
+    			echo $this->display_settings_location($output);    			
+    		break;
+
+    		case 'location_removeFromVisible':
+    			if($this->input->post('item')!= "")
+    			{
+    				$split = preg_split('/_/', $this->input->post('item'));
+    				$output = array(
+    		    			    				'removeFromVisible' => true,
+    		    			    				'LocationVisibleAttributes' => $split['1'],
+    				);
+    			}
+    			echo $this->display_settings_location($output);
+    		break;
+    			
+    		case 'location_sort':
+    			if(is_array($this->input->post('LocationAvailableAttributes')) and !is_array($this->input->post('LocationVisibleAttributes'))) $output = array('addToVisible' => true, 'LocationAvailableAttributes' => $this->input->post('LocationAvailableAttributes'));
+    			 
+    			if(!is_array($this->input->post('LocationAvailableAttributes')) and is_array($this->input->post('LocationVisibleAttributes'))) $output = array('removeFromVisible' => true, 'LocationVisibleAttributes' => $this->input->post('LocationVisibleAttributes'));
+    		
+    			echo $this->display_settings_location($output);
+    		break;
+       	} 	
+    }
+        
     function index() {
 
         $this->load->helper('text');
@@ -236,9 +528,10 @@ class Contact extends Admin_Controller {
         );
         
         //loading Smarty template
-        $data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
+        //$data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
         $data['middle']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
-         
+        
         //loading CI template
         $this->load->view('details', $data);
 

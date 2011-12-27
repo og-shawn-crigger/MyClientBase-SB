@@ -6,6 +6,14 @@
 	$(function(){
 		$('#accordion').accordion({active: false, collapsible: true, autoHeight: false});
 		$('#tabs').tabs({ selected: <?php echo $tab_index; ?> });
+
+		/* DAM settings for contact module accordion */
+		jQuery('#contact_accordion').accordion({
+			active: false,
+			collapsible: true, 
+			autoHeight: false
+		});
+				
 	});
 </script>
 

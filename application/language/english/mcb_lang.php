@@ -545,4 +545,5 @@ $lang['disable'] = 'Disable';
 $lang['module_successfully_enabled'] = 'Module has been successfully enabled';
 $lang['module_successfully_disabled'] = 'Module has been successfully disabled';
 $lang['module_cant_change_status'] = 'The module status can not be modified';
+$lang['action_panel'] = 'Action Panel';
 ?>

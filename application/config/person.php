@@ -1,23 +1,4 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/*
- * Person configuration file
- * Created on Oct 25, 2011 by Damiano Venturin @ squadrainformatica.com
- */
 
-$config['person_show_fields'] = array(  'anniversary', 'assistantName', 'assistantPhone',
-							 			'birthDate', 'businessRole', 
-										'codiceFiscale',
-										'enabled', 'entryUpdatedBy', 'entryCreatedBy', 
-										'givenName', 
-										'homeFacsimileTelephoneNumber',
-										'mail', 'mobile', 'mozillaHomeCountryName', 'mozillaHomeLocalityName', 'mozillaHomePostalCode', 'mozillaHomeState',
-										'note', 
-										'o', 
-										'preferredLanguage',
-										'sn',
-										'title',
-									);
-
-$config['person_hidden_fields'] = array( 'uid','client_id');
-
-/* End of person.php */
+$config['person_show_fields'] = array('x500uniqueIdentifier','x121Address','userSMIMECertificate','userPassword','userCertificate','userPKCS12','uid','tty','title','telexNumber','telex','teletexTerminalIdentifier','telephoneNumber','st','street','spouseName','sn','seeAlso','secretary','sambaSID','sambaPwdLastSet','sambaPasswordHistory','sambaNTPassword','sambaAcctFlags','roomNumber','registeredAddress','radio','primaryPhone','preferredLanguage','preferredDeliveryMethod','postalCode','postalAddress','postOfficeBox','photo','physicalDeliveryOfficeName','pager','ou','otherPostalAddress','otherPhone','otherFacsimileTelephoneNumber','objectClass','oRDN','oAdminRDN','o','note','acceptsCommercialAgreement','acceptsCommercialCommunications','acceptsPrivacy');
+$config['person_hidden_fields'] = array('uid','client_id');
