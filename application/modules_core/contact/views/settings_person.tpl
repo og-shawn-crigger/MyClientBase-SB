@@ -12,7 +12,7 @@
 			delay: 1,			 
 			stop: function(event, ui){	
 				var input = '&item=' + $(this).attr('id') + '&action=person_addToVisible'; 
-				$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+				$.post("/index.php/contact/update_settings", input, function(theResponse){
         			$("#person_accordion").html(theResponse);  
         		});            		 	
             },
@@ -30,7 +30,7 @@
 			delay: 1,			 		 
 			stop: function(event, ui){	
         		var input = '&item=' + $(this).attr('id') + '&action=person_removeFromVisible'; 
-        		$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+        		$.post("/index.php/contact/update_settings", input, function(theResponse){
         			$("#person_accordion").html(theResponse); 
         		});                		 	        		 		             	
         	},

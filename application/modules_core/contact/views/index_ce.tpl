@@ -33,19 +33,11 @@
 	{foreach $people as $key => $person}
     <tr class="hoverall">
     	{assign 'url' value="$baseurl/contact/details/uid/{$person->uid}"}
-    	<td class="counter" rowspan="2">{counter}</td>
+    	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
     	<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'n.d.'}</td>
     	<td class="tel">{$person->mobile|default:'n.d.'}</td>
     </tr> 
-    <tr class="actions">
-    	<td></td>
-    	<td class="actions" colspan="4"></td>
-    	<!-- 
-    	<td class="actions" colspan="4">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/contact/form/uid/{$person->uid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/uid/{$person->uid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/uid/{$person->uid}" text="{"{t}quote{/t}"|capitalize}"}</td>
-    	 -->
-    </tr>
-         
     {/foreach}
     </table>
 
@@ -57,7 +49,6 @@
 </div>
 
 <div class="right-block">
-
 	<div style="width: 100%;">
 		<form method="post" action="{$baseurl}/contact/form/add/organization">
 		{if $made_search}
@@ -73,18 +64,11 @@
 	{foreach $orgs as $key => $organization}
     <tr class="hoverall">
     	{assign 'url' value="$baseurl/contact/details/oid/{$organization->oid}"}
-    	<td class="counter" rowspan="2">{counter}</td>
+    	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$organization->o|truncate:30:" [...]":true}</td>
     	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'n.d.'}</td>
     	<td class="tel">{$organization->telephoneNumber|default:'n.d.'}</td>
     </tr>
-    <tr class="actions">
-    	<td></td>
-    	<td class="actions" colspan="4"></td>
-    	<!--     	
-    	<td class="actions" colspan="3">{a url=$url text="{"{t}view{/t}"|capitalize}"} | {a url="$baseurl/contact/form/oid/{$organization->oid}" text="{"{t}edit{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/oid/{$organization->oid}" text="{"{t}invoice{/t}"|capitalize}"} | {a url="$baseurl/invoices/create/quote/oid/{$organization->oid}" text="{"{t}quote{/t}"|capitalize}"}</td>
-    	-->
-    </tr>    
     {/foreach}
     </table>    
 {else}

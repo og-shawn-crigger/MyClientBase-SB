@@ -9,8 +9,8 @@
 </script>
 
 
-<!-- $middle contains details.tpl -->
-<?php echo $middle; ?>
+<!-- $details contains details.tpl -->
+<?php echo $details; ?>
 
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>

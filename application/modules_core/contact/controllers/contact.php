@@ -50,8 +50,6 @@ class Contact extends Admin_Controller {
     
     public function display_settings($data=null)
     {  	
-    	    	
-	    if(empty($data['settings_ldap'])) $data['settings_ldap'] = $this->display_settings_ldap();
 	    
 	    if(empty($data['settings_person'])) $data['settings_person'] = $this->display_settings_person();
 	    
@@ -79,11 +77,6 @@ class Contact extends Admin_Controller {
     	}
     }
     
-    private function display_settings_ldap($input=null)
-    {
-    	$data = array();
-    	return $this->plenty_parser->parse('settings_ldap.tpl', $data, true, 'smarty', 'contact');
-    }
 
     private function display_settings_person($input=null)
     {
@@ -530,7 +523,7 @@ class Contact extends Admin_Controller {
         //loading Smarty template
         //$data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
         $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
-        $data['middle']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
+        $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
         
         //loading CI template
         $this->load->view('details', $data);

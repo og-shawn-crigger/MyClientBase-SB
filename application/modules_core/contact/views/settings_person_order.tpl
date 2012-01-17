@@ -9,7 +9,7 @@
         	placeholder: "ui-state-highlight",
         	update: function() {
         		var input = $(this).sortable("serialize") + '&action=person_sort';
-        			$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+        			$.post("/index.php/contact/update_settings", input, function(theResponse){
 					$("#person_order_accordion").html(theResponse); 
 				});
 			}

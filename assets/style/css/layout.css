@@ -117,6 +117,7 @@ table .contact-details-container tr td {
 
 table .contact-details-left{
 	width: 600px;
+	border: 1px solid green;
 }
 
 table .contact-details-right {
@@ -126,13 +127,17 @@ table .contact-details-right {
 table .contact-details-left, table .contact-details-right {
 	margin: 10px;
 	padding: 10px;
-	border-spacing:2em 0.25em;
+	
 }
 
 table .contact-details-left tr, .contact-details-right tr { 
-	height : 16px;
-	line-height : 16px;
 	padding:5px;
+	text-align: left;
+}
+
+table .contact-details-left tr,
+{
+	text-align: left;
 }
 
 td .field { 

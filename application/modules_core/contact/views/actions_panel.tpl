@@ -4,6 +4,7 @@
 	<h3 class="title_black">{t}Actions Panel{/t}</h3>
 
 	<ul class="quicklinks content toggle" >
+		<li>Edit</li>
 		<li>Add to an organization</li>
 		<li>Add a location</li>
 		<li class="last">Create invoice</li>

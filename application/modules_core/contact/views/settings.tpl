@@ -6,7 +6,7 @@
 				ev.preventDefault();
 			    ev.stopPropagation();
 				var input = '&action=person_sort'; 
-				$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+				$.post("/index.php/contact/update_settings", input, function(theResponse){
 					$("#person_order_accordion").html(theResponse);
 				});          
         });
@@ -17,7 +17,7 @@
 				ev.preventDefault();
 			    ev.stopPropagation();
 				var input = '&action=org_sort'; 
-				$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+				$.post("/index.php/contact/update_settings", input, function(theResponse){
 					$("#org_order_accordion").html(theResponse);
 				});          
         });        

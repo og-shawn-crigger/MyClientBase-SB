@@ -17,7 +17,7 @@
                	stop: function(event, ui){
                     // When dragging stops, call the php function	
         			var input = '&item=' + $(this).attr('id') + '&action=location_addToVisible'; 
-        			$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+        			$.post("/index.php/contact/update_settings", input, function(theResponse){
         				$("#location_accordion").html(theResponse);  
         			}); 	
                 },
@@ -27,7 +27,7 @@
                	stop: function(event, ui){
                     // When dragging stops, call the php function	
         			var input = '&item=' + $(this).attr('id') + '&action=location_removeFromVisible'; 
-        			$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+        			$.post("/index.php/contact/update_settings", input, function(theResponse){
         				$("#location_accordion").html(theResponse); 
         			}); 	
                 },
@@ -41,7 +41,7 @@
         		placeholder: "ui-state-highlight",
         		update: function() {
         			var input = $(this).sortable("serialize") + '&action=location_sort';
-        			$.post("http://myclientbase-sb/index.php/contact/update_settings", input, function(theResponse){
+        			$.post("/index.php/contact/update_settings", input, function(theResponse){
         				$(".location_order_accordion").html(theResponse); 
         			});
         		}

@@ -18,36 +18,25 @@
 				<ul>
 					<li><a href="#tab_client">{t}Contact{/t}</a></li>
 					{if $contact->objectClass == "dueviOrganization"}
-					<li><a href="#tab_contacts">{citranslate lang=$language text='contacts'}</a></li>
+					<li><a href="#tab_contacts">{t}Members{/t}</a></li>
 					{/if}
 					<!-- 
 					<li><a href="#tab_invoices">{citranslate lang=$language text='invoices'}</a></li>
 					 -->
 				</ul>
-				
 				<div id="tab_client" >
-					<table class="contact-details-container">
-						<tr valign="top"><td valign="top">	
-						<table class="contact-details-left">
-							{foreach $properties as $property_name => $property_details}
-								{if $contact->$property_name != ""}
-								<tr valign="top">
-									<td class="field">
-										<!-- Let's see if we have a translation for the current property name -->
-										{assign property_translated "{citranslate lang=$language text=$property_name}"}
-										{if $property_translated != ""}
-											<i>{$property_translated}</i> :
-										{else}
-											<i>{$property_name}</i> :
-										{/if}
-									</td>
-									<td class="value"> 
-										{$contact->$property_name|wordwrap:60:"<br/>":true}
-									</td>
-								</tr>
-								{/if}
-							{/foreach}
-						</table>
+					<table class="contact-details-left">
+						{foreach $contact->show_fields as $key => $property_name}
+							{if $contact->$property_name != ""}
+							<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
+								<td class="field">{t}{$property_name}{/t}</td>
+								<td class="value"> 
+									{$contact->$property_name|wordwrap:60:"<br/>":true}
+								</td>
+							</tr>
+							{/if}
+						{/foreach}
+					</table>
 						<!-- 
 						</td><td>							
 						<table class="contact-details-right">
@@ -76,8 +65,6 @@
 						</table>
 					</td>
 					 -->
-					</tr>
-				</table>
 				</div>
 				
 				{if $contact->objectClass == "dueviOrganization"}
