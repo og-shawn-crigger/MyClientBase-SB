@@ -1,6 +1,11 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
+/**
+ * This class, originally from MCB and written by Jesse, has been modified to hook Contact Engine without breaking
+ * MCB standard functionalities. It uses the methods offered by the Mdl_Contact class and its extensions
+ *  
+ * Modified by Damiano Venturin @ squadrainformatica.com
+ */
 
 class Mdl_Contacts extends MY_Model {
 
@@ -11,8 +16,11 @@ class Mdl_Contacts extends MY_Model {
         $this->load->model('contact/mdl_contact','contact');
         
         $this->load->model('contact/mdl_person','person');
-		
-		$this->load->model('contact/mdl_organization','organization');	
+        
+        $this->load->model('contact/mdl_organization','organization');
+
+        $this->load->model('contact/mdl_location','location');        
+
     }
     
     public function get(array $params) {

@@ -204,7 +204,7 @@ class Contact extends Admin_Controller {
     
     /*
      * This function is called by the javascript in the UI everytime there is a javascript event (drag, sort)
-     * This function updated accordingly the config file and returns the updated html content to the javascript which
+     * This function updates the config file and returns the updated html content to the javascript which
      * replaces the old content with the new one  
      */
     public function update_settings()
@@ -512,24 +512,23 @@ class Contact extends Admin_Controller {
 
         }
 
-        
-/*         //getting Locations
+        //getting Locations
         $locs = explode(",", $contact->locRDN);
-        if(is_array($locs))
+        if(!empty($locs))
         {
         	$contact_locs = array();
         	 
         	foreach( $locs as $locId)
         	{
         		$params = array('locId' => $locId);
-        		$org = $this->mdl_location->get($params);
-        		if($org)
+        		$loc = $this->location->get($params);
+        		if($loc['status']['status_code'] == 200)
         		{
-        			$org->prepareShow();
-        			$contact_orgs[] = $org;
+        			$this->location->prepareShow();
+        			$contact_locs[] = clone $this->location;
         		}
         	}
-        } */
+        } 
                 
         //getting Organizations of which the contact is member
         $orgs = explode(",", $contact->oRDN);
@@ -553,6 +552,7 @@ class Contact extends Admin_Controller {
         $data = array(
             'contact'	=>	$contact,
             'contact_orgs' => $contact_orgs,
+        	'contact_locs' => $contact_locs,
             'invoices'	=>	$invoices,
             'tab_index'	=>	$tab_index,
             'baseurl'	=>	site_url(),

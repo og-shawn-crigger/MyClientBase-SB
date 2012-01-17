@@ -1,6 +1,10 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
+/**
+ * Extends Class Mdl_Contact
+ * 
+ * Created by Damiano Venturin @ squadrainformatica.com
+ */
 
 class Mdl_Organization extends Mdl_Contact {
 

@@ -1,6 +1,12 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-//modified by Damiano Venturin @ squadrainformatica.com
+/**
+ * This class performs all the needed methods to interact with Contact Engine and
+ * describes a contact as an unique object even if its made by two different 
+ * objects with different meanings and methods: Person and Organization
+ * 
+ * Created by Damiano Venturin @ squadrainformatica.com
+ */
 
 class Mdl_Contact extends MY_Model {
 

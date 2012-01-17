@@ -10,10 +10,12 @@
 	<div class="section_wrapper">
 		<div>
 			{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
+				{$contact_ref = $contact->cn}
 				<h3 class="title_black"><span style="font-size: 12px;">{t}Person{/t}: </span>{$contact->cn}</h3>
 			{/if}		
 			
 			{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
+				{$contact_ref = $contact->o}
 				<h3 class="title_black"><span style="font-size: 12px;">{t}Organization{/t}: </span>{$contact->o}</h3>
 			{/if}					
 		</div>
@@ -33,7 +35,9 @@
 					{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
 						<li><a href="#tab_memberOf">{t}Member of{/t}</a></li>
 					{/if}
-					
+
+					<li><a href="#tab_locations">{t}Locations{/t}</a></li>
+										
 					{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
 						<li><a href="#tab_contacts">{t}Members{/t}</a></li>
 					{/if}
@@ -69,36 +73,10 @@
 							{/if}
 						{/foreach}
 					</table>
-						<!-- 
-						</td><td>							
-						<table class="contact-details-right">
-							<tr>
-								<td class="field">{citranslate lang=$language text='invoices'}:</td>
-								<td class="value">&nbsp;</td>
-							</tr>
-	
-							<tr>
-								<td class="field">{citranslate lang=$language text='total_paid'}: </td>
-								<td>&nbsp;</td>
-							</tr>
-	
-							<tr>
-								<td class="field">{citranslate lang=$language text='total_balance'}: </td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td class="field">{citranslate lang=$language text='tax_id_number'}: </td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td class="field">{citranslate lang=$language text='notes'}: </td>
-								<td>&nbsp;</td>
-							</tr>
-						</table>
-					</td>
-					 -->
 				</div>
-				{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
+				
+				
+				{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
 				<div id="tab_memberOf">
 					{if $contact_orgs}
 						<!-- 
@@ -131,6 +109,47 @@
 					{/if}
 				</div>				
 				{/if}
+
+				<div id="tab_locations">
+					{if $contact_locs}	 
+						{foreach $contact_locs as $key => $loc}						
+						<h3 style="margin-left: -15px; clear: left;">{$loc->locDescription}</h3>								
+						<div class="none">
+							<div class="none" style="width: 380px; float: left; clear: left; margin-bottom: 20px;">
+								<table style="border: 1px solid #e8e8e8; width: 95%; margin-left: 15px; margin-right: 5px; margin-bottom: 3px;">
+									{foreach $loc->show_fields as $key => $property_name}
+										{if $loc->$property_name != ""}
+										<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
+											<td class="field" style="width: 30%;">{t}{$property_name}{/t}</td>
+											<td class="value"> 
+												{$loc->$property_name|wordwrap:75:" ":true}
+											</td>
+										</tr>
+										{/if}
+									{/foreach}										
+								</table>
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 15px;">| {t}ID{/t}: {$loc->locId} | {t}Created by{/t}: {$loc->entryCreatedBy} | {t}Updated by{/t}: {$loc->entryUpdatedBy} |</span>
+							</div>
+							{if $loc->locLatitude}
+								{$desc = $loc->locDescription}
+								{$description = "$contact_ref - $desc"}
+								<iframe width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+								src="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;output=embed">
+								</iframe>
+								<div style="margin-left: 5px;">
+								<a href="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;source=embed" target="_blank" style="font-size: 12px; margin-left: 380px; margin-top: 3px;">View Larger Map</a>
+								</div>
+							{else}
+								<div style="margin-left: 5px;">
+								<img src="/images/empty_map.png" width="300px"/><br/><span style="font-size: 12px; margin-left: 380px;">{t}The address provided can not be displayed{/t}.</span>
+								</div>
+							{/if}
+						</div>
+				
+						<br/>						
+						{/foreach}
+					{/if}
+				</div>
 				
 				{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
 				<div id="tab_contacts">
