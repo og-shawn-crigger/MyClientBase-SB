@@ -512,9 +512,47 @@ class Contact extends Admin_Controller {
 
         }
 
+        
+/*         //getting Locations
+        $locs = explode(",", $contact->locRDN);
+        if(is_array($locs))
+        {
+        	$contact_locs = array();
+        	 
+        	foreach( $locs as $locId)
+        	{
+        		$params = array('locId' => $locId);
+        		$org = $this->mdl_location->get($params);
+        		if($org)
+        		{
+        			$org->prepareShow();
+        			$contact_orgs[] = $org;
+        		}
+        	}
+        } */
+                
+        //getting Organizations of which the contact is member
+        $orgs = explode(",", $contact->oRDN);
+        if(is_array($orgs))
+        {
+        	$contact_orgs = array();
+        	
+	        foreach( $orgs as $oid)
+	        {
+	        	$params = array('oid' => $oid);
+	        	$org = $this->mdl_contacts->get($params);
+	        	if($org)
+	        	{
+	        		$org->prepareShow();
+	        		$contact_orgs[] = $org;
+	        	}
+	        }
+        }
+                
         //preparing output for views
         $data = array(
             'contact'	=>	$contact,
+            'contact_orgs' => $contact_orgs,
             'invoices'	=>	$invoices,
             'tab_index'	=>	$tab_index,
             'baseurl'	=>	site_url(),
@@ -522,6 +560,7 @@ class Contact extends Admin_Controller {
         
         //loading Smarty template
         //$data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
+        
         $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
         $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
         

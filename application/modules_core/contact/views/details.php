@@ -1,6 +1,6 @@
 <?php $this->load->view('dashboard/header', array('header_insert'=>'contact/details_header')); ?>
 
-<?php echo modules::run('invoices/widgets/generate_dialog'); ?>
+<?php //echo modules::run('invoices/widgets/generate_dialog'); ?>
 
 <script type="text/javascript">
 	$(function(){
