@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-//DAM quick and dirty to update a config file. Can be improved A LOT
+//DAM quick and dirty way to update a config file. Can be improved A LOT
 function write_config($filename, array $config_items, $create=false) {
 	
 	//TODO add a method to retrieve the right path for the specified config file
