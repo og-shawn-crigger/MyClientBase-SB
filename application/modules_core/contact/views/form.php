@@ -48,6 +48,9 @@
 	</div>
 </div>
 
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
+
 <?php //$this->load->view('dashboard/sidebar', array('side_block'=>'contact/sidebar')); ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

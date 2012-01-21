@@ -10,7 +10,7 @@
 	<div class="section_wrapper">
 		<div>
 			{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
-				{$contact_ref = $contact->cn}
+				{$contact_ref = $contact->cn}	
 				<h3 class="title_black"><span style="font-size: 12px;">{t}Person{/t}: </span>{$contact->cn}</h3>
 			{/if}		
 			

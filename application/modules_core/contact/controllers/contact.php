@@ -466,6 +466,7 @@ class Contact extends Admin_Controller {
                 'invoice_groups'    =>  $this->mdl_invoice_groups->get()
             );
 
+            $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
             $this->load->view('form', $data);
 
         }
