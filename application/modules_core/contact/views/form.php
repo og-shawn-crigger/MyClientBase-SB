@@ -8,45 +8,8 @@
 
 <?php $this->load->view('dashboard/jquery_clear_password'); ?>
 
-<div class="container_10" id="center_wrapper">
-
-	<div class="grid_7" id="content_wrapper">
-
-		<div class="section_wrapper">
-
-			<h3 class="title_black"><?php echo $this->lang->line('client_form'); ?></h3>
-
-			<?php $this->load->view('dashboard/system_messages'); ?>
-
-			<div class="content toggle">
-
-				<form method="post" action="<?php echo site_url('contact/form'); //echo site_url($this->uri->uri_string()); ?>">
-
-				<div id="tabs">
-
-					<ul>
-						<li><a href="#tab_details"><?php echo $this->lang->line('details'); ?></a></li>
-                        <li><a href="#tab_settings"><?php echo $this->lang->line('settings'); ?></a></li>
-					</ul>
-
-					<div id="tab_details">
-						<?php $this->load->view('tab_details_tpl'); ?>
-					</div>
-
-                    <div id="tab_settings">
-                        <?php $this->load->view('tab_settings'); ?>
-                    </div>
-
-				</div>
-
-				</form>
-
-			</div>
-
-		</div>
-
-	</div>
-</div>
+<!-- $actions_panel contains form.tpl -->
+<?php echo $form; ?>
 
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>

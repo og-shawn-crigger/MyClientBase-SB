@@ -10,12 +10,16 @@
 	<div class="section_wrapper">
 		<div>
 			{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
-				{$contact_ref = $contact->cn}	
+				{$contact_ref = $contact->cn}
+				{$contact_id = $contact->uid}
+				{$contact_id_key = "uid"}
 				<h3 class="title_black"><span style="font-size: 12px;">{t}Person{/t}: </span>{$contact->cn}</h3>
 			{/if}		
 			
 			{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
 				{$contact_ref = $contact->o}
+				{$contact_id = $contact->oid}
+				{$contact_id_key = "oid"}
 				<h3 class="title_black"><span style="font-size: 12px;">{t}Organization{/t}: </span>{$contact->o}</h3>
 			{/if}					
 		</div>
@@ -50,29 +54,54 @@
 				
 				
 				<div id="tab_client" >
-					<table class="contact-details-left" style="border: 1px solid #e8e8e8; width: 98%;">
-					<column width>
+
+					<table border="1" class="none" style="border: 1px solid #e8e8e8; width: 98%; margin-bottom: 2px;">
+						{counter start=0 skip=1 assign="count"}
 						{foreach $contact->show_fields as $key => $property_name}
+						
 							{if $contact->$property_name != ""}
-							<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
-								<td class="field" style="width: 30%;">{t}{$property_name}{/t}</td>
-								<td class="value">
-									{$already_wrote=0}
-									<!-- particular cases -->
-									{if $property_name=="mail" || $propery_name=="omail"}
-										<a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
-										{$already_wrote=1}
-									{/if}
+							<tr valign="top" style="height: 5px; background-color: {cycle values="#FFF,#e8e8e8"};">
+								
+								<td class="field" style="valign: middle; width: 30%;">{t}{$property_name}{/t}</td>
+
+								{if $count <= 4} 
+									<td class="value" style="valign: middle;">
+								{else}
+									<td class="value" colspan="2"  style="valign: middle;">
+								{/if}								
+								
+										{$already_wrote=0}
+										<!-- particular cases -->
+										{if $property_name=="mail" || $propery_name=="omail"}
+											<a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
+											{$already_wrote=1}
+										{/if}	
 									
-									<!-- default case -->
-									{if $already_wrote==0} 
-										{$contact->$property_name|wordwrap:60:"<br/>":true}
-									{/if}
-								</td>
+										<!-- default case -->
+										{if $already_wrote==0} 
+											{$contact->$property_name|wordwrap:60:"<br/>":true}
+										{/if}
+									</td>
+
+								{if $count == 1} 
+									<td rowspan="4" align="center" style="width: 100px; background: white;">
+										<span style="font-size: 12px; align: center; margin-bottom: 0px;">&nbsp;</span>
+										{if $contact->jpegPhoto}
+											<img alt="thumbnail" src="data:image/jpeg;base64,{$contact->jpegPhoto|base64_decode}">
+										{else}
+											<img style="border: 1px solid black; width: 100px; height: 100px; margin-top: 0px;" src="/images/no-face-100.png"/>
+										{/if}
+										
+									</td>
+								{/if}
+									
 							</tr>
 							{/if}
+							
+							{counter}
 						{/foreach}
 					</table>
+					<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;">{t}ID{/t}: {$contact_id} | {t}created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} | {t}updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}</span>
 				</div>
 				
 				
@@ -128,7 +157,7 @@
 										{/if}
 									{/foreach}										
 								</table>
-								<span style="font-size: 12px; margin-top: 5px; margin-left: 15px;">| {t}ID{/t}: {$loc->locId} | {t}Created by{/t}: {$loc->entryCreatedBy} | {t}Updated by{/t}: {$loc->entryUpdatedBy} |</span>
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 15px;">{t}ID{/t}: {$loc->locId} | {t}Created by{/t}: {$loc->entryCreatedBy} | {t}Updated by{/t}: {$loc->entryUpdatedBy}</span>
 							</div>
 							{if $loc->locLatitude}
 								{$desc = $loc->locDescription}
