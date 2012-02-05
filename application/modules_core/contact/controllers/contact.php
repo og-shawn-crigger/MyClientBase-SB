@@ -99,7 +99,6 @@ class Contact extends Admin_Controller {
     		foreach ($added_attribute as $key => $value) {
     			if(!in_array($value, $person->show_fields)) array_push($person->show_fields, $value);
     		}
-    		//asort($person->show_fields);
     		$this->update_config($person,'person');
     	}
     	
@@ -127,6 +126,11 @@ class Contact extends Admin_Controller {
     	    			'person_available_attributes' => array_diff_key($person->properties, array_flip($person->show_fields)),
     	    			'person_visible_attributes' => $person->show_fields,
     	);
+    	
+    	if($aliases)
+    	{
+    		return $this->plenty_parser->parse('settings_person_aliases.tpl', $data, true, 'smarty', 'contact');
+    	}
     	
     	if($sort)
     	{
@@ -246,7 +250,19 @@ class Contact extends Admin_Controller {
 				$output['sort'] = true;
     			echo $this->display_settings_person($output);
     		break;
-    		
+
+    		case 'person_aliases':
+/*     			if(is_array($this->input->post('PersonVisibleAttributes')))
+    			{
+    				$output = array(
+    		    								'removeFromVisible' => true,  
+    		    								'PersonVisibleAttributes' => $this->input->post('PersonVisibleAttributes'));
+    			} */
+    			$output['aliases'] = true;
+    			//$output['sort'] = true;
+    			echo $this->display_settings_person($output);
+    		break;
+    		    		
     		case 'org_addToVisible':
     			if($this->input->post('item')!= "")
     			{

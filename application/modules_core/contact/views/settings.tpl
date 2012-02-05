@@ -10,7 +10,18 @@
 					$("#person_order_accordion").html(theResponse);
 				});          
         });
-        
+
+		//refreshes the content of div #person_aliases_accordion everytime the accordion is clicked
+		jQuery('#contact_accordion').accordion({}).find('.paa').click(
+			function(ev){
+				ev.preventDefault();
+			    ev.stopPropagation();
+				var input = '&action=person_aliases'; 
+				$.post("/index.php/contact/update_settings", input, function(theResponse){
+					$("#person_aliases_accordion").html(theResponse);
+				});          
+        });
+        		
 		//refreshes the content of div #org_order_accordion everytime the accordion is clicked
 		jQuery('#contact_accordion').accordion({}).find('.ooa').click(
 			function(ev){
@@ -34,7 +45,12 @@
 	<div id="person_order_accordion">
 		{$settings_person_order}
 	</div>
-	
+
+	<h3 class="paa"><a href="#">{t}Person{/t}: {t}set attributes aliases{/t}</a></h3>
+	<div id="person_aliases_accordion">
+		{$settings_person_aliases}
+	</div>
+		
 	<h3><a href="#">{t}Organization{/t}: {t}set visible attributes{/t}</a></h3>
 	<div id="org_accordion">
 		{$settings_organization}

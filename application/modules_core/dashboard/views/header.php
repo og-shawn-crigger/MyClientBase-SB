@@ -8,12 +8,42 @@
 		<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/style/css/ie6.css" /><![endif]-->
 		<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/style/css/ie7.css" /><![endif]-->
 		<link type="text/css" href="<?php echo base_url(); ?>assets/jquery/ui-themes/myclientbase/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-		<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-1.6.2.min.js"></script>
+		<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-1.6.2.min.js"></script> -->
+		<?php 
+			//jquery full version is more comfortable for debugging but heavier than the .min version: so let's use one or the other
+			//depending on the environment we are using 
+			if(ENVIRONMENT == 'production'){
+				//echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>';
+				echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>';
+			} else {
+				echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>';
+			}
+		?>
+		
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-ui-1.8.16.custom.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/jquery.maskedinput-1.2.2.min.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/superfish.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/supersubs.js" type="text/javascript"></script>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+				
+		<script type="text/javascript">
+		//DAM This brings all the PHP errors at the bottom of the page
+		$(document).ready(function(){
+		
+			var html = '';
+			jQuery('.php_error').each(function(index){
+				html = html + '<div class="php_error" style="border:1px solid #990000; padding-left:20px; margin:0 0 10px 0;"> [error #' + index + '] '+ jQuery(this).html() + '</div>';
+				jQuery(this).replaceWith("");
+			});
+	
+			html = '<div id="php_error_container" style="position: absolute; top: 100%; clean: both;"><h1>List of PHP errors</h1>' + html + '</div>';
+			jQuery('.php_error').remove();
+			
+			jQuery('#php_error_container').replaceWith(html);
+			jQuery('.php_error').css('background-color','yellow');
+		});
+		</script>
+		
         <script>
 
             $(document).ready(function(){
@@ -29,6 +59,8 @@
 
         </script>          
 		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>
+
+
 
 	</head>
 	<body>

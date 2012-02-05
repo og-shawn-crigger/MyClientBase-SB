@@ -6,13 +6,15 @@
  * Created by Damiano Venturin @ squadrainformatica.com
  */
 
+
 class Mdl_Person extends Mdl_Contact {
 
 	public $uid;	//mandatory
 	public $cn;		//mandatory
 	
     public function __construct() {
-
+		
+    	//@todo another marker check
         parent::__construct();
         
         $this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));        

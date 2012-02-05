@@ -88,7 +88,6 @@ All the changes are automatically saved.
 	</ul>
 </div>
 
-
 <!-- 
 <script type="text/javascript">
 $(function() {
