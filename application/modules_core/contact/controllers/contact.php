@@ -86,7 +86,7 @@ class Contact extends Admin_Controller {
     	 
     	if(is_array($input)) extract($input);
     	 
-    	if($addToVisible) {
+    	if(isset($addToVisible) && $addToVisible) {
     		if(is_array($PersonAvailableAttributes))
     		{
     			$added_attribute = array_diff(array_keys($person->properties), $PersonAvailableAttributes);
@@ -102,7 +102,7 @@ class Contact extends Admin_Controller {
     		$this->update_config($person,'person');
     	}
     	
-    	if($removeFromVisible) {
+    	if(isset($removeFromVisible) && $removeFromVisible) {
     		if(is_array($PersonVisibleAttributes))
     		{
     			$person->show_fields = $PersonVisibleAttributes;    			
@@ -123,16 +123,22 @@ class Contact extends Admin_Controller {
     	
     	$data = array(
     	    			'person_all_attributes' => $person->properties,
-    	    			'person_available_attributes' => array_diff_key($person->properties, array_flip($person->show_fields)),
     	    			'person_visible_attributes' => $person->show_fields,
     	);
     	
-    	if($aliases)
+    	if(is_array($person->properties) and is_array($person->show_fields))
+    	{
+    		$data['person_available_attributes'] = array_diff_key($person->properties, array_flip($person->show_fields));
+    	} else {
+    		$data['person_available_attributes'] = array();
+    	}
+    	
+    	if(isset($aliases) && $aliases)
     	{
     		return $this->plenty_parser->parse('settings_person_aliases.tpl', $data, true, 'smarty', 'contact');
     	}
     	
-    	if($sort)
+    	if(isset($sort) && $sort)
     	{
     		return $this->plenty_parser->parse('settings_person_order.tpl', $data, true, 'smarty', 'contact');
     	} else {
@@ -148,7 +154,7 @@ class Contact extends Admin_Controller {
     	    	
     	if(is_array($input)) extract($input);
     	 
-    	if($addToVisible) {
+    	if(isset($addToVisible) && $addToVisible) {
     		if(is_array($OrgAvailableAttributes))
     		{
     			$added_attribute = array_diff(array_keys($org->properties), $OrgAvailableAttributes);
@@ -165,7 +171,7 @@ class Contact extends Admin_Controller {
     		$this->update_config($org,'organization');
     	}
     	
-    	if($removeFromVisible) {
+    	if(isset($removeFromVisible) && $removeFromVisible) {
     		if(is_array($OrgVisibleAttributes))
     		{
     			$org->show_fields = $OrgVisibleAttributes;    			
@@ -190,7 +196,7 @@ class Contact extends Admin_Controller {
     	    			'org_visible_attributes' => $org->show_fields,
     	);
     	
-    	if($sort)
+    	if(isset($sort) && $sort)
     	{
     		return $this->plenty_parser->parse('settings_organization_order.tpl', $data, true, 'smarty', 'contact');
     	} else {
@@ -356,9 +362,9 @@ class Contact extends Admin_Controller {
                             'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
                             'wanted_page'	=>	$wanted_page,
                             'search'		=>  $search,
-                  			'uid' 			=>  $uid,
-                  			'oid' 			=>  $oid,
         				);
+        if(isset($uid)) $params['uid'] = $uid;
+        if(isset($oid)) $params['oid'] = $oid;
         
         //TODO I think this is not necessary ... we go with the  search only right?
         if(!$search)

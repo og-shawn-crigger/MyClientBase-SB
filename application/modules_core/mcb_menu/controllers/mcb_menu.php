@@ -36,7 +36,7 @@ class MCB_Menu extends Admin_Controller {
         
         foreach ($menu_items as $key=>$menu_item) {
 			//DAM
-        	if($status_items[$key]=="disabled") unset($menu_items[$key]); 
+        	if(isset($status_item[$key]) && $status_items[$key]=="disabled") unset($menu_items[$key]); 
         	        	
             if (!$this->session->userdata('global_admin')) {
 

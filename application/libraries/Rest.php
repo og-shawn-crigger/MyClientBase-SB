@@ -308,7 +308,13 @@ class Rest
     	// Encode as Serialized array
     	private function _serialize($string)
     	{
-    		return unserialize(trim($string));
+    		if(!$string) return false;
+    		
+    		if (false == ($return = @unserialize($string))) {
+    			return false;
+    		} else {
+    			return $returns;
+    		}    	
     	}
 
     	// Encode raw PHP
