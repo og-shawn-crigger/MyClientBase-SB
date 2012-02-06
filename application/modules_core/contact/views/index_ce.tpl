@@ -22,7 +22,7 @@
 		<form method="post" action="{$baseurl}/contact/form/add/person">
 		{if $made_search}
 		<h3 class="title_black">{"{t}people{/t}"|capitalize} 
-			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			<input type="submit" class="mcbsb-regular-Button" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
 		</form>
@@ -53,7 +53,7 @@
 		<form method="post" action="{$baseurl}/contact/form/add/organization">
 		{if $made_search}
 		<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
-			<input type="submit" class="myButton" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
+			<input type="submit" class="mcbsb-regular-Button" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />
 		</h3>
 		{/if}
 		</form>

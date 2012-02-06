@@ -10,10 +10,13 @@
 
 class Mdl_Contact extends MY_Model {
 
+	public $possibleObjects;
+	public $objName;
 	public $properties;
 	public $client_id;
 	public $show_fields;
-	public $hidden_fields;	
+	public $hidden_fields;
+	public $aliases;
 	public $total_invoice = '0.0';
 	public $total_payment = '0.0';
 	public $total_balance = '0.0';	
@@ -21,6 +24,10 @@ class Mdl_Contact extends MY_Model {
     public function __construct() {
 
         parent::__construct();
+        
+        $this->objName = 'contact';
+        
+        $this->possibleObjects = array('person','organization', 'contact'); //lists all the possible children for this obj
         
         // Load curl
         $this->load->spark('curl/1.2.0');
@@ -33,9 +40,14 @@ class Mdl_Contact extends MY_Model {
         
     }
 
+    private function checkObjName($objName)
+    {
+    	return in_array($objName, $this->possibleObjects) ? true : false;    	
+    }
+    
     public function get($input)
     {
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/'));
+    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/')); //TODO is this hardcoded "contact" right?
     	
     	//performing the query to contact engine
     	//TODO this should be $this->rest->get
@@ -44,9 +56,13 @@ class Mdl_Contact extends MY_Model {
     	return $rest_return;
     }
     
-    public function getProperties($obj)
+    public function getProperties($objName = null)
     {
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$obj.'/'));
+    	//checks
+    	if(is_null($objName)) $objName = $this->objName;
+    	if(!$this->checkObjName($objName)) return false;
+    	
+    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$objName.'/'));
     	$rest_result = $this->rest->post('getProperties', null, 'serialize');
     	if($rest_result['status']['status_code'] == 200) 
     	{
@@ -54,12 +70,14 @@ class Mdl_Contact extends MY_Model {
     	}
     }
     
-    
-	protected function arrayToObject(array $contact, $obj)
+	protected function arrayToObject(array $contact, $objName)
 	{
+    	//checks
+    	if(is_null($objName)) $objName = $this->objName;
+    	if(!$this->checkObjName($objName)) return false;				
 		if(!is_array($contact)) return false;
 		
-		$this->getProperties($obj);
+		$this->getProperties($objName);
 		
 		foreach ($contact as $property => $value) {
 			if(in_array($property, array_keys($this->properties)))

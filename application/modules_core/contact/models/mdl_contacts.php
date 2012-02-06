@@ -110,7 +110,7 @@ class Mdl_Contacts extends MY_Model {
     		return $output;
     	} else {
 
-    		if($params['active'])
+    		if(isset($params['active']) && $params['active'])
     		{
     			//this is the return for for invoices, quotes ...
     			if(count($people)>0) return $people;

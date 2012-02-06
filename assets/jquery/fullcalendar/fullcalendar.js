@@ -1552,10 +1552,10 @@ function formatDates(date1, date2, format, options) {
 
 
 var dateFormatters = {
-	s	: function(d)	{ return d.getSeconds() },
-	ss	: function(d)	{ return zeroPad(d.getSeconds()) },
-	m	: function(d)	{ return d.getMinutes() },
-	mm	: function(d)	{ return zeroPad(d.getMinutes()) },
+	s	: function(d)	{ return d.getSeconds(); },
+	ss	: function(d)	{ return zeroPad(d.getSeconds()); },
+	m	: function(d)	{ return d.getMinutes(); },
+	mm	: function(d)	{ return zeroPad(d.getMinutes()); },
 	h	: function(d)	{ return d.getHours() % 12 || 12 },
 	hh	: function(d)	{ return zeroPad(d.getHours() % 12 || 12) },
 	H	: function(d)	{ return d.getHours() },

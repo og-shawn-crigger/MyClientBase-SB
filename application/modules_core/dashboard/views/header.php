@@ -13,10 +13,15 @@
 			//jquery full version is more comfortable for debugging but heavier than the .min version: so let's use one or the other
 			//depending on the environment we are using 
 			if(ENVIRONMENT == 'production'){
-				echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>';
+				//echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>';
+				echo '<script type="text/javascript" src="'.base_url().'assets/jquery/jquery-1-7-1.min.js"></script>';
 			} else {
-				echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>'; ?>
+				//echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>'; 
+				echo '<script type="text/javascript" src="'.base_url().'assets/jquery/jquery-1-7-1.js"></script>';
+				?>
+				
 				<script type="text/javascript">
+				
 					//DAM This rewrites all the PHP errors at the bottom of the page and hides the original ones
 					$(document).ready(function(){
 					
@@ -32,15 +37,17 @@
 						jQuery('#php_error_container').replaceWith(html);
 						jQuery('.php_error').css('background-color','yellow');
 					});
+				
 				</script>				
 			<?php 
 			}
 		?>
 		
-		<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+		<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-ui-1.8.16.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/jquery.maskedinput-1.2.2.min.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/superfish.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/supersubs.js" type="text/javascript"></script>
+		<script src="<?php echo base_url(); ?>assets/jquery/mcbsb.js" type="text/javascript"></script>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 	
 		

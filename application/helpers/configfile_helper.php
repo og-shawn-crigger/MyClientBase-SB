@@ -42,15 +42,29 @@ function write_config($filename, array $config_items, $create=false) {
 	
 	//adding the configuration file items
 	foreach ($config_items as $key => $item) {
-		$value = $CI->config->item($item);
-		if($value)
+		$new_value = $CI->config->item($item);
+		if($new_value)
 		{
-			if(is_array($value)) $value = 'array(\''.implode('\',\'', $value).'\');'."\n";
-			$config .= '$config[\''.$item.'\'] = '.$value;
+			if(is_array($new_value))
+			{
+				$string = '';
+				
+				//if it's not an associative array (unfortunately there is no way to have a precise check ...)
+				//just implode the array, otherwise pass through all the items
+				if(isset($new_value[0]))
+				{
+					$string = 'array(\''.implode('\',\'', $new_value).'\');'."\n";
+				} else {
+					foreach ($new_value as $key => $value) {
+						$string .= "\t\t\t\t".'\''.$key.'\' => \''.$value.'\','."\n";
+					}
+					$string = 'array('."\n".$string.');'."\n";
+				}
+			}
+			$config .= '$config[\''.$item.'\'] = '.$string;
 		}
 	}
 	
-	//
 	return file_put_contents($filepath, $config);
 }
 

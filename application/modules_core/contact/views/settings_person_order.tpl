@@ -27,7 +27,13 @@
 			{else}
 				{$color="black"}
 			{/if}
-			<p style="color:{$color}; margin-bottom: 4px; margin-left: 5px;"><b>{$attribute_name}</b></p> 
+
+			<p style="color:{$color}; margin-bottom: 4px; margin-left: 5px;"><b>{$attribute_name}</b>
+			{if isset($person_aliases) and isset($attribute_name) and isset($person_aliases.$attribute_name)}
+				<span style="font-size: 13px; color: green"> Alias: {$person_aliases.$attribute_name}</span>
+			{/if}	
+			</p>
+
 			<p style="margin-left: 15px; margin-bottom: 0px;"><i>
 			{if $person_all_attributes[$attribute_name]['desc'] != ""}
 				{t}{$person_all_attributes[$attribute_name]['desc']}{/t}

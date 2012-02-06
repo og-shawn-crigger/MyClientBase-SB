@@ -25,11 +25,7 @@
 		</div>
 	
 		<div class="content toggle" >
-<!-- 
-<pre>
-{$contact|print_r}
-</pre>
- -->
+ 
 			<div id="tabs" >
 			
 				<!-- TABS -->				
@@ -55,6 +51,8 @@
 				
 				<div id="tab_client" >
 
+				{if isset($contact->aliases)} {$aliases = $contact->aliases} {/if}
+				
 					<table border="1" class="none" style="border: 1px solid #e8e8e8; width: 98%; margin-bottom: 2px;">
 						{counter start=0 skip=1 assign="count"}
 						{foreach $contact->show_fields as $key => $property_name}
@@ -62,7 +60,14 @@
 							{if $contact->$property_name != ""}
 							<tr valign="top" style="height: 5px; background-color: {cycle values="#FFF,#e8e8e8"};">
 								
-								<td class="field" style="valign: middle; width: 30%;">{t}{$property_name}{/t}</td>
+								<td class="field" style="valign: middle; width: 30%;">
+								
+								{if isset($aliases) && isset($aliases.$property_name)}
+									{t}{$contact->aliases.$property_name|capitalize}{/t}
+								{else}
+									{t}{$property_name}{/t}
+								{/if}
+								</td>
 
 								{if $count <= 4} 
 									<td class="value" style="valign: middle;">
@@ -76,7 +81,12 @@
 											<a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
 											{$already_wrote=1}
 										{/if}	
-									
+
+										{if $property_name=="labeledURI" || $propery_name=="oURL"}
+											<a href="{$contact->$property_name}" target="_blank">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
+											{$already_wrote=1}
+										{/if}
+																			
 										<!-- default case -->
 										{if $already_wrote==0} 
 											{$contact->$property_name|wordwrap:60:"<br/>":true}

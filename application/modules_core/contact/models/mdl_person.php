@@ -17,6 +17,8 @@ class Mdl_Person extends Mdl_Contact {
     	//@todo another marker check
         parent::__construct();
         
+        $this->objName = 'person';
+        
         $this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/'));        
     	
     }
@@ -36,6 +38,7 @@ class Mdl_Person extends Mdl_Contact {
     {
     	$this->load->config('person');
     	$this->show_fields = $this->config->item('person_show_fields');
+    	$this->aliases = $this->config->item('person_attributes_aliases');
     	$this->hidden_fields = $this->config->item('person_hidden_fields');
     }
     

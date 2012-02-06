@@ -41,6 +41,8 @@
 <p style="background-color: #fffdd0; border: 1px dotted gray;">Drag attributes from the left to the right to make them visible or from the right to the left to make them invisible. 
 All the changes are automatically saved.
 </p>
+
+{* list of all the visible attributes *}
 <div id="PersonVisibleAttributes" style="float:right; display:inline; width: 48%; border: 1px solid gray; padding: 3px;">
 	<h3>{t}Visible Attributes{/t}<span style="font-size: 13px;"> (found {$person_visible_attributes|@count})</span></h3>
 	<ul id="PersonVisibleAttributes" class="connectedSortable">
@@ -51,7 +53,13 @@ All the changes are automatically saved.
 			{else}
 				{$color="black"}
 			{/if}
-			<p style="color:{$color}; margin-bottom: 4px; margin-left: 5px;"><b>{$attribute_name}</b></p> 
+						
+			<p style="color:{$color}; margin-bottom: 4px; margin-left: 5px;"><b>{$attribute_name}</b>
+			{if isset($person_aliases) and isset($attribute_name) and isset($person_aliases.$attribute_name)}
+				<span style="font-size: 13px; color: green"> Alias: {$person_aliases.$attribute_name}</span>
+			{/if}	
+			</p>
+				
 			<p style="margin-left: 15px; margin-bottom: 0px;"><i>
 			{if $person_all_attributes[$attribute_name]['desc'] != ""}
 				{t}{$person_all_attributes[$attribute_name]['desc']}{/t}
@@ -64,6 +72,7 @@ All the changes are automatically saved.
 	</ul>
 </div>
 
+{* list of all the available attributes *}
 <div style="width: 48%; border: 1px solid gray; padding: 3px;">
 	<h3>{t}Available Attributes{/t}<span style="font-size: 13px;"> (found {$person_available_attributes|@count})</span></h3>
 	<ul id="PersonAvailableAttributes" class="connectedSortable">
@@ -87,145 +96,3 @@ All the changes are automatically saved.
 	{/foreach}
 	</ul>
 </div>
-
-<!-- 
-<script type="text/javascript">
-$(function() {
-
-
-    
-	$("#visibleAttributes").sortable({ 
-		opacity: 0.6, 
-		cursor: 'move',
-		delay: 500, 
-		update: function() {
-			var order = $(this).sortable("serialize") + '&action=sortVisible'; 
-			$.post("http://myclientbase-sb/index.php/contact/test", order, function(theResponse){
-				$("#all").html(theResponse);
-			}); 															 
-		}								  
-	});        
-    
-    
-    $("#visibleAttributes li").draggable({ 
-        axis: "x",
-        cursor: 'crosshair',
-        distance: 1,
-        containment: 'document',
-        grid: [400, 0],
-        opacity: 0.80,
-        revert: true,
-        delay: 500,
-       	stop: function(event, ui){
-            // When dragging stops, revert the draggable to its
-            // original starting position.		
-			var input = '&item=' + $(this).attr('id') + '&action=removeFromVisible'; 
-			$.post("http://myclientbase-sb/index.php/contact/test", input, function(theResponse){
-				$("#all").html(theResponse);
-			}); 	
-        }, 
-    });
-
-    $( "ul, li" ).disableSelection();   
-});
-</script>
-
-
-<script type="text/javascript">
-$(function() {
-    $("#contentLeft div").draggable({
-        // Can't use revert, as we animate the original object
-        //revert: true,
-
-        axis: "x",
-        helper: function(){
-            // Create an invisible div as the helper. It will move and
-            // follow the cursor as usual.
-            return $('<div></div>').css('opacity',0);
-        },
-        create: function(){
-            // When the draggable is created, save its starting
-            // position into a data attribute, so we know where we
-            // need to revert to.
-            var $this = $(this);
-            $this.data('startleft',$this.position().left);
-        },
-        stop: function(event, ui){
-            // When dragging stops, revert the draggable to its
-            // original starting position.		
-			var order = '&item=' + $(this).attr('id') + '&action=addToVisible'; 
-			$.post("http://myclientbase-sb/index.php/contact/test", order, function(theResponse){
-				$("#all").html(theResponse);
-			}); 													 
-        },
-        drag: function(event, ui){
-            // During dragging, animate the original object to
-            // follow the invisible helper with custom easing.
-            $(this).stop().animate({
-                left: ui.helper.position().left
-            },1000,'easeOutCirc');           
-        }
-    });
-});
-</script>
--->
-<!-- 
-<script type="text/javascript">
-$(function() {
-    $("#shownAttributes ul").draggable({
-        // Can't use revert, as we animate the original object
-        //revert: true,
-
-        axis: "x",
-        helper: function(){
-            // Create an invisible div as the helper. It will move and
-            // follow the cursor as usual.
-            return $('<div></div>').css('opacity',0);
-        },
-        create: function(){
-            // When the draggable is created, save its starting
-            // position into a data attribute, so we know where we
-            // need to revert to.
-            var $this = $(this);
-            $this.data('startright',$this.position().right);
-        },
-        stop: function(event, ui){
-            // When dragging stops, revert the draggable to its
-            // original starting position.		
-			var order = '&item=' + $(this).attr('id') + '&action=removeFromVisible'; 
-			$.post("http://myclientbase-sb/index.php/contact/test", order, function(theResponse){
-				$("#all").html(theResponse);
-			}); 													 
-        },
-        drag: function(event, ui){
-            // During dragging, animate the original object to
-            // follow the invisible helper with custom easing.
-            $(this).stop().animate({
-                right: ui.helper.position().right
-            },1000,'easeOutCirc');           
-        }
-    });
-});
-</script>
-
- 
-<script type="text/javascript">
-$(document).ready(function(){ 
-						   
-	$(function() {
-		$("#shownAttributes ul").sortable({ 
-			opacity: 0.6, 
-			cursor: 'move', 
-			update: function() {
-				var order = $(this).sortable("serialize") + '&action=sortVisible'; 
-				$.post("http://myclientbase-sb/index.php/contact/test", order, function(theResponse){
-					$("#all").html(theResponse);
-				}); 															 
-			}								  
-		});
-	});
-
-});	
-</script>
---> 
-

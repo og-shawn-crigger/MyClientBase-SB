@@ -15,6 +15,8 @@ class Mdl_Organization extends Mdl_Contact {
 
         parent::__construct();
         
+        $this->objName = 'organization';
+        
         $this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/organization/'));        
                 
     }
@@ -34,6 +36,7 @@ class Mdl_Organization extends Mdl_Contact {
     {
     	$this->load->config('organization');
     	$this->show_fields = $this->config->item('organization_show_fields');
+    	$this->aliases = $this->config->item('organization_attributes_aliases');
     	$this->hidden_fields = $this->config->item('organization_hidden_fields');
     }    
 

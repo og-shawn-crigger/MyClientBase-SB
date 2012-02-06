@@ -16,7 +16,24 @@ class Contact extends Admin_Controller {
         $this->load->model('mdl_contacts');
     }
 
-    //work around to make CI pagination to fit CE pagination
+    /**
+     * work around to make CodeIgniter pagination fit ContactEngine pagination 
+     * 
+     * @access		private
+     * @param		
+     * @var			
+     * @return		string
+     * @example
+     * @see
+     * 
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Feb 6, 2012
+     * 
+     * @todo		
+     */
     private function get_wanted_page()
     {
     	$results_per_page = $this->mdl_mcb_data->setting('results_per_page');
@@ -31,179 +48,168 @@ class Contact extends Admin_Controller {
     	return $page; 
     }
 
-    private function update_config($obj,$configfile)
+    /**
+     * This function sets the new configuration values for the objects Person, Organization and Location using the common Code Igniter method
+     * $this->config->set_item. Afterwards, writes the values in the config file using the function write_config
+     * 
+     * @access		private
+     * @param		
+     * @var			
+     * @return		boolean
+     * @example
+     * @see
+     * 
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Feb 6, 2012
+     * 
+     * @todo		
+     */
+    private function update_config(&$obj, $configfile)
     {
+    	if(!is_object($obj)) return false;
+    	
     	//update the configuration file
     	$this->load->helper('configfile');
-    	switch ($configfile) {
-    		case 'person':
-		    	$this->config->set_item('person_show_fields', $obj->show_fields);
-		    	write_config($configfile, array('person_show_fields','person_hidden_fields'),true);    			
-    		break;
-    		
-    		case 'organization':
-		    	$this->config->set_item('organization_show_fields', $obj->show_fields);
-		    	write_config($configfile, array('organization_show_fields','organization_hidden_fields'),true);    			
-    		break;
-       	}
-    }
-    
-    public function display_settings($data=null)
-    {  	
-	    
-	    if(empty($data['settings_person'])) $data['settings_person'] = $this->display_settings_person();
-	    
-	    if(empty($data['settings_person_order'])) 
-	    {
-	    	$input = array('sort' => true);
-	    	$data['settings_person_order'] = $this->display_settings_person($input);
-	    }
-	    	    
-	    if(empty($data['settings_organization'])) $data['settings_organization'] = $this->display_settings_organization();
-
-	    if(empty($data['settings_organization_order']))
-	    {
-	    	$input = array('sort' => true);
-	    	$data['settings_organization_order'] = $this->display_settings_organization($input);
-	    }
-	    	    
-	    if(empty($data['settings_location'])) $data['settings_location'] = $this->display_settings_location();
-	
-    	if($this->input->post('action') == 'refresh')
+    	
+    	$this->config->set_item($obj->objName.'_show_fields', $obj->show_fields);
+    	$this->config->set_item($obj->objName.'_attributes_aliases', $obj->aliases);
+    	if(write_config($configfile, array($obj->objName.'_show_fields', $obj->objName.'_attributes_aliases', $obj->objName.'_hidden_fields'),true))
     	{
-    		echo $this->plenty_parser->parse('settings.tpl', $data, true, 'smarty', 'contact');
-    	} else {
-    		$this->plenty_parser->parse('settings.tpl', $data, false, 'smarty', 'contact');
+    		$obj->prepareShow();  //refreshes the object with the new values
+    		return true;
     	}
-    }
+    	return false;
+	}
     
-
-    private function display_settings_person($input=null)
+    /**
+     * This controller method (function) is defined as calledback in the config.php and is called by MCB when the System Settings Panel is displayed.
+     * MCB provides, so, a specific "settings tab" for the module Contact. This function is called only once, when the System Settings is loaded.
+     * After that, during the accordion operations etc, this function is no more called. 
+     * The aim of the function is to get, populate and return the html of several tpl files. The html returned will populate the "setting tab" 
+     * 
+     * @access		public
+     * @param		array | null	An array containing the data to send to the tpl files or nothing
+     * @return		string | false
+     * @example
+     * @see
+     * 
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Feb 6, 2012
+     * 
+     */
+    public function display_settings()
     {
-    	$person = new Mdl_Person();
-    	$person->getProperties('person');
-    	$person->prepareShow();
-    	 
-    	if(is_array($input)) extract($input);
-    	 
-    	if(isset($addToVisible) && $addToVisible) {
-    		if(is_array($PersonAvailableAttributes))
-    		{
-    			$added_attribute = array_diff(array_keys($person->properties), $PersonAvailableAttributes);
-    		} else {
-    			if(!empty($PersonAvailableAttributes))
-    			{
-    				$added_attribute = array($PersonAvailableAttributes);
-    			}
-    		}
-    		foreach ($added_attribute as $key => $value) {
-    			if(!in_array($value, $person->show_fields)) array_push($person->show_fields, $value);
-    		}
-    		$this->update_config($person,'person');
-    	}
+    	$data = array();
     	
-    	if(isset($removeFromVisible) && $removeFromVisible) {
-    		if(is_array($PersonVisibleAttributes))
-    		{
-    			$person->show_fields = $PersonVisibleAttributes;    			
-    		} else {
-    			if(!empty($PersonVisibleAttributes))
-    			{
-    				//temporary array
-    				$a = array_flip($person->show_fields);
-    				if(count($a)>1)
-    				{
-    					unset($a[$PersonVisibleAttributes]);
-    					$person->show_fields = array_flip($a);
-    				}
-    			}
-    		}
-    		$this->update_config($person,'person');
-    	}
+    	$obj = new Mdl_Person();
+    	$obj->getProperties();
+    	$obj->prepareShow();
+    	$data['settings_person'] = $this->display_object_settings($obj);
+
+    	$obj = new Mdl_Organization();
+    	$obj->getProperties();
+    	$obj->prepareShow();
+    	$data['settings_organization'] = $this->display_object_settings($obj);
     	
-    	$data = array(
-    	    			'person_all_attributes' => $person->properties,
-    	    			'person_visible_attributes' => $person->show_fields,
-    	);
+    	$obj = new Mdl_Location();
+    	$obj->getProperties();
+    	$obj->prepareShow();
+    	$data['settings_location'] = $this->display_settings_location();
     	
-    	if(is_array($person->properties) and is_array($person->show_fields))
-    	{
-    		$data['person_available_attributes'] = array_diff_key($person->properties, array_flip($person->show_fields));
-    	} else {
-    		$data['person_available_attributes'] = array();
-    	}
-    	
-    	if(isset($aliases) && $aliases)
-    	{
-    		return $this->plenty_parser->parse('settings_person_aliases.tpl', $data, true, 'smarty', 'contact');
-    	}
-    	
-    	if(isset($sort) && $sort)
-    	{
-    		return $this->plenty_parser->parse('settings_person_order.tpl', $data, true, 'smarty', 'contact');
-    	} else {
-    		return $this->plenty_parser->parse('settings_person.tpl', $data, true, 'smarty', 'contact');
-    	}
+    	$this->plenty_parser->parse('settings.tpl', $data, false, 'smarty', 'contact');
     }
+      
+	private function display_object_settings(&$obj, $tpl = null)
+	{	
+		if(!is_object($obj)) return false;
+		if(is_array($tpl)) return false;
+		
+		//collects data for the tpl files
+		$data = array(
+		    	    	$obj->objName.'_all_attributes' => $obj->properties,
+		    	    	$obj->objName.'_visible_attributes' => $obj->show_fields,
+		    	    	$obj->objName.'_aliases' => $obj->aliases,
+		);
+		 
+		if(is_array($obj->properties) and is_array($obj->show_fields))
+		{
+			$data[$obj->objName.'_available_attributes'] = array_diff_key($obj->properties, array_flip($obj->show_fields));
+		} else {
+			$data[$obj->objName.'_available_attributes'] = array();
+		}
+		 
+		//feeds and loads the right tpl file and returns the html output
+		$tpls = array('order','aliases');
+		if(in_array($tpl, $tpls))
+		{
+			return $this->plenty_parser->parse('settings_'.$obj->objName.'_'.$tpl.'.tpl', $data, true, 'smarty', 'contact');
+		} else {
+			return $this->plenty_parser->parse('settings_'.$obj->objName.'.tpl', $data, true, 'smarty', 'contact');
+		}
+	}
     
-    private function display_settings_organization($input=null)
-    {
-    	$org = new Mdl_Organization();
-    	$org->getProperties('organization');
-    	$org->prepareShow();
-    	    	
-    	if(is_array($input)) extract($input);
-    	 
-    	if(isset($addToVisible) && $addToVisible) {
-    		if(is_array($OrgAvailableAttributes))
-    		{
-    			$added_attribute = array_diff(array_keys($org->properties), $OrgAvailableAttributes);
-    		} else {
-    			if(!empty($OrgAvailableAttributes))
-    			{
-    				$added_attribute = array($OrgAvailableAttributes);
-    			}
-    		}
-    		foreach ($added_attribute as $key => $value) {
-    			if(!in_array($value, $org->show_fields)) array_push($org->show_fields, $value);
-    		}
-    		
-    		$this->update_config($org,'organization');
-    	}
-    	
-    	if(isset($removeFromVisible) && $removeFromVisible) {
-    		if(is_array($OrgVisibleAttributes))
-    		{
-    			$org->show_fields = $OrgVisibleAttributes;    			
-    		} else {
-    			if(!empty($OrgVisibleAttributes))
-    			{
-    				//temporary array
-    				$a = array_flip($org->show_fields);
-    				if(count($a)>1)
-    				{
-    					unset($a[$OrgVisibleAttributes]);
-    					$org->show_fields = array_flip($a);
-    				}
-    			}
-    		}
-    		$this->update_config($org,'organization');
-    	}
-    	
-    	$data = array(
-    	    			'org_all_attributes' => $org->properties,
-    	    			'org_available_attributes' => array_diff_key($org->properties, array_flip($org->show_fields)),
-    	    			'org_visible_attributes' => $org->show_fields,
-    	);
-    	
-    	if(isset($sort) && $sort)
-    	{
-    		return $this->plenty_parser->parse('settings_organization_order.tpl', $data, true, 'smarty', 'contact');
-    	} else {
-    		return $this->plenty_parser->parse('settings_organization.tpl', $data, true, 'smarty', 'contact');
-    	}    	
-    	
-    }
+	/**
+	 * This function adds or removes an attribute to the "visible-attributes-set" for the given object and writes it in the configuration file.
+	 * 
+	 * @access		private
+	 * @param		$obj	object	The given object (person, organization, location)
+	 * @param		$action	string	The action to perform (add | remove)
+	 * @param		$attribute	string	The attribute to add to the "visible-attributes-set" 		
+	 * @return		boolean
+	 * @example
+	 * @see
+	 * 
+	 * @author 		Damiano Venturin
+	 * @copyright 	2V S.r.l.
+	 * @license		GPL
+	 * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+	 * @since		Feb 6, 2012
+	 * 
+	 */ 
+	private function toVisible(&$obj, $action, $attribute)
+	{	
+		if(!is_object($obj)) return false;
+		if(is_array($attribute)) return false;
+		if(is_array($action)) return false;
+		
+		switch ($action) {
+			case 'add':
+				if(in_array($attribute, $obj->show_fields))
+				{
+					return true; //no changes: there is nothing to do here
+				} else {
+					array_push($obj->show_fields, $attribute);;
+				}
+			break;
+			
+			case 'remove':
+				if(count($obj->show_fields)>1)  //you can not remove all the fields
+				{
+					//temporary array
+					$tmp = array_flip($obj->show_fields);
+					if(isset($tmp[$attribute]))
+					{
+						unset($tmp[$attribute]);
+						$obj->show_fields = array_flip($tmp);
+					} else {
+						return true; //no changes: there is nothing to do here
+					}
+				}				
+			break;
+			
+			default:
+				return false;
+			break;
+		}
+		
+		return $this->update_config($obj,$obj->objName);			
+	}
     
     private function display_settings_location($input=null)
     {
@@ -212,130 +218,103 @@ class Contact extends Admin_Controller {
     	
     }
     
-    /*
-     * This function is called by the javascript in the UI everytime there is a javascript event (drag, sort)
-     * This function updates the config file and returns the updated html content to the javascript which
-     * replaces the old content with the new one  
+    private function getAjaxItem()
+    {
+    	if($this->input->post('item')!= "")
+    	{
+    		$split = preg_split('/_/', $this->input->post('item'));
+    		if(isset($split['1'])) return $split['1'];
+    	}
+    	return false;
+    }
+    
+    /**
+     * This function is called by the javascript (System Settings) everytime there is an event (drag, sort, submit)
+     * It updates the config file for the specific object and returns the updated html to the javascript which
+     * replaces the old content with the new one   
+     * 
+     * @access		private
+     * @param
+     * @return		string		
+     * @example
+     * @see
+     * 
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Feb 6, 2012
+  	 *
      */
     public function update_settings()
     {
     	$output = '';
     	$data = array();
-    	switch ($this->input->post('action')) {
-    		case 'person_addToVisible':
-    			if($this->input->post('item')!= "")
-    			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    								'addToVisible' => true,
-    								'PersonAvailableAttributes' => $split['1'],
-    								);
-    			}
-    			echo $this->display_settings_person($output);
-    		break;
+    	
+    	$split = preg_split('/_/', $this->input->post('action'));
+    	if(isset($split['0'])) $objName = $split['0'];
+    	if(isset($split['1'])) $action = $split['1'];
+    	
+		switch ($objName) {
+			case 'person':
+		    	$obj = new Mdl_Person();
+			break;
+
+			case 'organization':
+				$obj = new Mdl_Organization();
+			break;
+
+			case 'location':
+				$obj = new Mdl_Location();
+			break;			
+			
+			default:
+				return false;
+			break;
+		}
+
+		$obj->getProperties();
+		$obj->prepareShow();
+		
+		$tpl = null;
+		
+    	switch ($action) {
     		
-    		case 'person_removeFromVisible':
-    			if($this->input->post('item')!= "")
-    			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    			    				'removeFromVisible' => true,
-    			    				'PersonVisibleAttributes' => $split['1'],
-    				);
-    			}
-    			echo $this->display_settings_person($output);    			
-    		break;
-    			    		
-    		case 'person_sort':    			
-    			if(is_array($this->input->post('PersonVisibleAttributes'))) 
-    			{
-    				$output = array(
-    								'removeFromVisible' => true,  
-    								'PersonVisibleAttributes' => $this->input->post('PersonVisibleAttributes'));
-    			}
-				$output['sort'] = true;
-    			echo $this->display_settings_person($output);
+    		case 'addToVisible':
+    			if($attribute = $this->getAjaxItem()) $this->toVisible($obj, 'add', $attribute);		
     		break;
 
-    		case 'person_aliases':
-/*     			if(is_array($this->input->post('PersonVisibleAttributes')))
-    			{
-    				$output = array(
-    		    								'removeFromVisible' => true,  
-    		    								'PersonVisibleAttributes' => $this->input->post('PersonVisibleAttributes'));
-    			} */
-    			$output['aliases'] = true;
-    			//$output['sort'] = true;
-    			echo $this->display_settings_person($output);
+    		case 'removeFromVisible':
+    			if($attribute = $this->getAjaxItem()) $this->toVisible($obj, 'remove', $attribute);
     		break;
-    		    		
-    		case 'org_addToVisible':
-    			if($this->input->post('item')!= "")
+    			    		    		
+    		case 'sort':
+    			$show_fields = $this->input->post(ucfirst(strtolower($objName)).'VisibleAttributes'); 
+    			if(is_array($show_fields)) 
     			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    			    								'addToVisible' => true,
-    			    								'OrgAvailableAttributes' => $split['1'],
-    				);
+    				$obj->show_fields = $show_fields; //FIXME this might be dangerous. Someone can inject some not existant field
+    				$this->update_config($obj, $obj->objName);
     			}
-    			echo $this->display_settings_organization($output);    			
+    			$tpl = 'order';
     		break;
 
-    		case 'org_removeFromVisible':
-    			if($this->input->post('item')!= "")
-    			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    		    			    				'removeFromVisible' => true,
-    		    			    				'OrgVisibleAttributes' => $split['1'],
-    				);
+    		case 'aliases':
+    			if($this->input->post('save')){
+    				if(is_array($this->input->post('form'))) { 
+    					$aliases = array();
+    					$form = $this->input->post('form');
+    					foreach ($form as $key => $item) {
+    						if(!empty($item['value']) and $item['type'] == 'TEXT') $aliases[$item['field']] = strtolower(only_chars_nums_underscore(($item['value'])));
+    					}
+    					$obj->aliases = $aliases;
+    					$this->update_config($obj,$obj->objName);
+    				}
     			}
-    			echo $this->display_settings_organization($output);
+    			$tpl = 'aliases';
     		break;
-    			
-    		case 'org_sort':
-    			if(is_array($this->input->post('OrgVisibleAttributes'))) 
-    			{
-    				$output = array(
-    								'removeFromVisible' => true,  
-    								'OrgVisibleAttributes' => $this->input->post('OrgVisibleAttributes'));
-    			}
-				$output['sort'] = true;
-    			echo $this->display_settings_organization($output);
-    		break;
-    			
-    		case 'location_addToVisible':
-    			if($this->input->post('item')!= "")
-    			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    			    								'addToVisible' => true,
-    			    								'LocationAvailableAttributes' => $split['1'],
-    				);
-    			}
-    			echo $this->display_settings_location($output);    			
-    		break;
-
-    		case 'location_removeFromVisible':
-    			if($this->input->post('item')!= "")
-    			{
-    				$split = preg_split('/_/', $this->input->post('item'));
-    				$output = array(
-    		    			    				'removeFromVisible' => true,
-    		    			    				'LocationVisibleAttributes' => $split['1'],
-    				);
-    			}
-    			echo $this->display_settings_location($output);
-    		break;
-    			
-    		case 'location_sort':
-    			if(is_array($this->input->post('LocationAvailableAttributes')) and !is_array($this->input->post('LocationVisibleAttributes'))) $output = array('addToVisible' => true, 'LocationAvailableAttributes' => $this->input->post('LocationAvailableAttributes'));
-    			 
-    			if(!is_array($this->input->post('LocationAvailableAttributes')) and is_array($this->input->post('LocationVisibleAttributes'))) $output = array('removeFromVisible' => true, 'LocationVisibleAttributes' => $this->input->post('LocationVisibleAttributes'));
-    		
-    			echo $this->display_settings_location($output);
-    		break;
-       	} 	
+    	}
+       	
+    	echo $this->display_object_settings($obj, $tpl);
     }
         
     function index() {
@@ -397,8 +376,6 @@ class Contact extends Admin_Controller {
         $data['middle'] = $this->plenty_parser->parse('index_ce.tpl', $data, true, 'smarty', 'contact');
         
         $this->load->view('index_ce', $data);
-        
-
     }
 
 
@@ -573,7 +550,7 @@ class Contact extends Admin_Controller {
 	        	}
 	        }
         }
-                
+         
         //preparing output for views
         $data = array(
             'contact'	=>	$contact,
@@ -611,7 +588,7 @@ class Contact extends Admin_Controller {
     	
     	if($uid) $params = array('uid' => $uid);
     	if($oid) $params = array('oid' => $oid);    		 
-    	if($client_id) $params = array('client_id' => $client_id);
+    	if(isset($client_id) && $client_id) $params = array('client_id' => $client_id);
     	
     	if(!$oid && !$uid && !$client_id) return false;
     	
@@ -636,6 +613,7 @@ class Contact extends Admin_Controller {
     	$this->$obj->prepareShow();
     	$contact->show_fields = $this->$obj->show_fields;
     	$contact->hidden_fields = $this->$obj->hidden_fields;
+    	$contact->aliases = $this->$obj->aliases;
     	return $contact;
     }
     

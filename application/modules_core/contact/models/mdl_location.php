@@ -4,6 +4,7 @@
 
 class Mdl_Location extends MY_Model {
 
+	public $objName;
 	public $properties;
 	public $locId;
 	public $show_fields;
@@ -12,6 +13,8 @@ class Mdl_Location extends MY_Model {
     public function __construct() {
 
         parent::__construct();
+        
+        $this->objName = 'person';
         
         // Load curl
         $this->load->spark('curl/1.2.0');

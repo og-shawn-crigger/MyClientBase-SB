@@ -47,7 +47,7 @@ class CI_Model {
 	function __get($key)
 	{
 		$CI =& get_instance();
-		return $CI->$key;
+		return isset($CI->$key) ? $CI->$key : false;
 	}
 }
 // END Model Class
