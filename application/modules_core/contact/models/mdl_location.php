@@ -4,17 +4,21 @@
 
 class Mdl_Location extends MY_Model {
 
+	public $objClass;
 	public $objName;
 	public $properties;
 	public $locId;
 	public $show_fields;
 	public $hidden_fields;	
-	
+	public $aliases;
+		
     public function __construct() {
 
         parent::__construct();
         
-        $this->objName = 'person';
+        //some self-references
+        $this->objClass = get_class($this); //Mdl_Location
+        $this->objName = 'location';
         
         // Load curl
         $this->load->spark('curl/1.2.0');
@@ -136,6 +140,7 @@ class Mdl_Location extends MY_Model {
 		$this->load->config('location');
 		$this->show_fields = $this->config->item('location_show_fields');
 		$this->hidden_fields = $this->config->item('location_hidden_fields');
+		$this->aliases = $this->config->item('location_attributes_aliases');
 	}	
 }
 

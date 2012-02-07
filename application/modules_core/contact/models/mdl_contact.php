@@ -11,6 +11,7 @@
 class Mdl_Contact extends MY_Model {
 
 	public $possibleObjects;
+	public $objClass;
 	public $objName;
 	public $properties;
 	public $client_id;
@@ -25,7 +26,9 @@ class Mdl_Contact extends MY_Model {
 
         parent::__construct();
         
-        $this->objName = 'contact';
+        //some self-references
+        $this->objClass = get_class($this); //one of these (Mdl_Person, Mdl_Organization, Mdl_Contact)
+        $this->objName = 'contact'; //one of these ('person','organization', 'contact')
         
         $this->possibleObjects = array('person','organization', 'contact'); //lists all the possible children for this obj
         

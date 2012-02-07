@@ -120,7 +120,7 @@ class Contact extends Admin_Controller {
     	$obj = new Mdl_Location();
     	$obj->getProperties();
     	$obj->prepareShow();
-    	$data['settings_location'] = $this->display_settings_location();
+    	$data['settings_location'] = $this->display_object_settings($obj);
     	
     	$this->plenty_parser->parse('settings.tpl', $data, false, 'smarty', 'contact');
     }
@@ -289,11 +289,19 @@ class Contact extends Admin_Controller {
     		break;
     			    		    		
     		case 'sort':
-    			$show_fields = $this->input->post(ucfirst(strtolower($objName)).'VisibleAttributes'); 
-    			if(is_array($show_fields)) 
-    			{
-    				$obj->show_fields = $show_fields; //FIXME this might be dangerous. Someone can inject some not existant field
-    				$this->update_config($obj, $obj->objName);
+    			//show_fields is the ordered array of fields coming from the accordion
+    			$show_fields = $this->input->post(ucfirst(strtolower($objName)).'VisibleAttributes');
+
+    			if(is_array($show_fields)) {
+    				if(is_array($obj->show_fields))
+    				{
+    					//let's check if the given array (show_fields) is not fake
+    					if(count(array_diff($obj->show_fields, $show_fields)) == 0) {
+    						//there are no differences so I can assume that the POST wasn't manipulated
+    						$obj->show_fields = $show_fields;
+    						$this->update_config($obj, $obj->objName);
+    					}
+    				}
     			}
     			$tpl = 'order';
     		break;
