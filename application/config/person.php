@@ -11,4 +11,4 @@ $config['person_attributes_aliases'] = array(
 				'mozillaHomeState' => 'state',
 				'mozillaHomeCountryName' => 'country',
 );
-$config['person_hidden_fields'] = array('uid');
+$config['person_hidden_fields'] = array('uid','client_id');

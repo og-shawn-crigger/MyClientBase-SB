@@ -404,7 +404,9 @@ class Contact extends Admin_Controller {
         if(isset($uid) and $uid !== false) $obj = 'person';  //the empty form has been submitted and now it's ready for save
         if(isset($oid) and $oid !== false) $obj = 'organization';
         
-        $contact = $this->retrieve_contact();  
+        $contact = $this->retrieve_contact(); 
+        if(!is_object($contact)) return false;  //TODO this can be improved. Atm returning false means to see a white page...
+         
         if(isset($contact->uid)) $obj = 'person'; // a contact has been selected to be edited
         if(isset($contact->oid)) $obj = 'organization';
         
@@ -532,7 +534,7 @@ class Contact extends Admin_Controller {
         	foreach( $locs as $locId)
         	{
         		$params = array('locId' => $locId);
-        		$loc = $this->location->get($params);
+        		$loc = $this->location->get($params);  //FIXME this step takes too long
         		if($loc['status']['status_code'] == 200)
         		{
         			$this->location->prepareShow();
@@ -580,7 +582,7 @@ class Contact extends Admin_Controller {
 
     }
     
-    function retrieve_contact()
+    public function retrieve_contact()
     {
     	$uid = uri_assoc('uid');
     	$oid = uri_assoc('oid');
@@ -588,9 +590,9 @@ class Contact extends Admin_Controller {
     	{
     		if(uri_assoc('client_id'))
     		{
-    			$client_id = uri_assoc('client_id');
+    			$client_id = uri_assoc('client_id');   //retrieving client_id from GET
     		} else {
-    			if($this->input->post('client_id')) $client_id = $this->input->post('client_id');
+    			if($this->input->post('client_id')) $client_id = $this->input->post('client_id'); //retrieving client_id from POST
     		}
     	}
     	
@@ -598,7 +600,8 @@ class Contact extends Admin_Controller {
     	if($oid) $params = array('oid' => $oid);    		 
     	if(isset($client_id) && $client_id) $params = array('client_id' => $client_id);
     	
-    	if(!$oid && !$uid && !$client_id) return false;
+    	//check: I need at least one of the 3 parameters uid,oid,client_id
+    	if(!isset($params) || count($params)==0) return false;
     	
     	//perform the request to Contact Engine
     	$rest_return = $this->mdl_contacts->get($params);      	//TODO add check on rest_status
@@ -606,14 +609,12 @@ class Contact extends Admin_Controller {
     	//when the request is performed using client_id || uid || oid as input I get an object in return, not an array
     	if(is_object($rest_return))
     	{
-    		$contact = $rest_return;
-    		
-    		if($rest_return->uid) $obj = 'person';
-    		if($rest_return->oid) $obj = 'organization';
-    		$contact = $this->prepareShow($obj,$contact);
+    		$obj = $rest_return;
+    		$obj->prepareShow();
+    		return $obj;
     	}
     	
-    	return $contact;
+    	return false;
     }
 
     function prepareShow($obj, &$contact)

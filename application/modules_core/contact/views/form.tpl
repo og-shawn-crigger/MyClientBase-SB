@@ -1,5 +1,7 @@
 {* PREPARING THE FORM CONTENT *}
 
+{* <pre>{$contact|print_r}</pre> *}
+
 {foreach $contact->properties as $property => $details}
 	
 	{$type = ''}
@@ -57,9 +59,7 @@
 		{/if}
 	{/if}
 	
-	{if $type == 'hidden'}
-		<input type="{$type}" name="{$property}" id="{$property}" value="{$value}" {$checked} />
-	{else}
+	{if $type != 'hidden'}
 		{$fields[$property]["type"] = $type}
 	{/if}								
 {/foreach}
@@ -105,14 +105,26 @@
 							
 						<div id="tab_person">
 							{* <pre>{$fields|print_r}</pre> *} 
-							{* outputs the fields according to the order provided in the settings *}
+							
+							{* print out hidden fields regardless they are visible or not *}
+							{if is_array($contact->hidden_fields)}
+								{foreach $contact->hidden_fields as $key => $property}
+									<input type="hidden" name="{$property}" id="{$property}" value="{$contact->$property}" /> 
+								{/foreach}
+							{/if}							
+							
+							{* outputs the visible fields accordingly to the order provided in the settings *}
 							{foreach $contact->show_fields as $key => $property}
 								{if $fields[$property] and !in_array($property,$settings)}
 									{* here some GUI filters *}
 									
 									<dl style="background-color: {cycle values="#FFF,#e8e8e8"}; float: left; width: 100%;">
 										<dt style="float: left; text-align: left; width: 40%;">{t}{$property}{/t}{$fields[$property]["required"]}:</dt>
-										<dd style="float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$fields[$property]["checked"]} /></dd>
+										{$checked = ""}
+										{if isset($fields[$property]["checked"])} 
+											{$checked = $fields[$property]["checked"]}
+										{/if} 
+										<dd style="float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
 									</dl>								
 								{/if}
 							{/foreach}
@@ -129,7 +141,11 @@
 								{if $fields[$property] and in_array($property,$settings)}
 									<dl style="background-color: {cycle values="#FFF,#e8e8e8"}; float: left; width: 100%;">
 										<dt style="float: left; text-align: left; width: 40%;">{t}{$property}{/t}{$fields[$property]["required"]}:</dt>
-										<dd style="float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$fields[$property]["checked"]} /></dd>
+										{$checked = ""}
+										{if isset($fields[$property]["checked"])} 
+											{$checked = $fields[$property]["checked"]}
+										{/if} 
+										<dd style="float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
 									</dl>								
 								{/if}
 							{/foreach}
