@@ -325,7 +325,7 @@ class Contact extends Admin_Controller {
     	echo $this->display_object_settings($obj, $tpl);
     }
         
-    function index() {
+    public function index() {
 
         $this->load->helper('text');
         
@@ -386,106 +386,136 @@ class Contact extends Admin_Controller {
         $this->load->view('index_ce', $data);
     }
 
+	private function getContactById()
+	{
+		//I can get the $contact_id in 4 possible ways: by uid, by oid, by POST and GET
+		$uid = $this->input->post('uid');
+		if(empty($uid)) unset($uid);
 
+		$oid = $this->input->post('oid');
+		if(empty($oid)) unset($oid);
+
+		if(isset($uid) && isset($oid)) 
+		{
+			return false; //I can't understand if it's a person or an organization
+		} else {
+			if(!isset($uid) && !isset($oid))
+			{
+				//let's look for the contact_id
+			    if(uri_assoc('client_id'))
+	    		{
+	    			$contact_id = uri_assoc('client_id');   //retrieving client_id from GET
+	    		} else {
+	    			if($this->input->post('client_id')) $contact_id = $this->input->post('client_id'); //retrieving client_id from POST
+	    		}
+				if(empty($contact_id)) return false; //there is no other way to get the object
+			}
+		}
+		
+		if(isset($uid)) $contact_id = $uid;
+		if(isset($oid)) $contact_id = $oid;
+		
+		//retrieve the exact object (person or organization)
+		$obj = new Mdl_Contact();
+		$obj->client_id = $contact_id;
+		if(! $obj = $obj->get(null,false)) return false;
+		$obj->prepareShow();
+		return $obj;
+	}
     
-    function form() {
+    public function form() {
 
+    	$this->load->helper(array('form', 'url'));
+    	
+    	//let's see with which kind of object we are dealing
+    	if(! $obj = $this->getContactById()) return false;
+    	
+    	if ($this->mdl_contacts->validate($obj)) {
+    		
+    		$submit = true;
+    		//the form has been validated. Let's check if there is any binary file uploaded
+    		$upload_info = saveUploadedFile();
+    		
+    		//TODO error handling
+    		if(is_array($upload_info['data'])) {
+    			foreach ($upload_info['data'] as $element => $element_status)
+    			{
+    				//reads the file and converts it in base64 and stores it in $obj
+    				$this->load->helper('file');
+    				
+    				$binary_file = base64_encode(read_file($element_status['full_path']));
+    				
+    				unlink($element_status['full_path']);
+    				
+    				if($binary_file) $obj->$element = $binary_file;
+    			}
+    		}
+    		    		
+    		$properties = array_keys($obj->properties);
+    		//$data = array();
+    		foreach ($this->mdl_contacts->form_values as $property => $value) {
+    			if(in_array($property, $properties))
+    			{
+    				$obj->$property = $value;
+    			}
+    		}
+    		
+    		//ready to save in ldap
+    		$obj->save();
+    		
+    		//this brings back to the previous page
+    		redirect($this->session->userdata('last_index'));    		
+    	}
+    	
+    	$contact_id = $obj->uid ? $obj->uid : $obj->oid;
+    	
+    	$client_settings = $this->input->post('client_settings');
+    	if(is_array($client_settings))
+    	{    	 
+	    	foreach ($client_settings as $key=>$value) {
+	    		if ($value) {
+	    			$this->mdl_mcb_client_data->save($contact_id, $key, $value);
+	    		}
+	    		else {
+	    			$this->mdl_mcb_client_data->delete($contact_id, $key);
+	    		}
+	    	}    	
+    	}
+    	    	
+    	//this retrieves other info about the contact that have nothing to do with the contact itself
         $this->load->model(
             array(
             'mcb_data/mdl_mcb_client_data',
             'invoices/mdl_invoice_groups'
             )
         );
-
-        $obj = uri_assoc('add'); //new contact request => prepare empty form
         
-        $uid = $this->input->post('uid');
-        $oid = $this->input->post('oid');
-        if(isset($uid) and $uid !== false) $obj = 'person';  //the empty form has been submitted and now it's ready for save
-        if(isset($oid) and $oid !== false) $obj = 'organization';
+        //it's not a submit so let's fill the form with customer's data
+        $this->load->model('templates/mdl_templates');
+
+        //$this->mdl_contacts->prep_validation($contact_id);
         
-        $contact = $this->retrieve_contact(); 
-        if(!is_object($contact)) return false;  //TODO this can be improved. Atm returning false means to see a white page...
-         
-        if(isset($contact->uid)) $obj = 'person'; // a contact has been selected to be edited
-        if(isset($contact->oid)) $obj = 'organization';
+        //preparing the form
+        foreach ($obj->properties as $key => $property) {
+        	$this->mdl_contacts->form_values[$key] = $obj->$key;
+        }        
         
-        if ($this->mdl_contacts->validate($obj)) {
-
-        	//it's a submit
-            $this->mdl_contacts->save($obj);
-            
-            if($uid)
-            {
-            	$contact_id = $uid;
-            } else {
-            	$contact_id = $oid;
-            }
-             
-            foreach ($this->input->post('client_settings') as $key=>$value) {
-                if ($value) {
-                    $this->mdl_mcb_client_data->save($contact_id, $key, $value);
-                }
-                else {
-                    $this->mdl_mcb_client_data->delete($contact_id, $key);
-                }
-            }
-
-            redirect($this->session->userdata('last_index'));  //TODO what is this?
-
-        }
-
-        else {
-
-        	//it's not a submit so let's fill the form with customer's data
-            $this->load->model('templates/mdl_templates');
-
-            $this->load->helper('form');
-			
- 			//preparing the form
-            if (!$_POST) {
-                //$this->mdl_contacts->prep_validation($contact_id);
-                if(!is_object($contact)) {
-                	//preparing empty form to add a new com
-                	$this->contact->getProperties($obj);
-                	//creating an empty contact
-                	$contact = new Mdl_Person();
-                	$properties = $this->contact->properties;
-                	
-                	//empty every attribute
-                	foreach ($properties as $key => $value) {
-                		$contact->$key = '';
-                	}
-                	
-					$contact = $this->prepareShow($obj,$contact);
-					$contact->properties = $properties;
-                	
-                	//$contact = array_keys($properties);
-                } else {
-	            	foreach ($contact as $key => $value) {
-	            		if($key != "properties") $this->mdl_contacts->form_values[$key] = $value;
-	            	}
-                }
-            }
-
-            $data = array(
-                //'custom_fields'     =>	$this->mdl_contacts->custom_fields,
-            	'contact'			=>  $contact,
-                'invoice_templates' =>  $this->mdl_templates->get('invoices'),
-                'invoice_groups'    =>  $this->mdl_invoice_groups->get()
-            );
-
-            $data['form'] = $this->plenty_parser->parse('form.tpl', $data, true, 'smarty', 'contact');
-            
-            $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
-            
-            $this->load->view('form', $data);
-
-        }
-
+        $data = array(
+        				//'custom_fields'     =>	$this->mdl_contacts->custom_fields,
+                    	'contact'			=>  $obj,
+                        'invoice_templates' =>  $this->mdl_templates->get('invoices'),
+                        'invoice_groups'    =>  $this->mdl_invoice_groups->get()
+        );
+        
+        $data['form'] = $this->plenty_parser->parse('form.tpl', $data, true, 'smarty', 'contact');
+        
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
+        
+        $this->load->view('form', $data);
+        
     }
 
-    function details() {
+    public function details() {
     	
         $this->redir->set_last_index();
 
@@ -582,6 +612,7 @@ class Contact extends Admin_Controller {
 
     }
     
+    //TODO this function is called only in this file. I think I can refactor code so that I can get the rid of it
     public function retrieve_contact()
     {
     	$uid = uri_assoc('uid');

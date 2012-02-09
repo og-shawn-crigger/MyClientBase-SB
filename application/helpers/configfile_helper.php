@@ -22,6 +22,7 @@
 function write_config($filename, array $config_items, $create=false) {
 	
 	$CI =& get_instance();
+	$CI->load->helper('file');
 	
 	//The config file might be in the CI default config path (i.e. application/config or inside of the HMVC module in the config folder)
 	//For now this function takes care ONLY of the default config path
@@ -65,7 +66,8 @@ function write_config($filename, array $config_items, $create=false) {
 		}
 	}
 	
-	return file_put_contents($filepath, $config);
+	//return file_put_contents($filepath, $config);
+	return write_file($filepath, $config);
 }
 
 /* End of file configfile_helper.php */

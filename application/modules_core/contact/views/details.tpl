@@ -86,20 +86,24 @@
 											<a href="{$contact->$property_name}" target="_blank">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
 											{$already_wrote=1}
 										{/if}
-																			
+										
+										{if $property_name=="jpegPhoto"}
+											{* skip the item. I take care of the photo later *}
+											{$already_wrote=1}
+										{/if}									
 										<!-- default case -->
 										{if $already_wrote==0} 
 											{$contact->$property_name|wordwrap:60:"<br/>":true}
 										{/if}
 									</td>
 
-								{if $count == 1} 
-									<td rowspan="4" align="center" style="width: 100px; background: white;">
-										<span style="font-size: 12px; align: center; margin-bottom: 0px;">&nbsp;</span>
+								{if $count == 0} 
+									<td rowspan="5" align="center" style="width: 100px; background: white;">
+										<span style="font-size: 12px; align: center; margin-bottom: 0px;">{"{t}photo{/t}"|capitalize}</span>
 										{if $contact->jpegPhoto}
-											<img alt="thumbnail" src="data:image/jpeg;base64,{$contact->jpegPhoto|base64_decode}">
+											<img alt="jpegPhoto" style="border: 1px solid black; width: 100px; height: 100px; margin-top: 0px;" src="data:image/jpeg;base64,{$contact->jpegPhoto}">
 										{else}
-											<img style="border: 1px solid black; width: 100px; height: 100px; margin-top: 0px;" src="/images/no-face-100.png"/>
+											<img alt="jpegPhoto" style="border: 1px solid black; width: 100px; height: 100px; margin-top: 0px;" src="/images/no-face-100.png"/>
 										{/if}
 										
 									</td>

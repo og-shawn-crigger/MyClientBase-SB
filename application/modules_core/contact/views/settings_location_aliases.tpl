@@ -13,7 +13,7 @@
         });
     });
 </script>
-   
+
 <p style="background-color: #fffdd0; border: 1px dotted gray;">{t}For each attribute you can specify an alias that will replace the attribute name in the contact's details and form{/t}.</p>
 <form name="save_location_aliases">
 	{foreach $location_visible_attributes as $key => $attribute_name}

@@ -164,14 +164,19 @@ class Mdl_Contacts extends MY_Model {
     }
 
     public function validate($obj) {
-		switch ($obj) {
+
+    	if(!is_object($obj)) return false;
+    	
+		switch ($obj->objName) {
 			case 'person':
+				//FIXME too few fields. I can get the list of required fields automatically
 		        //validation rules for person
-		  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required');
+		  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required'); 
 		        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
 			break;
 
 			case 'organization':
+				//FIXME too few fields. I can get the list of required fields automatically
 		        //validation rules for organization
 		  		$this->form_validation->set_rules('o', $this->lang->line('o'), 'required');
 		        //$this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
@@ -233,7 +238,11 @@ class Mdl_Contacts extends MY_Model {
     }
 
     public function save($obj = null) {
-	
+		
+    	//FIXME this method is probably usefull and must rely on the obj method "save"
+    	$obj->save();
+    	return ;
+    	
     	//TODO this function is ok for the UPDATE but not for the CREATE yet
         $data = array();
         
@@ -246,7 +255,7 @@ class Mdl_Contacts extends MY_Model {
    		
         $this->contact->getProperties($obj);
         $properties = $this->contact->properties;
-        
+    	
         foreach ($this->form_values as $property => $value) {
         	if(in_array($property, array_keys($properties)))
         	{

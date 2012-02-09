@@ -143,9 +143,26 @@ form #btn_submit {
 form #btn_cancel {
 	margin-left: 10px;
 }
-dl {clear:both;}
-dt {float:left; text-align:right; width:180px; line-height:25px; margin:0 10px 10px 0;}
-dd {line-height:25px; margin:0 0 10px 0;}
+dl {clear:both;line-height:20px;}
+dt {
+	float:left;
+	text-align:right; 
+	width:180px; 
+	padding-top: 10px;
+	margin-left: 5px;
+	margin-right: 0px;
+	margin-bottom: 0px; 
+	border: 0px solid green;
+}
+dd {
+	padding-top: 5px;
+	padding-bottom: 3px;
+	margin-top: 0px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 0px; 
+	border: 0px solid red;
+}
 
 
 strong   		{	font-weight:600;}
