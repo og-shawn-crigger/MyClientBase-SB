@@ -218,6 +218,7 @@ input.contact_search {
 	text-align: right;
 }
 
+/*
 .mcbsb-regular-Button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -248,4 +249,32 @@ input.contact_search {
 .mcbsb-regular-:active {
 	position:relative;
 	top:1px;
+}
+*/
+
+.mcbsb-regular-Button {
+    padding: 5px 10px;
+    display: inline;
+    background: #555555;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    text-shadow: 1px 1px #666;
+}
+
+.mcbsb-regular-Button:hover {
+    background-position: 0 -48px; 
+    background-color: #34a067;
+    color: white;
+}
+
+.mcbsb-regular-Button:active {
+    background-position: 0 top;
+    position: relative;
+    top: 1px;
+    padding: 6px 10px 4px;
 }

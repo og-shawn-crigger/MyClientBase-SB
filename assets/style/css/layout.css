@@ -104,6 +104,31 @@ table tr td {
 	border-bottom: 1px solid #d8d8d8;
 }
 
+tr.columns_header {
+	background-color: #555555;
+	color: white;
+	font-weight: bold;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;	
+	height : 20px;
+	line-height : 20px;		
+}
+
+td.columns_header {
+	background-color: #555555;
+	color: white;
+	font-weight: bold;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border-right: 1px solid white;
+	height : 20px;
+	line-height : 20px;		
+}
+
 table .contact-details-container {
 	width: 100%;
 	margin: 0px;
@@ -210,6 +235,7 @@ table th {
 	padding: 0 10px;
 	text-align: left;
 }
+
 tr.hoverall:hover {background:#EFEFEF;}
 .quicklinks {
 	padding-top: 0 !important;

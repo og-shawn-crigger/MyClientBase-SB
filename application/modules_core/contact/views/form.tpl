@@ -106,16 +106,16 @@
 					<div id="tabs">
 
 						<ul>
-							<li><a href="#tab_person">{t}Info{/t}</a></li>
+							<li><a href="#tab_contact">{t}Info{/t}</a></li>
                   			<li><a href="#tab_settings">{t}Settings{/t}</a></li>
 						</ul>
 
 						<br/>
 						<span style="color: red;">*</span> <span style="text-size: 12px; margin-bottom: 5px;">{t}means mandatory field{/t}</span><br/><br/>						
 							
-						<div id="tab_person">
+						<div id="tab_contact">
 						
-							<form method="post" action="/index.php/contact/form" {$form_addon}>
+							<form method="post" action={$form_url} {$form_addon}>
 							
 								{* <pre>{$fields|print_r}</pre> *} 
 								
@@ -155,17 +155,23 @@
 										</dl>								
 									{/if}
 								{/foreach}
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
+								{if $contact->entryUpdatedBy != ""}
+									| {t}updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
+								{/if}
+								</span><br/><br/>								
 								<span>
 									<input type="reset" id="btn_cancel"  class="mcbsb-regular-Button" btn_cancel" value="{t}cancel{/t}" />
 									<input type="submit" id="btn_submit"  class="mcbsb-regular-Button"  name="btn_submit" value="{t}submit{/t}" />
 								</span>	
 							</form>
+
 							
 						</div>
             								
             			<div id="tab_settings">
             				
-                       		<form method="post" action="/index.php/contact/form" {$form_addon}>
+                       		<form method="post" action={$form_url} {$form_addon}>
                        		
 								{* print out hidden fields regardless they are visible or not *}
 								{if is_array($contact->hidden_fields)}

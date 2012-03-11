@@ -341,7 +341,7 @@ class Contact extends Admin_Controller {
         	//set into session
         	$this->session->set_userdata('search', $search);
         	$this->redir->set_last_index(site_url('contact/index'));
-        	$wanted_page = 0;
+        	$wanted_page = '0';
         }
         
         $params = array(
@@ -391,49 +391,97 @@ class Contact extends Admin_Controller {
 		//I can get the $contact_id in 4 possible ways: by uid, by oid, by POST and GET
 		$uid = $this->input->post('uid');
 		if(empty($uid)) unset($uid);
-
+		
+		if($uid_value = uri_assoc('uid')) //retrieving uid from GET
+		if($uid_value) $uid = $uid_value;
+		
 		$oid = $this->input->post('oid');
 		if(empty($oid)) unset($oid);
-
+		
+		if($oid_value = uri_assoc('oid')) //retrieving oid from GET
+		if($oid_value) $oid = $oid_value;
+				
 		if(isset($uid) && isset($oid)) 
 		{
 			return false; //I can't understand if it's a person or an organization
 		} else {
 			if(!isset($uid) && !isset($oid))
-			{
+			{		
 				//let's look for the contact_id
-			    if(uri_assoc('client_id'))
+				$contact_id = uri_assoc('client_id');
+				
+			    if(empty($contact_id)) 
 	    		{
-	    			$contact_id = uri_assoc('client_id');   //retrieving client_id from GET
-	    		} else {
 	    			if($this->input->post('client_id')) $contact_id = $this->input->post('client_id'); //retrieving client_id from POST
 	    		}
 				if(empty($contact_id)) return false; //there is no other way to get the object
 			}
 		}
 		
-		if(isset($uid)) $contact_id = $uid;
-		if(isset($oid)) $contact_id = $oid;
-		
 		//retrieve the exact object (person or organization)
-		$obj = new Mdl_Contact();
-		$obj->client_id = $contact_id;
-		if(! $obj = $obj->get(null,false)) return false;
-		$obj->prepareShow();
-		return $obj;
+
+// !!!!!!!!!!!!!!!!!!!!!!!!		
+//FIXME why not $this->contact->client_id without returning the obj?
+// !!!!!!!!!!!!!!!!!!!!!!!!
+
+		if(isset($contact_id)) {
+// 			$obj = new Mdl_Contact();
+// 			$obj->client_id = $contact_id;
+			$this->contact->client_id = $contact_id;
+			if(! $this->contact->get(null,false)) return false;
+			
+			//TODO something better
+			if(isset($this->contact->uid) && !empty($this->contact->uid))
+			{
+				$uid = $this->contact->uid;
+			}
+
+			if(isset($this->contact->oid) && !empty($this->contact->oid))
+			{
+				$oid = $this->contact->oid;
+			}
+				
+			//return $this->contact->objName;
+		}
+		
+		if(isset($uid)) {
+// 			$obj = new Mdl_Person();
+// 			$obj->uid = $uid;
+			$this->person->uid = $uid;
+			if(! $this->person->get(null,false)) return false;
+			$this->person->prepareShow();
+			return $this->person->objName;
+		}
+		
+		if(isset($oid)) {
+// 			$obj = new Mdl_Organization();
+// 			$obj->oid = $oid;
+			$this->organization->oid = $oid;
+			if(! $this->organization->get(null,false)) return false;
+			$this->organization->prepareShow();
+			return $this->organization->objName;
+		}
+		
+		return false;
 	}
     
     public function form() {
 
     	$this->load->helper(array('form', 'url'));
     	
-    	//let's see with which kind of object we are dealing
-    	if(! $obj = $this->getContactById()) return false;
+    	//let's see with which kind of object we are dealing with
+    	$obj = $this->getContactById();
     	
-    	if ($this->mdl_contacts->validate($obj)) {
-    		
-    		$submit = true;
-    		//the form has been validated. Let's check if there is any binary file uploaded
+    	if(!$obj) {
+    		if($add_value = uri_assoc('add')) //retrieving uid from GET
+    		if($add_value) $obj = $add_value;
+    		 
+    		//$this->$obj->setFormRules();    		
+    	}
+    	if($obj) $this->$obj->setFormRules();
+    	
+    	if (!empty($obj) && $this->$obj->validateForm()) {
+    		//it's a submit and the form has been validated. Let's check if there is any binary file uploaded
     		$upload_info = saveUploadedFile();
     		
     		//TODO error handling
@@ -447,66 +495,90 @@ class Contact extends Admin_Controller {
     				
     				unlink($element_status['full_path']);
     				
-    				if($binary_file) $obj->$element = $binary_file;
-    			}
-    		}
-    		    		
-    		$properties = array_keys($obj->properties);
-    		//$data = array();
-    		foreach ($this->mdl_contacts->form_values as $property => $value) {
-    			if(in_array($property, $properties))
-    			{
-    				$obj->$property = $value;
+    				if($binary_file) $this->obj->$element = $binary_file;
     			}
     		}
     		
     		//ready to save in ldap
-    		$obj->save();
+    		if($this->$obj->save()) {
+    			if(isset($this->$obj->uid))  redirect(site_url()."/contact/details/uid/".$this->$obj->uid);
+
+    			if(isset($this->$obj->oid))  redirect(site_url()."/contact/details/oid/".$this->$obj->oid);
+
+    			//this brings back to the previous page
+    			//redirect($this->session->userdata('last_index'));
+    		}    		
+    	}
+    	
+    	
+    	//it's not a form submit 
+    	if($obj) { 
+    		//the contact is set so it's an early stage update and it needs to fill the form with the contact's data
+    		$contact_id = $this->$obj->uid ? $this->$obj->uid : $this->$obj->oid;
+
+    		//preparing the form
+    		foreach ($this->$obj->properties as $key => $property) {
+    			$this->mdl_contacts->form_values[$key] = $this->$obj->$key;
+    		} 
     		
-    		//this brings back to the previous page
-    		redirect($this->session->userdata('last_index'));    		
+    		//sets form submit url
+    		if(isset($this->$obj->uid) && !empty($this->$obj->uid)) $form_url = site_url()."/contact/form/uid/".$this->$obj->uid;
+    		
+    		if(isset($this->$obj->oid) && !empty($this->$obj->oid)) $form_url = site_url()."/contact/form/oid/".$this->$obj->oid;
+    		
+    		if(!isset($form_url)) $form_url = site_url()."/contact/form/add/".$obj;
+    		
+    	} else {
+    		//the contact is not set. So it provides an empty form to add a new contact
+    		if($add_value = uri_assoc('add')) //retrieving uid from GET
+    			if($add_value) $obj = $add_value;
+    			
+    			$this->$obj->setFormRules();
+    			
+    			$form_url = site_url()."/contact/form/add/".$obj;
+    		
     	}
+
     	
-    	$contact_id = $obj->uid ? $obj->uid : $obj->oid;
+    	//TODO what is this?
+//     	$client_settings = $this->input->post('client_settings');
     	
-    	$client_settings = $this->input->post('client_settings');
-    	if(is_array($client_settings))
-    	{    	 
-	    	foreach ($client_settings as $key=>$value) {
-	    		if ($value) {
-	    			$this->mdl_mcb_client_data->save($contact_id, $key, $value);
-	    		}
-	    		else {
-	    			$this->mdl_mcb_client_data->delete($contact_id, $key);
-	    		}
-	    	}    	
-    	}
+//     	if(is_array($client_settings))
+//     	{    	 
+// 	    	foreach ($client_settings as $key=>$value) {
+// 	    		if ($value) {
+// 	    			$this->mdl_mcb_client_data->save($contact_id, $key, $value);
+// 	    		}
+// 	    		else {
+// 	    			$this->mdl_mcb_client_data->delete($contact_id, $key);
+// 	    		}
+// 	    	}    	
+//     	}
     	    	
     	//this retrieves other info about the contact that have nothing to do with the contact itself
-        $this->load->model(
-            array(
-            'mcb_data/mdl_mcb_client_data',
-            'invoices/mdl_invoice_groups'
-            )
-        );
+    	//TODO later. MCB stuff
+//         $this->load->model(
+//             array(
+//             'mcb_data/mdl_mcb_client_data',
+//             'invoices/mdl_invoice_groups'
+//             )
+//         );
         
         //it's not a submit so let's fill the form with customer's data
-        $this->load->model('templates/mdl_templates');
+    	//TODO later. MCB stuff
+        //$this->load->model('templates/mdl_templates');
 
         //$this->mdl_contacts->prep_validation($contact_id);
-        
-        //preparing the form
-        foreach ($obj->properties as $key => $property) {
-        	$this->mdl_contacts->form_values[$key] = $obj->$key;
-        }        
+                
         
         $data = array(
         				//'custom_fields'     =>	$this->mdl_contacts->custom_fields,
-                    	'contact'			=>  $obj,
-                        'invoice_templates' =>  $this->mdl_templates->get('invoices'),
-                        'invoice_groups'    =>  $this->mdl_invoice_groups->get()
+                    	'contact'			=>  $this->$obj,
+        				'form_url'			=> 	$form_url,
+                        //'invoice_templates' =>  $this->mdl_templates->get('invoices'),
+                        //'invoice_groups'    =>  $this->mdl_invoice_groups->get()
         );
-        
+    	
         $data['form'] = $this->plenty_parser->parse('form.tpl', $data, true, 'smarty', 'contact');
         
         $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
@@ -556,16 +628,15 @@ class Contact extends Admin_Controller {
         }
 
         //getting Locations
-        $locs = explode(",", $contact->locRDN);
-        if(!empty($locs))
+        if(isset($contact->locRDN)) $locs = explode(",", $contact->locRDN);
+        if(isset($locs) && is_array($locs))
         {
         	$contact_locs = array();
         	 
         	foreach( $locs as $locId)
         	{
-        		$params = array('locId' => $locId);
-        		$loc = $this->location->get($params);  //FIXME this step takes too long
-        		if($loc['status']['status_code'] == 200)
+        		$this->location->locId = $locId;
+        		if($this->location->get())
         		{
         			$this->location->prepareShow();
         			$contact_locs[] = clone $this->location;
@@ -574,38 +645,67 @@ class Contact extends Admin_Controller {
         } 
                 
         //getting Organizations of which the contact is member
-        $orgs = explode(",", $contact->oRDN);
-        if(is_array($orgs))
+        if(isset($contact->oRDN)) $orgs = explode(",", $contact->oRDN);
+        if(isset($orgs) && is_array($orgs))
         {
         	$contact_orgs = array();
         	
 	        foreach( $orgs as $oid)
 	        {
-	        	$params = array('oid' => $oid);
-	        	$org = $this->mdl_contacts->get($params);
-	        	if($org)
+	        	
+	        	$this->organization->oid = $oid;
+	        	
+	        	if($this->organization->get(null, false))
 	        	{
-	        		$org->prepareShow();
-	        		$contact_orgs[] = $org;
+	        		$this->organization->prepareShow();
+	        		$contact_orgs[] = clone $this->organization;
 	        	}
 	        }
         }
-         
+        
+        //in case it's an organization I retrieve the members
+        if(isset($contact->oid))
+        {
+        	$members = array();
+        	
+	    	$input = array('filter' => '(oRDN='.$contact->oid.')',
+	    					'wanted_attributes' => array('uid'));
+	    	if($crr = $this->person->get($input, true))
+	    	{
+	    		$uids = $crr['data'];
+	    		foreach ($uids as $item)
+	    		{
+	    			$this->person->uid = $item['uid']['0'];
+	    			if($this->person->get(null, false))
+	    			{
+		    			$this->person->prepareShow();
+		    			$members[] = clone $this->person;
+	    			}
+	    		}
+	    	}
+        }
+        
         //preparing output for views
         $data = array(
             'contact'	=>	$contact,
-            'contact_orgs' => $contact_orgs,
-        	'contact_locs' => $contact_locs,
             'invoices'	=>	$invoices,
             'tab_index'	=>	$tab_index,
             'baseurl'	=>	site_url(),
+        	'profile_view' => true,
         );
+        if(isset($contact_locs)) $data['contact_locs'] = $contact_locs;
+        if(isset($contact_orgs)) $data['contact_orgs'] = $contact_orgs;
+        if(isset($members))
+        {	
+        	$data['members'] = $members;
+        	$data['member_fields'] = array('mobile', 'homePhone', 'companyPhone', 'facsimileTelephoneNumber',  'mail');
+        }
+        	         
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
+        $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
         
         //loading Smarty template
         //$data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
-        
-        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
-        $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
         
         //loading CI template
         $this->load->view('details', $data);
@@ -634,13 +734,13 @@ class Contact extends Admin_Controller {
     	//check: I need at least one of the 3 parameters uid,oid,client_id
     	if(!isset($params) || count($params)==0) return false;
     	
-    	//perform the request to Contact Engine
-    	$rest_return = $this->mdl_contacts->get($params);      	//TODO add check on rest_status
+    	//perform the request to Contact Engine    	
+    	//$rest_return = ;
     	
     	//when the request is performed using client_id || uid || oid as input I get an object in return, not an array
-    	if(is_object($rest_return))
+    	if(is_object($obj = $this->get($params)))
     	{
-    		$obj = $rest_return;
+    		//$obj = $rest_return;
     		$obj->prepareShow();
     		return $obj;
     	}

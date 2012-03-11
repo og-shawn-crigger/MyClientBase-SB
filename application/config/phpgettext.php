@@ -2,7 +2,8 @@
 
 $config['gettextProjectDir'] = FCPATH.APPPATH.'third_party/php-gettext-1.0.11';
 $config['gettextLocaleDir'] = FCPATH.APPPATH.'third_party/php-gettext-1.0.11/locale';
-$config['gettextDefaultLocale'] = 'it_IT';
+$config['gettextDefaultLocale'] = 'en_EN';
+//$config['gettextDefaultLocale'] = 'it_IT';
 $config['gettextInc'] = FCPATH.APPPATH.'third_party/php-gettext-1.0.11/gettext.inc';
 $config['gettextSupportedLocales'] = array('en_US', 'it_IT');
 $config['gettextEncoding'] = 'UTF-8';

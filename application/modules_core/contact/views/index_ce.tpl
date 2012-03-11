@@ -1,7 +1,7 @@
 {assign 'people' $contacts.people}
 {assign 'orgs' $contacts.orgs}
 {assign 'total_number' $contacts.total_number}
-{assign 'language' 'it'}
+{assign 'language' 'en'}
 
 <div class="contact_search">
 <form method="post" action="">
@@ -30,13 +30,22 @@
 	
 {if count($people) gt 0}
 	<table class="table-clients">
+	<tr class="columns_header">
+		<td class="counter" style="background-color: black;">&nbsp;</td>
+		<td class="columns_header">{t}Name{/t}</td>
+		<td class="columns_header">{t}City{/t}</td>
+		<td class="columns_header">{t}Telephone{/t}</td>
+		<td class="columns_header">{t}Mobile{/t}</td>
+	</tr>
 	{foreach $people as $key => $person}
     <tr class="hoverall">
     	{assign 'url' value="$baseurl/contact/details/uid/{$person->uid}"}
     	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
-    	<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'n.d.'}</td>
-    	<td class="tel">{$person->mobile|default:'n.d.'}</td>
+		<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'-'}</td>
+		<td class="tel">{$person->mobile|default:'-'}</td>		
+		<td class="tel">{$person->homePhone|default:'-'}</td>
+		
     </tr> 
     {/foreach}
     </table>
@@ -61,13 +70,21 @@
 
 {if count($orgs) gt 0}    
 	<table class="table-orgs">
+	<tr class="columns_header">
+		<td class="counter" style="background-color: black;">&nbsp;</td>
+		<td class="columns_header">{t}Name{/t}</td>
+		<td class="columns_header">{t}City{/t}</td>
+		<td class="columns_header">{t}Telephone{/t}</td>
+		<td class="columns_header">{t}Mobile{/t}</td>
+	</tr>	
 	{foreach $orgs as $key => $organization}
     <tr class="hoverall">
     	{assign 'url' value="$baseurl/contact/details/oid/{$organization->oid}"}
     	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$organization->o|truncate:30:" [...]":true}</td>
-    	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'n.d.'}</td>
-    	<td class="tel">{$organization->telephoneNumber|default:'n.d.'}</td>
+    	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'-'}</td>
+    	<td class="tel">{$organization->telephoneNumber|default:'-'}</td>
+    	<td class="tel">{$organization->oMobile|default:'-'}</td>
     </tr>
     {/foreach}
     </table>    

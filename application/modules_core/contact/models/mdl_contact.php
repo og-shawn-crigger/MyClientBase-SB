@@ -22,7 +22,8 @@ class Mdl_Contact extends MY_Model {
 	public $aliases;
 	public $total_invoice = '0.0';
 	public $total_payment = '0.0';
-	public $total_balance = '0.0';	
+	public $total_balance = '0.0';
+	public $crr; //ContactEngine Rest Return	
 	
     public function __construct() {
         parent::__construct();
@@ -42,8 +43,20 @@ class Mdl_Contact extends MY_Model {
          
         // Load the rest client
         $this->load->spark('restclient/2.0.0');
+
+        $this->load->model('contact/rest_return_object');
+        $this->crr = new Rest_Return_Object();
+    }
+    
+    public function __destruct() {
+    	
     }
 
+    public function validateForm()
+    {
+    	return parent::validate($this);
+    }
+    
     private function checkObjName($objName)
     {
     	return in_array($objName, $this->possibleObjects) ? true : false;    	
@@ -56,34 +69,43 @@ class Mdl_Contact extends MY_Model {
     	
     	if(empty($input['filter'])) $input['filter'] = '(|(uid='.$this->client_id.')(oid='.$this->client_id.'))';
     	
+    	
+    	
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
     	
     	//performing the query to contact engine
-    	//TODO this should be $this->rest->get
-    	$rest_return = $this->rest->post('read', $input, 'serialize');
-
-    	if($return_rest) return $rest_return;
+    	$this->crr->importCeReturnObject($this->rest->post('read', $input, 'serialize'));
     	
-		//populate the current object	
-    	if($rest_return['status']['status_code'] == 200) {
-    		if($rest_return['status']['results_number']==1)
-    		{
-    			//is this a Person or an Organization?
-    			if(!empty($rest_return['data']['0']['uid'])){
-    				$obj = new Mdl_Person();
-//    				$obj->uid = $rest_return['data']['0']['uid'];
-    				return $obj->arrayToObject($rest_return['data']['0'],true);
-    			}
-    			
-    			if(!empty($rest_return['data']['0']['uid'])){
-    				$obj = new Mdl_Organization();
-//    				$obj->oid = $rest_return['data']['0']['oid'];
-    				return $obj->arrayToObject($rest_return['data']['0'],true);
-       			}    			
+    	if($return_rest){
+    		if($this->crr->has_no_errors) {
+    			return $this->crr->returnAsArray();
+    		} else { 
+    			return false;
     		}
+    	} 
+    		 
+    	if($this->crr->has_no_errors)
+    	{
+    		if($this->crr->results_got_number == '1')
+    		{
+    			if(!empty($this->crr->data['0']['uid'])) {
+    				$this->person->arrayToObject($this->crr->data['0']);
+    				//$this->person->prepareShow(); //TODO maybe this can come in handy
+    			}
+
+    			if(!empty($this->crr->data['0']['oid'])) {
+    				$this->organization->arrayToObject($this->crr->data['0']);
+    				//$this->organization->prepareShow();  //TODO maybe this can come in handy
+    			}
+    			return true;
+    		}
+    		    		
+    		if($this->crr->results_got_number == '0') return false;
+    		
     	}
+    	
     	return false;
-    }
+	}
     
     public function getProperties($objName = null)
     {
@@ -91,17 +113,47 @@ class Mdl_Contact extends MY_Model {
     	if(is_null($objName)) $objName = $this->objName;
     	if(!$this->checkObjName($objName)) return false;
     	
-    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$objName.'/'));
-    	$rest_result = $this->rest->post('getProperties', null, 'serialize');
-    	if($rest_result['status']['status_code'] == 200) 
+    	if(!isset($this->properties) || count($this->properties)==0)
+    	{    		
+	    	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$objName.'/'));
+	    	
+	    	//performing the REST request
+	    	$this->crr->importCeReturnObject($this->rest->post('getProperties', null, 'serialize'));
+	    	
+	    	if($this->crr->has_no_errors)
+	    	{
+	    		$this->properties = $this->crr->data;
+	    		return true;	
+	    	} else {
+	    		return false;
+	    	}
+    	}
+    	return true;
+    }
+    
+    protected function cleanAttributes()
+    {
+    	$this->getProperties();
+    	$properties = array_keys($this->properties);
+    	foreach ($properties as $property)
     	{
-    		$this->properties = $rest_result['data'];
-    		return true;
-    	} else {
-    		return false;
+    		$this->$property = null;
     	}
     }
     
+    public function getMandatoryAttributes()
+    {
+    	if(empty($this->properties))
+    	{
+    		if(!$this->getProperties()) return false;
+    	}
+    	$this->mandatoryAttributes = array();
+    	foreach ($this->properties as $attribute => $settings) {
+    		if($settings['required']) $this->mandatoryAttributes[] = $attribute;
+    	}
+    	return true;
+    }
+        
 	protected function arrayToObject(array $data, $objName = null)
 	{
     	//checks
@@ -110,6 +162,8 @@ class Mdl_Contact extends MY_Model {
 		if(!is_array($data)) return false;
 		
 		if(!$this->getProperties($objName)) return false;
+		
+		$this->cleanAttributes();
 		
 		$properties = array_keys($this->properties);
 		
@@ -122,6 +176,49 @@ class Mdl_Contact extends MY_Model {
 		
 		return true;
 	}
+	
+	protected function objectToArray() {
+
+		$properties = array_keys($this->properties);
+		
+		$output = array();
+		foreach ($properties as $key => $property) {
+			
+			//special fields
+			if($property == 'uid' || $property == 'oid')
+			{
+				$output[$property] = $this->$property;
+				continue;
+			}
+						
+			//do not mess with LDAP system fields
+			if($this->properties[$property]['no-user-modification'] === '1') continue;
+			
+			if($this->properties[$property]['single-value'] === '1') {
+				if(!is_array($this->$property)) {
+					$output[$property] = $this->$property; 
+				} else {
+					$output[$property] = implode(',', $this->$property); //TODO not sure about this. If it's single it should be never an array
+				}
+			} else {
+				if(is_array($this->$property)) {
+					$output[$property] = $this->$property;
+				} else {
+					if(!empty($this->$property))
+					{
+						$output[$property] = array($this->$property);
+					} else {
+						$output[$property] = array();
+					}
+				}
+			}
+			
+			//TODO add here the validation on lenght, field type ... or call the validation method before loading this method
+		}
+		
+		return $output;
+	}
+	
 	
 	private function getReturnValue($attribute,$data)
 	{
@@ -138,22 +235,193 @@ class Mdl_Contact extends MY_Model {
 	
 		return '';
 	}
-
-	public function update($input)
-	{
-		//$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/')); //TODO is this necessary?
-		$rest_return = $this->rest->post('update', $input, 'serialize');
 	
-		return $rest_return;
+	public function setFormRules() {
+		 
+		//gets aliases and stuff
+		$this->prepareShow();
+		 
+		if($this->getMandatoryAttributes())
+		{
+			foreach ($this->mandatoryAttributes as $mandatoryAttribute) {
+				//adds to the form rules only the mandatory fields that are shown in the form.
+				//all the other mandatory fields (like cn, objectClass ...  will be set in the validate method
+	
+				//FIXME figure out what to do with the enabled field: it's currently in the "settings" form, so it's not included in the "info form"
+				if(in_array($mandatoryAttribute, $this->show_fields) && $mandatoryAttribute != 'enabled')
+				{
+					//gets the alias for the mandatory field
+					//TODO I still have to fix the localization
+					if(isset($this->aliases[$mandatoryAttribute]))
+					{
+						$field = $this->aliases[$mandatoryAttribute];
+					} else {
+						$field = $mandatoryAttribute;
+					}
+	
+					$this->form_validation->set_rules($mandatoryAttribute, $field, 'required');
+				}
+			}
+		}
+	}	
+
+	public function save($creation, $with_form = true)
+	{
+		if(!is_bool($creation)) return false;
+		
+		//TODO add here the notification messages for each case of failure
+		 
+		//($this->enabled) ? $this->enabled = 'TRUE' : $this->enabled = 'FALSE';
+		$this->enabled = 'TRUE'; //FIXME		
+		
+		//did the user fill all the mandatory fields present in the form ?
+		if($with_form) {
+			if(!$this->validateForm()) return false;
+		}
+		 
+		//let's bind the values filled in the form with the obj. MY_Model stores form's values in $this->form_values.
+		if($with_form) {
+			if(!$this->arrayToObject($this->form_values, $creation)) return false;
+		}
+		 
+		//validates the object before sending data to Contact Engine
+		$left = $this->validateObj($creation);
+		if(!$left || is_array($left)) {
+		//TODO add the content of left to the notification message
+			return false;
+		}
+		 	 
+		if($creation){
+			return $this->create($this->objectToArray());
+		} else {
+			return $this->update($this->objectToArray());
+		}
+					
+	}	
+	
+	protected function update($input)
+	{
+		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));		
+
+		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
+	
+		if($this->crr->has_no_errors) return true; 
+		
+		return false;
 	}
 	
-	public function create($input)
-	{
-		//$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/person/')); //TODO is this necessary?
-		$rest_return = $this->rest->post('create', $input, 'serialize');
-	
-		return $rest_return;
+	protected function create($input)
+	{	
+		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
+		
+		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
+		
+		if($this->crr->has_no_errors) 	return true;
+
+		return false;
 	}	
+	
+	protected function updateDefaultLocation($creation)
+	{
+		if(!is_bool($creation)) return false;
+		
+		//refresh contact
+		$this->get(null, false);
+		
+		$input = array();
+		
+		if($this->objName == 'organization') 
+		{ 
+			$input['locDescription'] = 'Registered Address';
+			$input['locStreet'] = $this->street;
+			$input['locZip'] = $this->postalCode;
+			$input['locCity'] = $this->l;
+			$input['locState'] = $this->st;
+			$input['locCountry'] = $this->c;
+			$input['locPhone'] = $this->telephoneNumber;
+				
+		}
+		
+		if($this->objName == 'person'){
+			$input['locDescription'] = 'Home';
+			$input['locStreet'] = $this->homePostalAddress;
+			$input['locZip'] = $this->mozillaHomePostalCode;
+			$input['locCity'] = $this->mozillaHomeLocalityName;
+			$input['locState'] = $this->mozillaHomeState;
+			$input['locCountry'] = $this->mozillaHomeCountryName;
+			$input['locPhone'] = $this->homePhone;
+		}
+		
+		//TODO maybe this can be replaced by a Contact Engine method which retrieves the right Location automatically
+		//if it's an update gets the locId of the right location
+		if(!$creation) {
+			 
+			$locs = explode(',', $this->locRDN);
+		
+			if(is_array($locs))
+			{
+				if(count($locs) == 1)
+				{
+					if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (locId='.$locs[0].')';
+					if($this->objName == 'person') $filter = '(&(locDescription=Home) (locId='.$locs[0].')';
+				} else {
+					foreach ($locs as $key => $locId) {
+						if($key == 0) $filter = '(locId='.$locId.')';
+						if($key > 0)  $filter = $filter.' (locId='.$locId.')';
+					}
+					if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (|'.$filter.'))';
+					if($this->objName == 'person') $filter = '(&(locDescription=Home) (|'.$filter.'))';
+				}
+			}
+		
+			$find_location = array('filter' => $filter);
+			if($rest_return = $this->location->get($find_location, true)) {
+				$registered_location = $rest_return['data'];
+				if(count($registered_location) == 0) $creation = true;
+				if(count($registered_location) == 1)
+				{
+					$creation = false;
+					$this->location->locId = $input['locId'] = $registered_location[0]['locId'];
+				}
+				if(count($registered_location) > 1) {
+					unset($creation);
+					//TODO send a notification
+				}
+			}
+		}
+		
+		if(isset($creation))
+		{
+			if($this->location->save($creation, false, $input))
+			{
+				if($creation)
+				{
+					//update the contact
+					if(is_array($this->locRDN) and count($this->locRDN) > 0)
+					{
+						$this->locRDN[] = $this->location->locId;
+					} else {
+						if(empty($this->locRDN))
+						{
+							$this->locRDN = array($this->location->locId);
+						} else {
+							$locs = (array) $this->locRDN;
+							$locs[] = $this->location->locId;
+							$this->locRDN = $locs;
+						}
+					}
+		
+					$return = parent::save(false,false);
+				}
+		
+				return true;
+			}
+			 
+			//TODO send a notification
+		}
+		
+		return true;
+	}		
 }
 
 ?>

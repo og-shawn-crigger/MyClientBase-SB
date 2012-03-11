@@ -20,7 +20,7 @@ class Mdl_Contacts extends MY_Model {
         $this->load->model('contact/mdl_organization','organization');
 
         $this->load->model('contact/mdl_location','location');        
-
+     
     }
     
     public function get(array $params) {
@@ -65,20 +65,20 @@ class Mdl_Contacts extends MY_Model {
     	$rest_info = $rest_return['status'];										
     	
     	//pagination
-    	isset($rest_info['results_number']) ? $params['total_rows'] = $rest_info['results_number'] : $params['total_rows'] = 0;
-
-    	//when retrieving contacts I get the total number of items (orgs + people) and the total number of items per people and orgs
-    	//I take as good result the highest between total number people and orgs
-    	if(!empty($rest_info['result_number_people']) && !empty($rest_info['result_number_orgs']))
-    	{
-    		if($rest_info['result_number_people'] >= $rest_info['result_number_orgs'])
+    	if(isset($rest_info['results_number'])) {
+    		$tmp = $rest_info['results_pages'] * $input['items_page'];
+    		if($rest_info['results_number'] > ($tmp))
     		{
-    			$params['total_rows'] = $rest_info['result_number_people'];
+    			//this means that the result has been paginated by the object Contact and contains both people and organizations,
+    			//so the total number of items to take in consideration is lower than the value return
+    			$params['total_rows'] = $tmp;
     		} else {
-    			$params['total_rows'] = $rest_info['result_number_orgs'];
+    			$params['total_rows'] = $rest_info['results_number'];
     		}
+    	} else {
+    		$params['total_rows'] = 0;
     	}
-    	
+    		
     	$this->_prep_pagination($params);
     	
     	//prepare return for output
@@ -163,46 +163,25 @@ class Mdl_Contacts extends MY_Model {
 
     }
 
-    public function validate($obj) {
+    public function validate() {
 
-    	if(!is_object($obj)) return false;
-    	
-		switch ($obj->objName) {
-			case 'person':
-				//FIXME too few fields. I can get the list of required fields automatically
-		        //validation rules for person
-		  		$this->form_validation->set_rules('sn', $this->lang->line('sn'), 'required'); 
-		        $this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
-			break;
-
-			case 'organization':
-				//FIXME too few fields. I can get the list of required fields automatically
-		        //validation rules for organization
-		  		$this->form_validation->set_rules('o', $this->lang->line('o'), 'required');
-		        //$this->form_validation->set_rules('givenName', $this->lang->line('givenName'), 'required');
-			break;			
-		}
-		
-		//Common validation rules for both the objects
-		//$this->form_validation->set_rules('enabled', $this->lang->line('enabled'), 'required');
-		
         return parent::validate($this);
-
     }
 
     public function delete($client_id) {
 
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/contact/'));
     	
-    	//let's delete just the customer for now
+    	//TODO let's delete just the customer for now, but I don't think it's a great idea
     	
-    	//TODO should I check if the customer exists before deleting him?
-    	
-    	//deleting customer
-    	//$url = 'api/exposeObj/person/delete/';
     	$input = array('uid' => $client_id);
-    	$rest_return = $this->rest->post('delete', $input, 'serialize'); //TODO this should be $this->rest->delete
-		return $rest_return['0'];  //true or false
+    	
+    	$this->crr->importCeReturnObject($this->rest->post('delete', $input, 'serialize'));    	
+
+    	return $this->crr->has_no_errors;
+    	
+//     	$rest_return = $this->rest->post('delete', $input, 'serialize'); //TODO this should be $this->rest->delete
+// 		return $rest_return['0'];  //true or false
 		   	
     	//TODO delete also invoices esteems and whatever
     	
