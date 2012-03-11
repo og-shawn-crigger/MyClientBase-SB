@@ -92,7 +92,7 @@ class Mcb_Modules extends Admin_Controller {
 							'module_enabled'	=>	0
 		);
 		
-		$this->db->update('mcb_modules', $db_array);
+		$return = $this->db->update('mcb_modules', $db_array);
 		
 		$this->session->set_flashdata('custom_success', $this->lang->line('module_successfully_disabled'));
 		

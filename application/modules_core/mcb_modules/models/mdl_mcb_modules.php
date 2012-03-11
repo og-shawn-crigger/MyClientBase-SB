@@ -106,6 +106,9 @@ class Mdl_MCB_Modules extends MY_Model {
             $this->db->where('module_core', 1);
 
             $this->db->delete('mcb_modules');
+            
+            //DAM
+            $sql = $this->db->last_query();
 
         }
 
