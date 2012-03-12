@@ -355,38 +355,46 @@ class Mdl_Contact extends MY_Model {
 		//TODO maybe this can be replaced by a Contact Engine method which retrieves the right Location automatically
 		//if it's an update gets the locId of the right location
 		if(!$creation) {
-			 
-			$locs = explode(',', $this->locRDN);
-		
-			if(is_array($locs))
-			{
-				if(count($locs) == 1)
+			
+			if(!empty($this->locRDN)) {			
+				
+				$locs = explode(',', $this->locRDN);
+			
+				if(is_array($locs))
 				{
-					if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (locId='.$locs[0].')';
-					if($this->objName == 'person') $filter = '(&(locDescription=Home) (locId='.$locs[0].')';
-				} else {
-					foreach ($locs as $key => $locId) {
-						if($key == 0) $filter = '(locId='.$locId.')';
-						if($key > 0)  $filter = $filter.' (locId='.$locId.')';
+					if(count($locs) == 1)
+					{
+						if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (locId='.$locs[0].')';
+						if($this->objName == 'person') $filter = '(&(locDescription=Home) (locId='.$locs[0].'))';
+					} else {
+						foreach ($locs as $key => $locId) {
+							if($key == 0) $filter = '(locId='.$locId.')';
+							if($key > 0)  $filter = $filter.' (locId='.$locId.')';
+						}
+						if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (|'.$filter.'))';
+						if($this->objName == 'person') $filter = '(&(locDescription=Home) (|'.$filter.'))';
 					}
-					if($this->objName == 'organization') $filter = '(&(locDescription=Registered Address) (|'.$filter.'))';
-					if($this->objName == 'person') $filter = '(&(locDescription=Home) (|'.$filter.'))';
+					
+					$find_location = array('filter' => $filter);
+					
+					if($rest_return = $this->location->get($find_location, true)) {
+						$default_location = $rest_return['data'];
+						if(count($default_location) == 0) $creation = true;
+						if(count($default_location) == 1)
+						{
+							$creation = false;
+							$this->location->locId = $input['locId'] = $default_location[0]['locId'];
+						}
+						if(count($default_location) > 1) {
+							unset($creation);
+							//TODO send a notification
+						}
+					} else {
+						return false;
+					}		
 				}
-			}
-		
-			$find_location = array('filter' => $filter);
-			if($rest_return = $this->location->get($find_location, true)) {
-				$registered_location = $rest_return['data'];
-				if(count($registered_location) == 0) $creation = true;
-				if(count($registered_location) == 1)
-				{
-					$creation = false;
-					$this->location->locId = $input['locId'] = $registered_location[0]['locId'];
-				}
-				if(count($registered_location) > 1) {
-					unset($creation);
-					//TODO send a notification
-				}
+			} else {
+				$creation = true;
 			}
 		}
 		
@@ -410,8 +418,7 @@ class Mdl_Contact extends MY_Model {
 							$this->locRDN = $locs;
 						}
 					}
-		
-					$return = parent::save(false,false);
+					return $this->update($this->objectToArray());
 				}
 		
 				return true;
@@ -420,6 +427,7 @@ class Mdl_Contact extends MY_Model {
 			//TODO send a notification
 		}
 		
+		//TODO send a notification
 		return true;
 	}		
 }

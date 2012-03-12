@@ -169,8 +169,10 @@ class Mdl_Person extends Mdl_Contact {
     	
     	if($return)
     	{
-    		if($creation) $this->uid = $this->crr->data['uid'];
-    		return $this->updateDefaultLocation($creation);
+    		if($creation) $this->uid = $uid = $this->crr->data['uid'];
+    		$update_return = $this->updateDefaultLocation($creation);
+    		
+    		return $return;
     	}    	
     	
     	return false;
