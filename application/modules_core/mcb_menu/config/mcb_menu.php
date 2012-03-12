@@ -5,7 +5,7 @@ $config = array(
 		'contact'   =>  array(
 		 	'title'     =>  'contact',
 		    'href'      =>  'contact/index',
-		),    
+		),    		
         'clients'   =>  array(
             'title'     =>  'clients',
             'href'      =>  'clients/index',
