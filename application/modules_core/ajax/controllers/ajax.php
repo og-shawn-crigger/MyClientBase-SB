@@ -26,7 +26,7 @@ class Ajax extends Admin_Controller {
     
     private function securityChecks(){
 		//TODO there are plenty of security checks to perform here
-    	if($_SERVER['REMOTE_ADDR'] != '127.0.0.1') die('Failure: '.$_SERVER['REMOTE_ADDR']);
+    	//if($_SERVER['REMOTE_ADDR'] != '127.0.0.1') die('Failure: '.$_SERVER['REMOTE_ADDR']);
     }
     
     
