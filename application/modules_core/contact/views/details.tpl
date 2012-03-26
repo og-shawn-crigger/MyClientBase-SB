@@ -339,8 +339,8 @@
 											</iframe>
 										</div>
 									{else}
-										<div>
-											<img style="border: 1px solid #e8e8e8;" src="/images/empty_map.png" width="300px"/>
+										<div style="overflow: hidden;">
+											<img style="border: 1px solid #e8e8e8;" src="/images/empty_map.png" width="300px" height="300px"/>
 										</div>
 									{/if}
 								</div>

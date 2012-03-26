@@ -188,8 +188,13 @@ class Ajax extends Admin_Controller {
     		}
     	}
     	
+    	//let's check if the user set one of the two reserved descriptions
+    	if(strtolower($input['locDescription']) == 'home' || strtolower($input['locDescription']) == 'registered address' ) {
+    		$this->returnError('The description "'.$input['locDescription'].'" is reserved. Please choose another description.');
+    	}
+    	
     	$creation = ($input['locId']=='') ? true : false;
-    
+    	
     	$return = $location->save($creation,false,$input);
     	
     	if($return) { 

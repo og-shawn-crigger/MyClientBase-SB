@@ -57,16 +57,20 @@ function retrieveForm(form) {
 	
 	var elemArray = form.elements;
 
-    for (var i = 0; i < elemArray.length; i++) {
-
-    	var element = elemArray[i];
-    	
-    	var field = element.name;
-    	var value = element.value;
-    	var type = element.type.toUpperCase();
-    	
-    	dataObj[i] = { field: field, value: value, type: type };
-    }	
+	if(typeof elemArray.length !== "undefined" && elemArray.length){
+	    for (var i = 0; i < elemArray.length; i++) {
+	
+	    	var element = elemArray[i];
+	    	
+	    	var field = element.name;
+	    	var value = element.value;
+	    	if(typeof element.type !== "undefined" && element.type){
+	    		var type = element.type.toUpperCase();
+	    	}
+	    	
+	    	dataObj[i] = { field: field, value: value, type: type };
+	    }
+	}
 	return dataObj;
 }
 
