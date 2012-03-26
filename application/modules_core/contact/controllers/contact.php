@@ -482,7 +482,7 @@ class Contact extends Admin_Controller {
     	
     	if (!empty($obj) && $this->$obj->validateForm()) {
     		//it's a submit and the form has been validated. Let's check if there is any binary file uploaded
-    		$upload_info = saveUploadedFile();
+/*     		$upload_info = saveUploadedFile();
     		
     		//TODO error handling
     		if(is_array($upload_info['data'])) {
@@ -498,7 +498,7 @@ class Contact extends Admin_Controller {
     				if($binary_file) $this->obj->$element = $binary_file;
     			}
     		}
-    		
+ */    		
     		//ready to save in ldap
     		if($this->$obj->save()) {
     			if(isset($this->$obj->uid))  redirect(site_url()."/contact/details/uid/".$this->$obj->uid);
@@ -593,7 +593,8 @@ class Contact extends Admin_Controller {
 
         $this->load->helper('text');  //TODO why not autoload?
 
-        $this->load->model(
+       
+         $this->load->model(
             array(
             'invoices/mdl_invoices',
             'templates/mdl_templates'
@@ -615,7 +616,7 @@ class Contact extends Admin_Controller {
 
         }
 
-        $invoices = $this->mdl_invoices->get($invoice_params);
+         $invoices = $this->mdl_invoices->get($invoice_params);
 
         if ($this->session->flashdata('tab_index')) {
 
@@ -625,8 +626,8 @@ class Contact extends Admin_Controller {
 
             $tab_index = 0;
 
-        }
-
+        } 
+ 
         //getting Locations
         if(isset($contact->locRDN)) $locs = explode(",", $contact->locRDN);
         if(isset($locs) && is_array($locs))
@@ -685,13 +686,17 @@ class Contact extends Admin_Controller {
 	    	}
         }
         
+        $location_model = clone $this->location;
+        
+        
         //preparing output for views
         $data = array(
             'contact'	=>	$contact,
-            'invoices'	=>	$invoices,
+            //'invoices'	=>	$invoices,
             'tab_index'	=>	$tab_index,
             'baseurl'	=>	site_url(),
         	'profile_view' => true,
+        	'location_model' => $location_model,
         );
         if(isset($contact_locs)) $data['contact_locs'] = $contact_locs;
         if(isset($contact_orgs)) $data['contact_orgs'] = $contact_orgs;

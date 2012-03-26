@@ -1,3 +1,17 @@
+{* focuses on the tab matching the hash and goes on the top of the page *}
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		var currentURL = window.location;
+		url_hash = currentURL.hash;
+		
+		var $tabs = $('#tabs').tabs();
+		$tabs.tabs('select', url_hash);
+		
+		window.location.hash='#top';		
+	});
+</script>	
+
 {assign 'contact' $contact}
 {assign 'properties' $contact->properties}
 {assign 'language' 'en'}
@@ -12,14 +26,14 @@
 				{$contact_ref = $contact->cn}
 				{$contact_id = $contact->uid}
 				{$contact_id_key = "uid"}
-				<h3 class="title_black"><span style="font-size: 12px;">{t}Person{/t}: </span>{$contact->cn}</h3>
+				<h3 class="title_black">{$contact->cn}</h3>
 			{/if}		
 			
 			{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
 				{$contact_ref = $contact->o}
 				{$contact_id = $contact->oid}
 				{$contact_id_key = "oid"}
-				<h3 class="title_black"><span style="font-size: 12px;">{t}Organization{/t}: </span>{$contact->o}</h3>
+				<h3 class="title_black">{$contact->o}</h3>
 			{/if}					
 		</div>
 	
@@ -50,9 +64,8 @@
 				
 				
 				<div id="tab_client" >
-
-				{if isset($contact->aliases)} {$aliases = $contact->aliases} {/if}
-				
+					{if isset($contact->aliases)} {$aliases = $contact->aliases} {/if}
+					
 					<table border="1" class="none" style="border: 1px solid #e8e8e8; width: 98%; margin-bottom: 2px;">
 						{counter start=0 skip=1 assign="count"}
 						{foreach $contact->show_fields as $key => $property_name}
@@ -268,49 +281,70 @@
 				<div id="tab_locations">
 						 
 						{foreach $contact_locs as $key => $loc}		
-							
 							{if isset($loc->aliases)} {$aliases = $loc->aliases} {/if}
-							
-							<h3 style="margin-left: -15px; clear: left;">{$loc->locDescription}</h3>								
-							<div class="none">
-								<div class="none" style="width: 380px; float: left; clear: left; margin-bottom: 20px;">
-									<table style="border: 1px solid #e8e8e8; width: 95%; margin-left: 15px; margin-right: 5px; margin-bottom: 3px;">
-										{foreach $loc->show_fields as $key => $property_name}
-											{if $loc->$property_name != ""}
-											<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
-												<td class="field" style="width: 30%;">
-													{if isset($aliases) && isset($aliases.$property_name)}
-														{t}{$loc->aliases.$property_name|capitalize|regex_replace:"/_/":" "}{/t}
-													{else}
-														{t}{$property_name}{/t}
-													{/if}
-												</td>
-												<td class="value"> 
-													{$loc->$property_name|wordwrap:75:" ":true}													
-												</td>
-											</tr>
+							<div id="loc_{$loc->locId}" style="margin-bottom: 30px;">
+								<div style="width: 100%; overflow:auto;">
+									<div style="float: left;"><h3 style="margin-left: -15px;">{$loc->locDescription}</h3></div>
+									<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
+										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 
+											{if $contact_id_key == 'uid'}
+												{$related_object_name = 'person'}
 											{/if}
-										{/foreach}										
-									</table>
-									<span style="font-size: 12px; margin-top: 5px; margin-left: 15px; color: gray;">{t}ID{/t}: {$loc->locId} | {t}Created by{/t}: {$loc->entryCreatedBy} | {t}Updated by{/t}: {$loc->entryUpdatedBy}</span>
+											{if $contact_id_key == 'oid'}
+												{$related_object_name = 'organization'}
+											{/if}
+											
+											<a href="#" onClick="jqueryForm({ 'object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$related_object_name}','related_object_id':'{$contact_id}','hash':'set_here_the_hash'})">{t}Edit{/t}</a>
+											&nbsp;|&nbsp;
+											<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash'})">{t}Delete{/t}</a>
+
+											{if $loc->locLatitude}&nbsp;|&nbsp;{/if}
+										{/if}
+										
+										{if $loc->locLatitude}
+										<a href="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;source=embed" target="_blank">{t}Larger Map{/t}</a>
+										{/if}
+									</div>
 								</div>
-								{if $loc->locLatitude}
-									{$desc = $loc->locDescription}
-									{$description = "$contact_ref - $desc"}
-									<iframe width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
-									src="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;output=embed">
-									</iframe>
-									<div style="margin-left: 5px;">
-									<a href="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;source=embed" target="_blank" style="font-size: 12px; margin-left: 380px; margin-top: 3px;">View Larger Map</a>
+																
+								<div class="none" style="width: 100%; overflow:auto;">
+									<div class="none" style="width: 380px; float: left; clear: left; margin-bottom: 20px;">
+										<table style="border: 1px solid #e8e8e8; width: 95%; margin-left: 15px; margin-right: 5px; margin-bottom: 3px;">
+											{foreach $loc->show_fields as $key => $property_name}
+												{if $loc->$property_name != ""}
+												<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
+													<td class="field" style="width: 30%;">
+														{if isset($aliases) && isset($aliases.$property_name)}
+															{t}{$loc->aliases.$property_name|capitalize|regex_replace:"/_/":" "}{/t}
+														{else}
+															{t}{$property_name}{/t}
+														{/if}
+													</td>
+													<td class="value"> 
+														{$loc->$property_name|wordwrap:75:" ":true}													
+													</td>
+												</tr>
+												{/if}
+											{/foreach}										
+										</table>
+										<span style="font-size: 12px; margin-top: 5px; margin-left: 15px; color: gray;">{t}ID{/t}: {$loc->locId} | {t}Created by{/t}: {$loc->entryCreatedBy} | {t}Updated by{/t}: {$loc->entryUpdatedBy}</span>
 									</div>
-								{else}
-									<div style="margin-left: 5px;">
-									<img src="/images/empty_map.png" width="300px"/><br/><span style="font-size: 12px; margin-left: 380px;">{t}The address provided can not be displayed{/t}.</span>
-									</div>
-								{/if}
-							</div>
-					
-							<br/>						
+									
+									{if $loc->locLatitude}
+										{$desc = $loc->locDescription}
+										{$description = "$contact_ref - $desc"}
+										<div>
+											<iframe style="border: 1px solid #e8e8e8;" width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+											src="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;output=embed">
+											</iframe>
+										</div>
+									{else}
+										<div>
+											<img style="border: 1px solid #e8e8e8;" src="/images/empty_map.png" width="300px"/>
+										</div>
+									{/if}
+								</div>
+							</div>						
 						{/foreach}
 					
 				</div>
@@ -323,7 +357,6 @@
 						</div>
 	 					-->
 			</div>
-			
 		</div>
 	
 	</div>

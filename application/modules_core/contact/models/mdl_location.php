@@ -6,7 +6,7 @@ class Mdl_Location extends MY_Model {
 
 	public $objClass;
 	public $objName;
-	protected $properties;
+	public $properties;
 	public $locId;
 	public $show_fields;
 	public $hidden_fields;	
@@ -319,7 +319,19 @@ class Mdl_Location extends MY_Model {
 		
 		return false;		
 	}	
+
+	public function delete($input)
+	{
+		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
 	
+		$this->crr->importCeReturnObject($this->rest->post('delete', $input, 'serialize'));
+	
+		if($this->crr->has_no_errors) {
+			return true;
+		}
+	
+		return false;
+	}	
 	public function prepareShow()
 	{
 		$this->load->config('location');

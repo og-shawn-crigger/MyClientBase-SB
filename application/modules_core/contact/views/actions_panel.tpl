@@ -11,14 +11,21 @@
 {/if}					
 
 
-
 <div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px;">
 
 	<h3 class="title_black">{t}Actions Panel{/t}</h3>
 
 	<ul class="quicklinks content toggle" >
-		{if !$profile_view}<li><a href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
-		{if $profile_view}<li><a href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">Edit</a></li>{/if}
+		{if !$profile_view}<li><a id="back_to_profile" href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
+		{if $profile_view}<li> <a id="edit_profile" href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">{t}Edit profile{/t}</a></li>{/if}
+		{if $contact_id_key == 'uid'}
+			{$related_object_name = 'person'}
+		{/if}
+		{if $contact_id_key == 'oid'}
+			{$related_object_name = 'organization'}
+		{/if}
+		
+		<li><a id="add-location" href="#" onClick="jqueryForm({ 'object_name':'location','related_object_name':'{$related_object_name}','related_object_id':'{$contact_id}','hash':'set_here_the_hash'})">{t}Add location{/t}</a></li>
 		<!-- 
 		<li>Add to an organization</li>
 		<li>Add a location</li>

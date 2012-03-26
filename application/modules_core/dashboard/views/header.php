@@ -45,9 +45,11 @@
 		
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery-ui-1.8.16.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/jquery.maskedinput-1.2.2.min.js" type="text/javascript"></script>
+		<script src="<?php echo base_url(); ?>assets/jquery/util.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/superfish.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/supersubs.js" type="text/javascript"></script>
 		<script src="<?php echo base_url(); ?>assets/jquery/mcbsb.js" type="text/javascript"></script>
+		
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 	
 		
@@ -65,13 +67,11 @@
             });
 
         </script>          
-		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>
-
-
-
+		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>		
 	</head>
 	<body>
-
+	<!-- top anchor -->
+	<a id="top" name="top"></a>
 		<!-- No header - saving space 
 		<div id="header_wrapper">
 
