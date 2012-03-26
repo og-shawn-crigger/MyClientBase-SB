@@ -18,8 +18,8 @@ if (!window.console) {
 
 function errorCallback(jqXHR, textStatus, errorThrown)
 {
-	console.log('errorCallback has been called.');
-    console.log(jqXHR);
+	//console.log('errorCallback has been called.');
+    //console.log(jqXHR);
 	//alert(textStatus +": "+ errorThrown);
     if(jqXHR.responseText != '') {
     	//sends back the server html error (ex. 404 message)
@@ -86,7 +86,7 @@ function jqueryDelete(params) {
 		})
 		.done(function(json){
 			if(typeof json.error !== "undefined" && json.error){
-				console.log('jqueryDelete has an error');
+				//console.log('jqueryDelete has an error');
 				alert(urldecode(json.error));
 			}
 		})
@@ -115,7 +115,7 @@ function jqueryForm(params) {
 	})
 	.done(function(json){
 		if(typeof json.error !== "undefined" && json.error){
-			console.log('jqueryForm has an error');
+			//console.log('jqueryForm has an error');
 			alert(urldecode(json.error));
 		}
 	});
@@ -173,7 +173,7 @@ function postFormToAjax(url,dataType,type,form_name,related_object_name,related_
     })
 	.done(function(json){
 		if(typeof json.error !== "undefined" && json.error){
-			console.log('postFormToAjax has an error at validation stage.');
+			//console.log('postFormToAjax has an error at validation stage.');
 			alert(urldecode(json.error));
 		}
 	})
@@ -192,8 +192,8 @@ function postFormToAjax(url,dataType,type,form_name,related_object_name,related_
         })
 		.done(function(json){
 			if(typeof json.error !== "undefined" && json.error){
-				console.log('postFormToAjax has an error at POST stage.');
-				console.log(json);
+				//console.log('postFormToAjax has an error at POST stage.');
+				//console.log(json);
 				alert(urldecode(json.error));
 				return false;
 			}

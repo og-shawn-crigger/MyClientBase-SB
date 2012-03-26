@@ -210,6 +210,8 @@ class Ajax extends Admin_Controller {
 	    			//TODO add cases
 	    			if($contact->save(false)) {
 	    				$message = 'The location has been created.';
+	    			} else {
+	    				$message = 'The location has been created but it has not been associated to the contact.';
 	    			}
 	    		}
 	    	} else {
@@ -220,7 +222,7 @@ class Ajax extends Admin_Controller {
     		$this->returnError('The location has not been created');
     	}
     	
-    	if($message) { 	    				
+    	if(isset($message)) { 	    				
     		$to_js = array();
 	    	$to_js['message'] = $message;
 	    	$to_js['focus_tab'] = '#tab_locations';
