@@ -24,9 +24,10 @@ function smarty_function_a($params, $template)
 	$text = '';
 	if(isset($params['class'])) $class = 'class="'.$params['class'].'"';
 	if(isset($params['url'])) $url = $params['url'];
+	if(isset($params['target'])) $target = 'target="'.$params['target'].'"';
 	if(isset($params['text'])) $text = $params['text'];
 	if(empty($text)) $text = 'text is missing';
-	return '<a '.$class.' href="'.$url.'">'.$text.'</a>';    
+	return '<a '.$class.' href="'.$url.'" '.$target.'>'.$text.'</a>';    
 }
 
 ?>

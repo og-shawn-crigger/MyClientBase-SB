@@ -288,15 +288,15 @@
 									<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
 										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 
 											{if $contact_id_key == 'uid'}
-												{$related_object_name = 'person'}
+												{$object_type = 'person'}
 											{/if}
 											{if $contact_id_key == 'oid'}
-												{$related_object_name = 'organization'}
+												{$object_type = 'organization'}
 											{/if}
 											
-											<a href="#" onClick="jqueryForm({ 'object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$related_object_name}','related_object_id':'{$contact_id}','hash':'set_here_the_hash'})">{t}Edit{/t}</a>
+											<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
 											&nbsp;|&nbsp;
-											<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash'})">{t}Delete{/t}</a>
+											<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
 
 											{if $loc->locLatitude}&nbsp;|&nbsp;{/if}
 										{/if}

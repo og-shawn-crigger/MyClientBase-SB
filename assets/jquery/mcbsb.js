@@ -104,6 +104,19 @@ function jqueryDelete(params) {
 	}
 }
 
+function search(params){
+	searched_value = $('#input_search').val();
+	if(typeof searched_value !== "undefined" && searched_value){
+		params.searched_value = searched_value;
+		console.log(params);
+		jqueryForm(params);
+		return false;
+		//$("#search_organization").toggle();
+	} else {
+		return false;
+	}
+};	
+
 function jqueryForm(params) {
 	
 	$.ajax({

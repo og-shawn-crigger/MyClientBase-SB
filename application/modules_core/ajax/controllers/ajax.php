@@ -65,10 +65,101 @@ class Ajax extends Admin_Controller {
     }
     
     public function getForm(){
-    	global $callback;
-
     	$params = $this->input->post('params');
     	if(!is_array($params) || count($params) == 0) $this->returnError('Some information are missing'); //TODO translate with CI standard way
+    	 
+    	if(isset($params['form_type'])) $form_type = urlencode(trim($params['form_type']));
+    	if(!isset($form_type) || !$form_type) $this->returnError('Form type is missing.'); //TODO translate with CI standard way
+    	
+    	switch ($form_type){
+    		case 'form':
+    			$this->getClassicForm($params);
+    		break;
+    		
+    		case 'search':
+    			$this->getSearchResults($params);
+    		break;
+    		
+    		default :
+    			$this->returnError('Unknown form type.');
+    		break;
+    	}
+    }
+
+    protected function getSearchResults(array $params){
+    	if(isset($params['object_name'])) $searched_object = urlencode(trim($params['object_name']));
+    	if(isset($params['searched_value'])) $searched_value = urlencode(trim($params['searched_value']));
+    	
+    	if(isset($params['related_object_name'])) $related_object_name = urlencode(trim($params['related_object_name']));
+    	if(isset($params['related_object_id'])) $related_object_id = urlencode(trim($params['related_object_id']));
+    	
+    	if(empty($searched_object) || empty($searched_value)) $this->returnError("Nothing to search.");
+
+    	$possible_object_names = array('person','organization');
+    	 
+    	if(!in_array($searched_object, $possible_object_names)) $this->returnError('The specified object '.$searched_object.' is not valid.');    	
+    	
+    	$input = array();
+    	$input['method'] = 'POST';
+    	if($searched_object == 'person') {
+    		$input['sort_by'] = array('sn');
+    		$input['filter'] = '(cn=*'.$searched_value.'*)';
+    	}
+    	if($searched_object == 'organization') {
+    		$input['sort_by'] = array('o');
+    		$input['filter'] = '(|(o=*'.$searched_value.'*)(omail=*'.$searched_value.'*)(vatNumber=*'.$searched_value.'*)(oMobile=*'.$searched_value.'*)(telephoneNumber=*'.$searched_value.'*))';
+    	}
+    	$input['flow_order'] = 'asc';
+    	$input['wanted_page'] = '0';
+    	$input['items_page'] = '20';
+    	
+    	$class = 'Mdl_'.$searched_object;
+    	$contact = new $class();
+    	$rest_return = $contact->get($input);    	
+
+    	$people = array();
+    	$orgs = array();
+    	if (is_array($rest_return['data'])) {
+    		foreach ($rest_return['data'] as $item => $contact_item) {
+
+    			if(in_array('dueviPerson', $contact_item['objectClass'])) {
+    				if($contact->arrayToObject($contact_item)) $people[] = clone $contact;
+    			}
+    			
+    			if(in_array('dueviOrganization', $contact_item['objectClass'])) {
+    				if($contact->arrayToObject($contact_item)) $orgs[] = clone $contact;
+    			}
+    		}
+    	}    	
+    	
+    	$data = array('people' => $people, 'orgs' => $orgs);
+    	$data['div_id'] = 'jquery-div-'.$searched_object;
+    	$data['form_name'] = 'jquery-form-'.$searched_object;
+    	$data['results_number'] = $rest_return['status']['results_number'];
+    	$data['results_got_number'] = $rest_return['status']['results_got_number'];
+    	
+    	//gets the html
+    	$html_form = $this->plenty_parser->parse('jquery_search.tpl', $data, true, 'smarty', 'ajax');
+    	
+    	//returns the html to js
+    	$to_js = array();
+    	if(!empty($html_form)){
+    		$to_js['html'] = urlencode($html_form);
+    		$to_js['div_id'] = urlencode(trim($data['div_id']));
+    		$to_js['form_name'] = urlencode(trim($data['form_name']));
+    		 
+    		//these information are used by js to submit the form back to php
+    		$to_js['url'] = urlencode('/ajax/update'.ucwords(urlencode(trim($searched_object))));
+    		$to_js['related_object_name'] = $params['related_object_name'];
+    		$to_js['related_object_id'] = $params['related_object_id'];
+    		 
+    		$this->output($to_js);
+    	} else {
+    		$this->returnError($searched_object.'-form can not be loaded.');
+    	}    	
+    }
+    
+    protected function getClassicForm(array $params){
     	
     	if(isset($params['object_name'])) $object_name = urlencode(trim($params['object_name']));
     	if(isset($params['object_id'])) $object_id = urlencode(trim($params['object_id']));
@@ -116,7 +207,7 @@ class Ajax extends Admin_Controller {
     	$data['object_name'] = $object_name;
     	$data['div_id'] = 'jquery-div-'.$object_name;
     	$data['form_name'] = 'jquery-form-'.$object_name;
-    	
+
     	//gets the html
     	$html_form = $this->plenty_parser->parse('jquery_form.tpl', $data, true, 'smarty', 'ajax');
     	
@@ -126,17 +217,18 @@ class Ajax extends Admin_Controller {
     		$to_js['html'] = urlencode($html_form);
     		$to_js['div_id'] = urlencode(trim($data['div_id']));
     		$to_js['form_name'] = urlencode(trim($data['form_name']));
-    		
+    		 
     		//these information are used by js to submit the form back to php
     		$to_js['url'] = urlencode('/ajax/update'.ucwords(urlencode(trim($object_name))));
-  			$to_js['related_object_name'] = $params['related_object_name'];
-  			$to_js['related_object_id'] = $params['related_object_id'];
-  			
+    		$to_js['related_object_name'] = $params['related_object_name'];
+    		$to_js['related_object_id'] = $params['related_object_id'];
+    		 
     		$this->output($to_js);
     	} else {
-			$this->returnError($object_name.'-form can not be loaded.');
-    	}
+    		$this->returnError($object_name.'-form can not be loaded.');
+    	}    	
     }
+    
     
     public function validateForm() {
 		//TODO implement validation
