@@ -28,7 +28,7 @@
 		});
 
 		$('#search_organization_form').submit(function() {
-			search({ 'form_type':'search','object_name':'organization','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','url':'/ajax/associate/','hash':'set_here_the_hash' });
+			search({ 'procedure':'personToOrganizationMembership','form_type':'search','object_name':'organization','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','url':'/ajax/associate/','hash':'set_here_the_hash' });
 			return false;
 		});
 	});

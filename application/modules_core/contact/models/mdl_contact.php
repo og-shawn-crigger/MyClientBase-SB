@@ -187,23 +187,28 @@ class Mdl_Contact extends MY_Model {
 			}
 						
 			//do not mess with LDAP system fields
-			if($this->properties[$property]['no-user-modification'] === '1') continue;
+			if($this->properties[$property]['no-user-modification'] == 1) continue;
 			
-			if($this->properties[$property]['single-value'] === '1') {
+			$pd = $this->properties[$property]['single-value'];
+			if($property == 'oAdminRDN') {
+				$a = '';
+			}
+			if($this->properties[$property]['single-value'] == 1) {
 				if(!is_array($this->$property)) {
 					$output[$property] = $this->$property; 
 				} else {
-					$output[$property] = implode(',', $this->$property); //TODO not sure about this. If it's single it should be never an array
+					//just in case the property has been mistakenly set as an array I force it to be a string
+					$output[$property] = implode(',', $this->$property);
 				}
 			} else {
 				if(is_array($this->$property)) {
 					$output[$property] = $this->$property;
 				} else {
-					if(!empty($this->$property))
+					if(empty($this->$property))
 					{
-						$output[$property] = array($this->$property);
-					} else {
 						$output[$property] = array();
+					} else {
+						$output[$property] = explode(',', $this->$property);
 					}
 				}
 			}

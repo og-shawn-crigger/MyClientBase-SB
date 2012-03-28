@@ -26,6 +26,7 @@
 				{$contact_ref = $contact->cn}
 				{$contact_id = $contact->uid}
 				{$contact_id_key = "uid"}
+				{$object_type = 'person'}
 				<h3 class="title_black">{$contact->cn}</h3>
 			{/if}		
 			
@@ -33,6 +34,7 @@
 				{$contact_ref = $contact->o}
 				{$contact_id = $contact->oid}
 				{$contact_id_key = "oid"}
+				{$object_type = 'organization'}
 				<h3 class="title_black">{$contact->o}</h3>
 			{/if}					
 		</div>
@@ -153,81 +155,71 @@
 				<div id="tab_memberOf">
 					{if $contact_orgs}
 						{foreach $contact_orgs as $key => $org}
-							{if isset($org->aliases)} {$aliases = $org->aliases} {/if}
-						
-							{if $key == 0}
-								<h3 style="margin-left: -15px;">
-							{else}
-								<h3 style="margin-left: -15px; margin-top: 30px;">
-							{/if}
-							<a href="index.php/contact/details/oid/{$org->oid}">{$org->o}</a>
-
-							{if $contact->oAdminRDN==$org->oid}
-							<img src="/images/gold_star_20.jpg" style="width: 20px; margin-left: 10px;" />
-							<span style="font-size: 12px; margin-left: 3px;">({t}manager{/t})</span>
-							{/if}
-
-							</h3>
-							
-							{*
-							<div style="width: 100%; overflow:auto;">
-								<div style="float: left;"><h3 style="margin-left: -15px;">{$loc->locDescription}</h3></div>
-								<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
-									{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 
-										{if $contact_id_key == 'uid'}
-											{$object_type = 'person'}
+							{if isset($org->aliases)} {$aliases = $org->aliases} {/if}	
+							<div id="memberOf_{$org->oid}" style="margin-bottom: 30px;">
+								<div style="width: 100%; overflow:auto;">
+									<div style="float: left;">
+										<h3 style="margin-left: -15px;">
+											<a href="index.php/contact/details/oid/{$org->oid}">{$org->o}</a>
+				
+											{if {preg_match pattern=$org->oid subject=$contact->oAdminRDN}}
+											<img src="/images/gold_star_20.jpg" style="width: 20px; margin-left: 10px;" />
+											<span style="font-size: 12px; margin-left: 3px;">({t}manager{/t})</span>
+											{/if}
+		
+										</h3>
+									</div>
+									<div style="float:right; display:inline; width: 260px; font-size: 12px; padding-top: 9px;">
+										{if {preg_match pattern=$org->oid subject=$contact->oAdminRDN}} 
+											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Remove administation{/t}</a>
+										{else}
+											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Make administrator{/t}</a>
 										{/if}
-										{if $contact_id_key == 'oid'}
-											{$object_type = 'organization'}
-										{/if}
-										
-										<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
-										&nbsp;|&nbsp;
-										<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
-									{/if}
+											&nbsp;|&nbsp;
+											<a href="#" onClick="jqueryDelete({ 'procedure':'deleteOrganizationMembership','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Delete Association{/t}</a>
+									</div>
 								</div>
-							</div>
-							*}
-							
-							<table class="contact-details-left" style="border: 1px solid #e8e8e8; width: 98%; margin-left: 15px; margin-bottom: 3px; padding-bottom: 0px;">
-								{foreach $org->show_fields as $index => $property_name}
-									{if $org->$property_name != ""}
-									<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
-										<td class="field" style="width: 30%;">
-											{if isset($aliases) && isset($aliases.$property_name)}
-												{t}{$org->aliases.$property_name|capitalize|regex_replace:"/_/":" "}{/t}
-											{else}
-												{t}{$property_name}{/t}
-											{/if}
-										</td>
-										<td class="value">
-											{$already_wrote=0}
-											<!-- particular cases -->
-											{if $property_name=="omail"}
-												<a href="mailto:{$org->$property_name}">{$org->$property_name|wordwrap:60:"<br/>":true}</a>
-												{$already_wrote=1}
-											{/if}
-												
-											{if $propery_name=="oURL"}
-												<a href="{$org->$property_name}" target="_blank">{$org->$property_name|wordwrap:60:"<br/>":true}</a>
-												{$already_wrote=1}
-											{/if}
-												
-											{* default case *}
-											{if $already_wrote==0}
-												{$org->$property_name|wordwrap:75:" ":true}
-											{/if}
-										</td>
-									</tr>
+								
+								
+								<table class="contact-details-left" style="border: 1px solid #e8e8e8; width: 98%; margin-left: 15px; margin-bottom: 3px; padding-bottom: 0px;">
+									{foreach $org->show_fields as $index => $property_name}
+										{if $org->$property_name != ""}
+										<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
+											<td class="field" style="width: 30%;">
+												{if isset($aliases) && isset($aliases.$property_name)}
+													{t}{$org->aliases.$property_name|capitalize|regex_replace:"/_/":" "}{/t}
+												{else}
+													{t}{$property_name}{/t}
+												{/if}
+											</td>
+											<td class="value">
+												{$already_wrote=0}
+												<!-- particular cases -->
+												{if $property_name=="omail"}
+													<a href="mailto:{$org->$property_name}">{$org->$property_name|wordwrap:60:"<br/>":true}</a>
+													{$already_wrote=1}
+												{/if}
+													
+												{if $propery_name=="oURL"}
+													<a href="{$org->$property_name}" target="_blank">{$org->$property_name|wordwrap:60:"<br/>":true}</a>
+													{$already_wrote=1}
+												{/if}
+													
+												{* default case *}
+												{if $already_wrote==0}
+													{$org->$property_name|wordwrap:75:" ":true}
+												{/if}
+											</td>
+										</tr>
+										{/if}
+									{/foreach}										
+								</table>
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 15px; color: gray;">{t}ID{/t}: {$org->oid} | {t}Created by{/t}: {$org->entryCreatedBy} @{$contact->entryCreationDate}
+									{if $org->entryUpdatedBy != ""}
+										{t}updated by{/t}: {$org->entryUpdatedBy} @{$org->entryUpdateDate}
 									{/if}
-								{/foreach}										
-							</table>
-							<span style="font-size: 12px; margin-top: 5px; margin-left: 15px; color: gray;">{t}ID{/t}: {$org->oid} | {t}Created by{/t}: {$org->entryCreatedBy} @{$contact->entryCreationDate}
-							{if $org->entryUpdatedBy != ""}
-								{t}updated by{/t}: {$org->entryUpdatedBy} @{$org->entryUpdateDate}
-							{/if}
-							
-							</span>
+								</span>
+							</div>
 						{/foreach}
 					{/if}
 				</div>				
@@ -307,17 +299,10 @@
 								<div style="width: 100%; overflow:auto;">
 									<div style="float: left;"><h3 style="margin-left: -15px;">{$loc->locDescription}</h3></div>
 									<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
-										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 
-											{if $contact_id_key == 'uid'}
-												{$object_type = 'person'}
-											{/if}
-											{if $contact_id_key == 'oid'}
-												{$object_type = 'organization'}
-											{/if}
-											
+										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 										
 											<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
 											&nbsp;|&nbsp;
-											<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
+											<a href="#" onClick="jqueryDelete({ 'procedure':'deleteLocation','object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
 
 											{if $loc->locLatitude}&nbsp;|&nbsp;{/if}
 										{/if}

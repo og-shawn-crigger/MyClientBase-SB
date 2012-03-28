@@ -75,7 +75,7 @@ function retrieveForm(form) {
 }
 
 function jqueryDelete(params) {
-	var agree=confirm("Are you sure you want to delete this " + params.object_name +"?");
+	var agree=confirm("Are you sure ?");
 	if (agree)
 	{	
 		$.ajax({
@@ -83,6 +83,36 @@ function jqueryDelete(params) {
 			type: 'POST',
 			dataType : 'jsonp',
 			url : '/ajax/delete',
+			data : {
+				params: params,
+			}, 
+			error: errorCallback,
+		})
+		.done(function(json){
+			if(typeof json.error !== "undefined" && json.error){
+				//console.log('jqueryDelete has an error');
+				alert(urldecode(json.error));
+			}
+		})
+	    .success(function(json){
+	    	if(typeof json.message !== "undefined" && json.message){
+	    		alert(urldecode(json.message));
+	        	window.location.hash = json.focus_tab;
+	        	window.location.reload(true);
+	    	}
+	    });
+	}
+}
+
+function jqueryAssociate(params) {
+	var agree=confirm("Are you sure ?");
+	if (agree)
+	{	
+		$.ajax({
+			async : true,
+			type: 'POST',
+			dataType : 'jsonp',
+			url : '/ajax/associate',
 			data : {
 				params: params,
 			}, 
@@ -150,6 +180,7 @@ function openJqueryForm(json){
 	console.log('openJqueryForm');
 	console.log('json');
 	var tag = $("<div></div>");
+	var procedure = '';
 	selected_radio = ''; //global
 	
 	if(typeof json == "object" && json.html) {
@@ -166,7 +197,7 @@ function openJqueryForm(json){
 			resizable: false,
 			buttons: {
 				"Ok": function() {
-					postFormToAjax(json.url,'jsonp','POST',json.form_name,json.object_name,json.related_object_name,json.related_object_id,selected_radio);
+					postFormToAjax(json.url,'jsonp','POST',json.form_name,json.object_name,json.related_object_name,json.related_object_id,selected_radio,json.procedure);
 				},
 //				"Reset": function(){
 //					var form = document.forms[json.form_name];
@@ -181,7 +212,7 @@ function openJqueryForm(json){
 	}	
 }
 
-function postFormToAjax(url,dataType,type,form_name,object_name,related_object_name,related_object_id,selected_radio){
+function postFormToAjax(url,dataType,type,form_name,object_name,related_object_name,related_object_id,selected_radio,procedure){
 	console.log('postFormToAjax');
 	var form = document.forms[form_name];
 	var formObj = retrieveForm(form);
@@ -207,6 +238,7 @@ function postFormToAjax(url,dataType,type,form_name,object_name,related_object_n
         	dataType: dataType,
         	type	: type,
             data    : {
+            		procedure: procedure,
                 	form: formObj,
                 	
                 	object_name: object_name,

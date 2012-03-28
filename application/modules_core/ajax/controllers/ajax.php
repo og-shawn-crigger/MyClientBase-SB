@@ -87,6 +87,8 @@ class Ajax extends Admin_Controller {
     }
 
     protected function getSearchResults(array $params){
+    	$procedure = urlencode(trim($params['procedure']));
+    	
     	if(isset($params['object_name'])) $searched_object = urlencode(trim($params['object_name']));
     	if(isset($params['searched_value'])) $searched_value = urlencode(trim($params['searched_value']));
     	
@@ -151,6 +153,7 @@ class Ajax extends Admin_Controller {
     		$to_js['html'] = urlencode($html_form);
     		$to_js['div_id'] = urlencode(trim($data['div_id']));
     		$to_js['form_name'] = urlencode(trim($data['form_name']));
+    		$to_js['procedure'] = urlencode(trim($params['procedure']));
     		 
     		//these information are used by js to submit the form back to php
     		$to_js['url'] = $url;
@@ -234,84 +237,171 @@ class Ajax extends Admin_Controller {
     	}    	
     }
     
+    private function getOrganization(Mdl_Organization $organization, $object_id) {
+    	$organization->oid = $object_id;
+    	$result = $organization->get();
+    	if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+    		$organization->arrayToObject($result['data']['0']);
+    		return true;
+    	}
+    	$this->returnError('The selected organization can not be found');
+    }
+
+    private function getPerson(Mdl_Person $person, $object_id) {
+    	$person->uid = $object_id;
+    	$result = $person->get();
+    	if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+    		$person->arrayToObject($result['data']['0']);
+    		return true;
+    	}
+    	$this->returnError('The selected person can not be found');
+    }
+    
+    
     public function associate() {
-    	$form = $this->input->post('form');
-    	
-    	$selected_object_name = urldecode(trim($this->input->post('object_name')));
-    	$selected_object_id = urldecode(trim($this->input->post('selected_radio')));
-    	
-    	$related_object_name = urldecode(trim($this->input->post('related_object_name')));
-    	$related_object_id = urldecode(trim($this->input->post('related_object_id')));
+    	$post = $this->input->post();
+    	if(isset($post['params']) && is_array($post['params'])) {
+    		foreach ($post['params'] as $key => $value) {
+    			$post[$key] = $value;
+    		}
+    		unset($post['params']);
+    	}
+    	foreach ($post as $key => $value){
+    		if(!is_array($value)) {
+    			$post[$key] = urldecode(trim($value));
+    		} 
+    	}
+ 
+    	$howmany = extract($post);
 
     	$organization = new Mdl_Organization();
     	$person = new Mdl_Person();
-    	
-    	if($selected_object_name=='organization' && $related_object_name=='person') {
-    		//get the organization
-    		$organization->oid = $selected_object_id;
-    		$result = $organization->get();
-    		if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
-    			$organization->arrayToObject($result['data']['0']);
-    			$organization_name = $organization->o;
-    		} else {
-    			$this->returnError('The selected organization can not be found');
-    		}
-    		
-    		//get the person
-    		$person->uid = $related_object_id;
-    		$result = $person->get(null);
-    		if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
-    			$person->arrayToObject($result['data']['0']);
-
-	    		if(empty($person->oRDN)){
-	    			$person->oRDN = $selected_object_id;
-	    		} else {
-	    			if(!is_array($person->oRDN)) {
-	    				$ordn = explode(',', $person->oRDN);
-	    			} else {
-	    				$ordn = $person->oRDN;
-	    			}
-    				if(!in_array($selected_object_id, $ordn)) {
-    					$ordn[] = $selected_object_id;
-    					$person->oRDN = $ordn;
-    				} else {
-    					$this->returnError($person->cn.' is already associated to '.$organization_name);
-    				}	    				
-    			}
-
+    	 
+    	switch ($procedure) {
+    		case 'personToOrganizationMembership':
+    			if(empty($object_name) || empty($selected_radio) || empty($related_object_name) || empty($related_object_id)) $this->returnError('Some information are missing');
+    			 
+    			$selected_object_name = $object_name;
+    			$selected_object_id = $selected_radio;
     			
-    			if(empty($person->o)){
-    				$person->o = $organization_name;
+    			if($selected_object_name=='organization' && $related_object_name=='person') {
+
+    				$this->getOrganization($organization, $selected_object_id);
+    				$organization_name = $organization->o;
+    				
+    				//update person
+    				$this->getPerson($person, $related_object_id);
+    					
+    				if(empty($person->oRDN)){
+    					$person->oRDN = $selected_object_id;
+    				} else {
+    					if(!is_array($person->oRDN)) {
+    						$ordn = explode(',', $person->oRDN);
+    					} else {
+    						$ordn = $person->oRDN;
+    					}
+    					if(!in_array($selected_object_id, $ordn)) {
+    						$ordn[] = $selected_object_id;
+    						$person->oRDN = $ordn;
+    					} else {
+    						$this->returnError($person->cn.' is already associated to '.$organization_name);
+    					}
+    				}
+    				 
+
+    				if(empty($person->o)){
+    					$person->o = $organization_name;
+    				} else {
+    					if(!is_array($person->o)) {
+    						$o = explode(',', $person->o);
+    					} else {
+    						$o = $person->o;
+    					}
+    					if(!in_array($selected_object_id, $o)) {
+    						$o[] = $organization_name;
+    						$person->o = $o;
+    					}
+    				}
+    				 
+    				if($person->save(false)){
+    					$message = $person->cn." has been associated to ".$organization_name;
+    					$tab = "#tab_memberOf";
+    						
+    				} else {
+    					$this->returnError('The association process failed.');
+    				}
+    				
+    				 
+    				if(isset($message)) {
+    					$to_js = array();
+    					$to_js['message'] = $message;
+    					$to_js['focus_tab'] = $tab;
+    				}
     			} else {
-    				if(!is_array($person->o)) {
-    					$o = explode(',', $person->o);
-    				} else {
-    					$o = $person->o;
-    				}
-    				if(!in_array($selected_object_id, $o)) {
-    					$o[] = $organization_name;
-    					$person->o = $o;
-    				}
+    				$this->returnError('Unknown association has been requested.');
     			}
-	    		 
-    			if($person->save(false)){
-    				$message = $person->cn." has been associated to ".$organization_name;
-    				$tab = "#tab_memberOf";
+    		break;
+    		
+    		case 'personAdminOfOrganization':
+    			if(empty($object_name) || empty($object_id) || empty($related_object_name) || empty($related_object_id)) $this->returnError('Some information are missing');
     			
-	    		} else {
-	    			$this->returnError('The association process failed.');
-	    		}
-    		}
-    		 
-    		if(isset($message)) {
-    			$to_js = array();
-    			$to_js['message'] = $message;
-    			$to_js['focus_tab'] = $tab;
-    			$this->output($to_js);
-    		}    		   		
+    			$selected_object_name = $object_name;
+    			$selected_object_id = $object_id;
+    			 
+    			if($selected_object_name=='organization' && $related_object_name=='person') {
+    				
+	    			$this->getOrganization($organization, $selected_object_id);
+	    			$organization_name = $organization->o;
+	    			
+	    			$this->getPerson($person, $related_object_id);
+	    			
+	    			if(empty($person->oAdminRDN)){
+	    				$person->oAdminRDN = $selected_object_id;
+	    				$message = $person->cn." is now administrator of ".$organization_name;
+	    			} else {
+	    				if(!is_array($person->oAdminRDN)) {
+	    					$oAdminRDN = explode(',', $person->oAdminRDN);
+	    				} else {
+	    					$oAdminRDN = $person->oAdminRDN;
+	    				}
+	    				if(!in_array($selected_object_id, $oAdminRDN)) {
+	    					$oAdminRDN[] = $selected_object_id;
+	    					$message = $person->cn." is now administrator of ".$organization_name;
+	    				} else {
+	    					//remove the administration (toggle effect)
+	    					foreach ($oAdminRDN as $key => $value) {
+	    						if($value == $selected_object_id) unset($oAdminRDN[$key]);
+	    					}
+	    					$message = $person->cn." is no more administrator of ".$organization_name;
+	    				}
+	    				if(count($oAdminRDN)>0) {
+	    					$person->oAdminRDN = $oAdminRDN;
+	    				} else {
+	    					$person->oAdminRDN = '';
+	    				}
+	    			}
+	    			
+	    			if($person->save(false)){
+	    				$to_js = array();
+	    				$to_js['message'] = $message;
+	    				$to_js['focus_tab'] = '#tab_memberOf';	    				 
+	    			} else {
+	    				$this->returnError('The process failed.');
+	    			}	    			
+    			}    			 
+    		break;
+    		
+    		default:
+    			$this->returnError('An invalid procedure has been requested');
+    		break;
     	}
-    	    	
-    	$this->returnError('Unknown association has been requested.');
+
+    	if(isset($to_js)) {
+    		$this->output($to_js);
+    	} else {
+    		$this->returnError('Something went wrong');
+    	}
+    	
     }
     
     public function validateForm() {
@@ -414,32 +504,112 @@ class Ajax extends Admin_Controller {
     public function delete(){
     	$params = $this->input->post('params');
     	if(!is_array($params) || count($params) == 0) $this->returnError('Some information are missing'); //TODO translate with CI standard way
-    	 
-    	if(isset($params['object_name'])) $object_name = urlencode(trim($params['object_name']));
-    	if(isset($params['object_id'])) $object_id = urlencode(trim($params['object_id']));
-    	 
-    	$possible_object_names = array('location');    	
     	
-    	if(!in_array($object_name, $possible_object_names)) $this->returnError('The specified '.$object_name.' can not be deleted.');
+    	extract($params);
     	
-    	switch ($object_name) {
-    		case 'location':
+//     	
+//     	if(isset($params['procedure'])) $procedure = urlencode(trim($params['procedure']));
+//     	if(isset($params['object_name'])) $object_name = urlencode(trim($params['object_name']));
+//     	if(isset($params['object_id'])) $object_id = urlencode(trim($params['object_id']));
+
+    	switch ($procedure) {
+    		case 'deleteLocation':
+    			if(!isset($object_name) || !isset($object_id)) $this->returnError('Some information are missing');
+    			
+    			if(strtolower($object_name) != 'location') $this->returnError('The specified '.$object_name.' can not be deleted.');
     			$location = new Mdl_Location();
     			$location->locId = $object_id;
-				$input = array();
-				$input['locId'] = $object_id;    		
-    		break;    		
+    			$input = array();
+    			$input['locId'] = $object_id;
+    			
+    			if($location->delete($input)) {
+    				$to_js = array();
+    				$to_js['message'] = 'The location has been deleted.';
+    				$to_js['focus_tab'] = '#tab_locations';
+    			} else {
+    				$this->returnError('The location has not been deleted');
+    			}    			 
+    		break;
+    		
+    		case 'deleteOrganizationMembership':
+    			if(!isset($object_name) || !isset($object_id) || !isset($related_object_name) || !isset($related_object_id)) $this->returnError('Some information are missing');    			
+    			if(strtolower($object_name) != 'organization') $this->returnError('The specified object_name '.$object_name.' can not be used in this procedure.');
+    			//get the person
+    			$person = new Mdl_Person();
+    			$person->uid = $related_object_id;
+    	    	$result = $person->get(null);
+    	    	
+	    		if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+	    			//get the organization
+	    			$organization = new Mdl_Organization();
+	    			$organization->oid = $object_id;
+	    			$res = $organization->get();
+	    			if($res['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+	    				$organization->arrayToObject($res['data']['0']);
+	    				$organization_name = $organization->o;
+	    			} else {
+	    				$this->returnError('The selected organization can not be found');
+	    			}	    			
+	    			
+	    			//update person's attributes
+	    			$person->arrayToObject($result['data']['0']);
+	    			
+	    			$ordn = explode(',', $person->oRDN);
+	    			foreach ($ordn as $key => $item) {
+	    				if($item == $object_id) {
+	    					 unset($ordn[$key]);
+	    				}
+	    			}
+	    			if(count($ordn) > 0) {
+	    				$person->oRDN = implode(',', $ordn);
+	    			} else {
+	    				$person->oRDN = '';
+	    			}
+	    			
+	    			$oAdminRDN = explode(',', $person->oAdminRDN);
+	    			foreach ($oAdminRDN as $key => $item) {
+	    				if($item == $object_id) {
+	    					unset($oAdminRDN[$key]);
+	    				}
+	    			}
+	    			if(count($oAdminRDN) > 0) {
+	    				$person->oAdminRDN = implode(',', $oAdminRDN);
+	    			} else {
+	    				$person->oAdminRDN = '';
+	    			}
+	    			
+	    			$o = explode(',', $person->o);
+	    			foreach ($o as $key => $item) {
+	    				if($item == $organization_name) {
+	    					unset($o[$key]);
+	    				}
+	    			}
+	    			if(count($o) > 0) {
+	    				$person->o = implode(',', $o);
+	    			} else {
+	    				$person->o = '';
+	    			}	
+		    		 
+	    			if($person->save(false)){
+	    				$to_js = array();
+	    				$to_js['message'] = $person->cn." has been disassociated from ".$organization_name;
+	    				$to_js['focus_tab'] = '#tab_memberOf';	    				
+		    		} else {
+		    			$this->returnError('The association process failed.');
+		    		}
+	    		}
+    		break;
+    		
+    		default:
+    			$this->returnError('An invalid procedure has been requested');
+    		break;
     	}
     	
-    	if($location->delete($input)) {
-    		$to_js = array();
-    		$to_js['message'] = 'The location has been deleted.';
-    		$to_js['focus_tab'] = '#tab_locations';
+    	if(isset($to_js)) {
     		$this->output($to_js);
     	} else {
-    		$this->returnError('The location has not been deleted');
-    	}
-    		
+    		$this->returnError('Something went wrong');
+    	}	
     }
     
     public function t(){
