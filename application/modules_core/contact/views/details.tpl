@@ -46,10 +46,6 @@
 				<ul>
 					<li><a href="#tab_client">{t}Info{/t}</a></li>
 
-					{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
-						<li><a href="#tab_memberOf">{t}Member of{/t}</a></li>
-					{/if}
-
 					{if $contact_locs}
 					<li><a href="#tab_locations">{t}Locations{/t}</a></li>
 					{/if}
@@ -58,6 +54,9 @@
 						<li><a href="#tab_members">{t}Members{/t}</a></li>
 					{/if}
 					
+					{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
+						<li><a href="#tab_memberOf">{t}Member of{/t}</a></li>
+					{/if}					
 					<!-- 
 					<li><a href="#tab_invoices">{citranslate lang=$language text='invoices'}</a></li>
 					 -->
