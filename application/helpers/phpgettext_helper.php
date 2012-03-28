@@ -24,9 +24,24 @@ function setupPhpGettext() {
 	$supported_locales = $CI->config->item('gettextSupportedLocales');
 	$encoding = $CI->config->item('gettextEncoding');
 	
-	//TODO maybe this should be set through GET or POST or SESSION ... will see
-	$locale = $CI->config->item('gettextDefaultLocale'); //(isset($_GET['lang']))? $_GET['lang'] : DEFAULT_LOCALE;
-
+	//takes the language settings from MCB and transforms it in a valid gettext locale
+	$mcb_locale = $CI->mdl_mcb_data->get('default_language');
+	switch ($mcb_locale) {
+		case 'english':
+			$smarty_locale = 'en_EN';
+		break;
+		
+		case 'italian':
+			$smarty_locale = 'it_IT';
+		break;
+	}
+	
+	if(!isset($smarty_locale)) {
+		$locale = $CI->config->item('gettextDefaultLocale'); //(isset($_GET['lang']))? $_GET['lang'] : DEFAULT_LOCALE;
+	} else {
+		$locale = $smarty_locale;
+	}
+	
 	return array('locale' => $locale,
 				 'encoding' => $encoding,
 				 'supported_locales' => $supported_locales,
