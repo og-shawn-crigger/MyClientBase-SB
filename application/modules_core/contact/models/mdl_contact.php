@@ -59,7 +59,7 @@ class Mdl_Contact extends MY_Model {
     
     private function checkObjName($objName)
     {
-    	return in_array($objName, $this->possibleObjects) ? true : false;    	
+    	return in_array($objName, $this->possibleObjects) ? true : false;
     }
     
     public function get(array $input = null, $return_rest = true)
@@ -68,8 +68,6 @@ class Mdl_Contact extends MY_Model {
     	if((is_null($input) || (count($input)==0)) && is_null($this->client_id)) return false;
     	
     	if(empty($input['filter'])) $input['filter'] = '(|(uid='.$this->client_id.')(oid='.$this->client_id.'))';
-    	
-    	
     	
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
     	
@@ -84,10 +82,8 @@ class Mdl_Contact extends MY_Model {
     		}
     	} 
     		 
-    	if($this->crr->has_no_errors)
-    	{
-    		if($this->crr->results_got_number == '1')
-    		{
+    	if($this->crr->has_no_errors) {
+    		if($this->crr->results_got_number == '1') {
     			if(!empty($this->crr->data['0']['uid'])) {
     				$this->person->arrayToObject($this->crr->data['0']);
     				//$this->person->prepareShow(); //TODO maybe this can come in handy
@@ -101,7 +97,6 @@ class Mdl_Contact extends MY_Model {
     		}
     		    		
     		if($this->crr->results_got_number == '0') return false;
-    		
     	}
     	
     	return false;

@@ -2,12 +2,14 @@
 	{$contact_ref = $contact->cn}
 	{$contact_id = $contact->uid}
 	{$contact_id_key = "uid"}
+	{$object_type = 'person'}
 {/if}		
 
 {if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
 	{$contact_ref = $contact->o}
 	{$contact_id = $contact->oid}
 	{$contact_id_key = "oid"}
+	{$object_type = 'organization'}
 {/if}					
 
 <script type="text/javascript">
@@ -24,6 +26,11 @@
 			}, 0 );
 			$("#input_search").focus();
 		});
+
+		$('#search_organization_form').submit(function() {
+			search({ 'form_type':'search','object_name':'organization','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','url':'/ajax/associate/','hash':'set_here_the_hash' });
+			return false;
+		});
 	});
 </script>
 
@@ -35,21 +42,17 @@
 		<li><a id="back_to_profile" href="/contact/">{t}Search contact{/t}</a></li>
 		{if !$profile_view}<li><a id="back_to_profile" href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
 		{if $profile_view}<li> <a id="edit_profile" href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">{t}Edit profile{/t}</a></li>{/if}
-		{if $contact_id_key == 'uid'}
-			{$object_type = 'person'}
-		{/if}
-		{if $contact_id_key == 'oid'}
-			{$object_type = 'organization'}
-		{/if}
 		
 		<li><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Add location{/t}</a></li>
-		<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
-		<div id="search_organization" title="Form" style="display: none;">
-			<form style="background-color: white;" onsubmit="search({ 'form_type':'search','object_name':'organization','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })"">
-				<input style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
-				<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
-			</form>
-		</div>
+		{if $object_type == 'person'}
+			<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
+			<div id="search_organization" title="Form" style="display: none;">
+				<form id="search_organization_form" style="background-color: white;">
+					<input title="{t}search for name, vat, phone, email, website{/t}" style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
+					<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
+				</form>
+			</div>
+		{/if}
 		<!--
 		<li>
 				<form method="post" action="" style="display: inline;">

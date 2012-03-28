@@ -93,6 +93,9 @@ class Ajax extends Admin_Controller {
     	if(isset($params['related_object_name'])) $related_object_name = urlencode(trim($params['related_object_name']));
     	if(isset($params['related_object_id'])) $related_object_id = urlencode(trim($params['related_object_id']));
     	
+    	if(isset($params['url'])) $url = urlencode(trim($params['url']));
+    	if(!isset($url)) $this->returnError('No url specified');
+    	
     	if(empty($searched_object) || empty($searched_value)) $this->returnError("Nothing to search.");
 
     	$possible_object_names = array('person','organization');
@@ -103,7 +106,7 @@ class Ajax extends Admin_Controller {
     	$input['method'] = 'POST';
     	if($searched_object == 'person') {
     		$input['sort_by'] = array('sn');
-    		$input['filter'] = '(cn=*'.$searched_value.'*)';
+    		$input['filter'] = '(|(cn=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))';
     	}
     	if($searched_object == 'organization') {
     		$input['sort_by'] = array('o');
@@ -111,7 +114,7 @@ class Ajax extends Admin_Controller {
     	}
     	$input['flow_order'] = 'asc';
     	$input['wanted_page'] = '0';
-    	$input['items_page'] = '20';
+    	$input['items_page'] = '15';
     	
     	$class = 'Mdl_'.$searched_object;
     	$contact = new $class();
@@ -133,6 +136,7 @@ class Ajax extends Admin_Controller {
     	}    	
     	
     	$data = array('people' => $people, 'orgs' => $orgs);
+    	$data['searched_value'] = $searched_value;
     	$data['div_id'] = 'jquery-div-'.$searched_object;
     	$data['form_name'] = 'jquery-form-'.$searched_object;
     	$data['results_number'] = $rest_return['status']['results_number'];
@@ -149,7 +153,8 @@ class Ajax extends Admin_Controller {
     		$to_js['form_name'] = urlencode(trim($data['form_name']));
     		 
     		//these information are used by js to submit the form back to php
-    		$to_js['url'] = urlencode('/ajax/update'.ucwords(urlencode(trim($searched_object))));
+    		$to_js['url'] = $url;
+    		$to_js['object_name'] = $params['object_name'];
     		$to_js['related_object_name'] = $params['related_object_name'];
     		$to_js['related_object_id'] = $params['related_object_id'];
     		 
@@ -229,6 +234,85 @@ class Ajax extends Admin_Controller {
     	}    	
     }
     
+    public function associate() {
+    	$form = $this->input->post('form');
+    	
+    	$selected_object_name = urldecode(trim($this->input->post('object_name')));
+    	$selected_object_id = urldecode(trim($this->input->post('selected_radio')));
+    	
+    	$related_object_name = urldecode(trim($this->input->post('related_object_name')));
+    	$related_object_id = urldecode(trim($this->input->post('related_object_id')));
+
+    	$organization = new Mdl_Organization();
+    	$person = new Mdl_Person();
+    	
+    	if($selected_object_name=='organization' && $related_object_name=='person') {
+    		//get the organization
+    		$organization->oid = $selected_object_id;
+    		$result = $organization->get();
+    		if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+    			$organization->arrayToObject($result['data']['0']);
+    			$organization_name = $organization->o;
+    		} else {
+    			$this->returnError('The selected organization can not be found');
+    		}
+    		
+    		//get the person
+    		$person->uid = $related_object_id;
+    		$result = $person->get(null);
+    		if($result['status']['status_code']=='200' && $result['status']['results_number']=='1') {
+    			$person->arrayToObject($result['data']['0']);
+
+	    		if(empty($person->oRDN)){
+	    			$person->oRDN = $selected_object_id;
+	    		} else {
+	    			if(!is_array($person->oRDN)) {
+	    				$ordn = explode(',', $person->oRDN);
+	    			} else {
+	    				$ordn = $person->oRDN;
+	    			}
+    				if(!in_array($selected_object_id, $ordn)) {
+    					$ordn[] = $selected_object_id;
+    					$person->oRDN = $ordn;
+    				} else {
+    					$this->returnError($person->cn.' is already associated to '.$organization_name);
+    				}	    				
+    			}
+
+    			
+    			if(empty($person->o)){
+    				$person->o = $selected_object_id;
+    			} else {
+    				if(!is_array($person->o)) {
+    					$o = explode(',', $person->o);
+    				} else {
+    					$o = $person->o;
+    				}
+    				if(!in_array($selected_object_id, $o)) {
+    					$o[] = $organization_name;
+    					$person->o = $o;
+    				}
+    			}
+	    		 
+    			if($person->save(false)){
+    				$message = $person->cn." has been associated to ".$organization_name;
+    				$tab = "#tab_memberOf";
+    			
+	    		} else {
+	    			$this->returnError('The association process failed.');
+	    		}
+    		}
+    		 
+    		if(isset($message)) {
+    			$to_js = array();
+    			$to_js['message'] = $message;
+    			$to_js['focus_tab'] = $tab;
+    			$this->output($to_js);
+    		}    		   		
+    	}
+    	    	
+    	$this->returnError('Unknown association has been requested.');
+    }
     
     public function validateForm() {
 		//TODO implement validation

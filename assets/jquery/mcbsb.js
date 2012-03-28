@@ -105,22 +105,29 @@ function jqueryDelete(params) {
 }
 
 function search(params){
+
 	searched_value = $('#input_search').val();
+	
 	if(typeof searched_value !== "undefined" && searched_value){
+
 		params.searched_value = searched_value;
-		console.log(params);
-		jqueryForm(params);
-		return false;
-		//$("#search_organization").toggle();
+		
+		jqueryForm(params, function(response){
+
+			$("#search_organization").toggle();
+
+		    alert('Done');
+		});	
 	} else {
 		return false;
 	}
 };	
 
 function jqueryForm(params) {
-	
+	console.log('jqueryForm');
+	console.log(params);
 	$.ajax({
-		async : true,
+		async: false,
 		type: 'POST',
 		dataType : 'jsonp',
 		url : '/ajax/getForm',
@@ -132,7 +139,7 @@ function jqueryForm(params) {
 	})
 	.done(function(json){
 		if(typeof json.error !== "undefined" && json.error){
-			//console.log('jqueryForm has an error');
+			console.log('jqueryForm has an error');
 			alert(urldecode(json.error));
 		}
 	});
@@ -140,8 +147,10 @@ function jqueryForm(params) {
 
 
 function openJqueryForm(json){
-
+	console.log('openJqueryForm');
+	console.log('json');
 	var tag = $("<div></div>");
+	selected_radio = ''; //global
 	
 	if(typeof json == "object" && json.html) {
 		
@@ -156,8 +165,8 @@ function openJqueryForm(json){
 			position: ['center',30],
 			resizable: false,
 			buttons: {
-				"Ok": function() {			
-					postFormToAjax(json.url,'jsonp','POST',json.form_name,json.related_object_name,json.related_object_id);
+				"Ok": function() {
+					postFormToAjax(json.url,'jsonp','POST',json.form_name,json.object_name,json.related_object_name,json.related_object_id,selected_radio);
 				},
 //				"Reset": function(){
 //					var form = document.forms[json.form_name];
@@ -172,8 +181,8 @@ function openJqueryForm(json){
 	}	
 }
 
-function postFormToAjax(url,dataType,type,form_name,related_object_name,related_object_id){
-
+function postFormToAjax(url,dataType,type,form_name,object_name,related_object_name,related_object_id,selected_radio){
+	console.log('postFormToAjax');
 	var form = document.forms[form_name];
 	var formObj = retrieveForm(form);
 
@@ -182,9 +191,7 @@ function postFormToAjax(url,dataType,type,form_name,related_object_name,related_
     	dataType: dataType,
     	type	: type,
         data    : {
-            	form: formObj,
-            	related_object_name: related_object_name,
-            	related_object_id: related_object_id,                	
+            	form: formObj
         },
         error	: errorCallback,
     })
@@ -201,9 +208,12 @@ function postFormToAjax(url,dataType,type,form_name,related_object_name,related_
         	type	: type,
             data    : {
                 	form: formObj,
+                	
+                	object_name: object_name,
+                	selected_radio: selected_radio,
+            
                 	related_object_name: related_object_name,
                 	related_object_id: related_object_id,                	
-                	
             },
             error	: errorCallback,
         })
@@ -212,7 +222,7 @@ function postFormToAjax(url,dataType,type,form_name,related_object_name,related_
 				//console.log('postFormToAjax has an error at POST stage.');
 				//console.log(json);
 				alert(urldecode(json.error));
-				return false;
+				//return false;
 			}
 		})        
         .success(function(json) {    	    	

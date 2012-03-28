@@ -325,11 +325,19 @@ class Contact extends Admin_Controller {
     	echo $this->display_object_settings($obj, $tpl);
     }
         
-    public function index() {
+    public function index($search = null) {
 
         $this->load->helper('text');
         
         $search = $this->input->post('search');
+        
+        //let's look in the URL
+        if(!$search){
+        	$segs = $this->uri->segment_array();
+        	unset($segs['1']); //this item is always "contact";
+        	$search = array_pop($segs);
+        	if($search == "index") $search = false;
+        }
         
         if(!$search)
         {

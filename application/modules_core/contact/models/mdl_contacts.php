@@ -38,7 +38,14 @@ class Mdl_Contacts extends MY_Model {
     		if(empty($params['client_id']))
     		{
 	    		//looking for all contacts
-	    		$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'*))';
+	    		//(|(cn=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))
+	    		//$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'*))';
+    			$fields = array('cn','o','mail','omail','mobile','oMobile','homePhone','telephoneNumber','labeledURI','oURL');
+    			$input['filter'] = '';
+    			foreach ($fields as $field){
+    				$input['filter'] .= '('.$field.'=*'.$params['search'].'*)';
+    			}
+    			$input['filter'] = '(|'.$input['filter'].')';
     		} else {
     			//looking for a single contact but I don't know if it's an organization or a person
     			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))'; //TODO why the $client_id is not extracted?

@@ -10,3 +10,4 @@ application/logs/*
 /trash
 /.*
 .*
+/uploads

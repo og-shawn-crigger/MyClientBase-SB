@@ -8,7 +8,7 @@
 		var $tabs = $('#tabs').tabs();
 		$tabs.tabs('select', url_hash);
 		
-		window.location.hash='#top';		
+		window.location.hash='#top';
 	});
 </script>	
 
@@ -168,6 +168,27 @@
 							{/if}
 
 							</h3>
+							
+							{*
+							<div style="width: 100%; overflow:auto;">
+								<div style="float: left;"><h3 style="margin-left: -15px;">{$loc->locDescription}</h3></div>
+								<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
+									{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 
+										{if $contact_id_key == 'uid'}
+											{$object_type = 'person'}
+										{/if}
+										{if $contact_id_key == 'oid'}
+											{$object_type = 'organization'}
+										{/if}
+										
+										<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
+										&nbsp;|&nbsp;
+										<a href="#" onClick="jqueryDelete({ 'object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
+									{/if}
+								</div>
+							</div>
+							*}
+							
 							<table class="contact-details-left" style="border: 1px solid #e8e8e8; width: 98%; margin-left: 15px; margin-bottom: 3px; padding-bottom: 0px;">
 								{foreach $org->show_fields as $index => $property_name}
 									{if $org->$property_name != ""}
