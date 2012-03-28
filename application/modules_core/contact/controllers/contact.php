@@ -334,9 +334,9 @@ class Contact extends Admin_Controller {
         //let's look in the URL
         if(!$search){
         	$segs = $this->uri->segment_array();
-        	unset($segs['1']); //this item is always "contact";
-        	$search = array_pop($segs);
-        	if($search == "index") $search = false;
+        	if(isset($segs['2']) && isset($segs['3']) && $segs['2'] == 'search') {
+        		$search = $segs['3'];
+        	}
         }
         
         if(!$search)

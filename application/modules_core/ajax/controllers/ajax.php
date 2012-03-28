@@ -281,7 +281,7 @@ class Ajax extends Admin_Controller {
 
     			
     			if(empty($person->o)){
-    				$person->o = $selected_object_id;
+    				$person->o = $organization_name;
     			} else {
     				if(!is_array($person->o)) {
     					$o = explode(',', $person->o);
