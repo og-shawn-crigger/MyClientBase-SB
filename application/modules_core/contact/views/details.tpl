@@ -142,9 +142,9 @@
 							{counter}
 						{/foreach}
 					</table>
-					<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
+					<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
 					{if $contact->entryUpdatedBy != ""}
-						| {t}updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
+						| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
 					{/if}
 					</span>
 				</div>
@@ -170,7 +170,7 @@
 									</div>
 									<div style="float:right; display:inline; width: 260px; font-size: 12px; padding-top: 9px;">
 										{if {preg_match pattern=$org->oid subject=$contact->oAdminRDN}} 
-											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Remove administation{/t}</a>
+											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Remove administration{/t}</a>
 										{else}
 											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Make administrator{/t}</a>
 										{/if}
@@ -296,7 +296,7 @@
 							{if isset($loc->aliases)} {$aliases = $loc->aliases} {/if}
 							<div id="loc_{$loc->locId}" style="margin-bottom: 30px;">
 								<div style="width: 100%; overflow:auto;">
-									<div style="float: left;"><h3 style="margin-left: -15px;">{$loc->locDescription}</h3></div>
+									<div style="float: left;"><h3 style="margin-left: -15px;">{t}{$loc->locDescription}{/t}</h3></div>
 									<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
 										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 										
 											<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
@@ -326,7 +326,11 @@
 														{/if}
 													</td>
 													<td class="value"> 
-														{$loc->$property_name|wordwrap:75:" ":true}													
+														{if $property_name == "locDescription"}
+															{t}{$loc->$property_name|wordwrap:75:" ":true}{/t}
+														{else}
+															{$loc->$property_name|wordwrap:75:" ":true}
+														{/if}													
 													</td>
 												</tr>
 												{/if}

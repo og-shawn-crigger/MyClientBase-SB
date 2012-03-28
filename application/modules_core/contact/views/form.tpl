@@ -141,7 +141,7 @@
 												{$fieldname = $property}
 											{/if}					
 			
-											<dt style="margin-top: 5px; float: left; text-align: left; width: 40%;">{"{t}{$fieldname}{/t}"|capitalize}{$fields[$property]["required"]}:</dt>
+											<dt style="margin-top: 5px; float: left; text-align: left; width: 40%;">{t}{$fieldname|capitalize|regex_replace:"/_/":" "}{/t}{$fields[$property]["required"]}:</dt>
 											
 											{$checked = ""}
 											{if isset($fields[$property]["checked"])} 
@@ -155,9 +155,9 @@
 										</dl>								
 									{/if}
 								{/foreach}
-								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
 								{if $contact->entryUpdatedBy != ""}
-									| {t}updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
+									| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
 								{/if}
 								</span><br/><br/>								
 								<span>
@@ -192,7 +192,7 @@
 												{$fieldname = $property}
 											{/if}		
 											
-											<dt style="float: left; text-align: left; width: 40%;">{"{t}{$fieldname}{/t}"|capitalize}{$fields[$property]["required"]}:</dt>
+											<dt style="float: left; text-align: left; width: 40%;">{t}{{$fieldname}|capitalize|regex_replace:"/_/":" "}{/t}{$fields[$property]["required"]}:</dt>
 											
 											{$checked = ""}
 											{if isset($fields[$property]["checked"])} 

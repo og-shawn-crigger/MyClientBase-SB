@@ -52,3 +52,180 @@ msgstr "risultati"
 
 msgid "Add"
 msgstr "Aggiungi"
+
+msgid "Location"
+msgstr "Sede"
+
+msgid "Locations"
+msgstr "Sedi"
+
+msgid "Member of"
+msgstr "Membro di"
+
+msgid "Member"
+msgstr "Membro"
+
+msgid "Members"
+msgstr "Membri"
+
+msgid "Search contact"
+msgstr "Cerca contatto"
+
+msgid "Edit profile"
+msgstr "Modifica profilo"
+
+msgid "Add location"
+msgstr "Aggiungi sede"
+
+msgid "Associate Organization"
+msgstr "Associa organizzazione"
+
+msgid "Last Name"
+msgstr "Cognome"
+
+msgid "First Name"
+msgstr "Nome"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Zip"
+msgstr "Cap"
+
+msgid "City"
+msgstr "Citta"
+
+msgid "State"
+msgstr "Provincia"
+
+msgid "Country"
+msgstr "Nazione"
+
+msgid "Mobile"
+msgstr "Cellulare"
+
+msgid "Home Phone"
+msgstr "Telefono Residenza"
+
+msgid "enabled"
+msgstr "abilitato"
+
+msgid "Enabled"
+msgstr "Abilitato"
+
+msgid "TRUE"
+msgstr "SI"
+
+msgid "Description"
+msgstr "Descrizione"
+
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgid "Land-Line"
+msgstr "Telefono fisso"
+
+msgid "Created by"
+msgstr "Creato da"
+
+msgid "Updatedb by"
+msgstr "Aggiornato da"
+
+msgid "Home"
+msgstr "Residenza"
+
+msgid "Organization"
+msgstr "Organizzazione"
+
+msgid "Organization Type"
+msgstr "Tipo Organizzazione"
+
+msgid "Activity"
+msgstr "Settore"
+
+msgid "Client Base"
+msgstr "Clientela"
+
+msgid "Vat Number"
+msgstr "Partita Iva"
+
+msgid "Po-Box"
+msgstr "Casella Postale"
+
+msgid "Telephone"
+msgstr "Telefono"
+
+msgid "Website"
+msgstr "Sito Web"
+
+msgid "Make administrator"
+msgstr "Rendi amministratore"
+
+msgid "Delete Association"
+msgstr "Disassocia"
+
+msgid "Remove administration"
+msgstr "Rimuovi amministrazione"
+
+msgid "manager"
+msgstr "amministratore"
+
+msgid "means mandatory field"
+msgstr "indica campo obbligatorio"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "Home Fax"
+msgstr "Fax Residenza"
+
+msgid "Organization Phone"
+msgstr "Telefono Organizzazione"
+
+msgid "Organization Fax"
+msgstr "Fax Organizzazione"
+
+msgid "Manager Name"
+msgstr "Nome Supervisore"
+
+msgid "Assistant Name"
+msgstr "Nome Assistente"
+
+msgid "Assistant Phone"
+msgstr "Telefono Assistente"
+
+msgid "Online Calendar"
+msgstr "Calendario Online"
+
+msgid "Spoken Language"
+msgstr "Lingua parlata"
+
+msgid "Birthdate"
+msgstr "Data di nascita"
+
+msgid "Photo"
+msgstr "Foto"
+
+msgid "submit"
+msgstr "invia"
+
+msgid "cancel"
+msgstr "cancella"
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Back to profile"
+msgstr "Torna al profilo"
+
+msgid "search for name, vat, phone, email, website"
+msgstr "cerca nome, partita iva, telefono, email, sitoweb"
+
+msgid "Search for name, organization name, vat number, phone, email, website"
+msgstr "Cerca per nome, nome organizzazione, partita iva, telefono, sitoweb"
