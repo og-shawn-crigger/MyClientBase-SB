@@ -5,6 +5,12 @@ $config = array(
 		'contact'   =>  array(
 		 	'title'     =>  'contact',
 		    'href'      =>  'contact/index',
+			'submenu'   =>  array(
+					'clients'  =>  array(
+							'title' =>  'by location',
+							'href'  =>  'contact/by_location'
+					)
+			)
 		),    		
         'clients'   =>  array(
             'title'     =>  'clients',

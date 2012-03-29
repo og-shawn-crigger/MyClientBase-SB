@@ -229,3 +229,24 @@ msgstr "cerca nome, partita iva, telefono, email, sitoweb"
 
 msgid "Search for name, organization name, vat number, phone, email, website"
 msgstr "Cerca per nome, nome organizzazione, partita iva, telefono, sitoweb"
+
+msgid "Edit"
+msgstr "Modifica"
+
+msgid "Delete"
+msgstr "Elimina"
+
+msgid "Larger Map"
+msgstr "Mappa Ingrandita"
+
+msgid "city"
+msgstr "citta"
+
+msgid "state"
+msgstr "provincia"
+
+msgid "statistics"
+msgstr "statistiche"
+
+msgid "Search"
+msgstr "Cerca"

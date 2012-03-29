@@ -324,18 +324,85 @@ class Contact extends Admin_Controller {
        	
     	echo $this->display_object_settings($obj, $tpl);
     }
-        
+    
+    public function by_location(){
+    	//TODO is this necessary?
+    	$this->load->helper('text');
+    	
+    	$city = urldecode(trim($this->input->post('city')));
+    	$state = urldecode(trim($this->input->post('state')));
+    	
+    	if($state)
+    	{
+	    	$params = array(
+	    			'paginate'		=>	TRUE,
+	    			'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
+	    			'wanted_page'	=>	$this->get_wanted_page(),
+	    			'search'		=>  array('city' => $city, 'state' => $state),
+	    	);    	
+	    	
+	    	$contacts = $this->mdl_contacts->get($params,true);
+	    	
+	    	if($contacts){
+	    		$statistics = array();
+	    		foreach ($contacts['people'] as $key => $person) {
+	    			if(!isset($statistics[$person->mozillaHomeLocalityName])) {
+	    				$statistics[$person->mozillaHomeLocalityName] = array('people' => 1, 'organizations' => 0);
+	    			} else {
+	    				$statistics[$person->mozillaHomeLocalityName]['people']++;
+	    			} 
+	    		}
+	    		
+	    		foreach ($contacts['orgs'] as $key => $org) {
+	    			if(!isset($statistics[$org->l])) {
+	    				$statistics[$org->l] = array('people' => 0, 'organizations' => 1);
+	    			} else {
+	    				$statistics[$org->l]['organizations']++;
+	    			}
+	    		}	    		
+	    	}
+	    	
+	    	foreach ($statistics as $city => $values) {
+	    		$statistics[$city]['total'] = ($values['people'] + $values['organizations'] );
+	    	}
+	    	
+	    	$data = array(
+	    			'contacts'	=>	$contacts,
+	    			'statistics' => $statistics,
+	    	);
+	    	$search = $city.','.$state;
+	    	
+    	} else {
+    		$data = array();
+    		$search = '';
+    	}
+    	    	
+    	//template workaround to allow the usage of Smarty
+    	//$data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
+    	$data['baseurl'] = site_url();
+    	$data['pager'] = $this->mdl_contacts->page_links;
+    	if($search) $data['searched_string'] = $search;
+    	if($search) $data['made_search'] = true;
+    	
+    	//loading Smarty template
+    	$data['js_autofocus'] = $this->load->view('dashboard/jquery_set_focus', array('id'=>'search-box'), true);
+    	$data['middle'] = $this->plenty_parser->parse('by_location.tpl', $data, true, 'smarty', 'contact');
+    	
+    	$this->load->view('index_ce', $data);
+    	 
+    }
+    
     public function index($search = null) {
-
+		//TODO is this necessary?
         $this->load->helper('text');
         
-        $search = $this->input->post('search');
+        $search = urldecode(trim($this->input->post('search')));
         
         //let's look in the URL
         if(!$search){
         	$segs = $this->uri->segment_array();
         	if(isset($segs['2']) && isset($segs['3']) && $segs['2'] == 'search') {
-        		$search = $segs['3'];
+        		$search = urldecode(trim($segs['3']));
         	}
         }
         
@@ -362,19 +429,23 @@ class Contact extends Admin_Controller {
         if(isset($oid)) $params['oid'] = $oid;
         
         //TODO I think this is not necessary ... we go with the  search only right?
-        if(!$search)
-        {
-        	$uid = uri_assoc('uid');
-        	$oid = uri_assoc('oid');
-        }
+//         if(!$search)
+//         {
+//         	$uid = uri_assoc('uid');
+//         	$oid = uri_assoc('oid');
+//         }
         
+//        $segs = $this->uri->segments;
         //if the user clicked on the top of the table column to change the display order ...
-        $user_order = explode('_', uri_assoc('order_by')); 
-        if(count($user_order) == 2) 
-        {
-        	$params['order_by'] = $user_order['0'];
-        	$params['flow_order'] = $user_order['1'];
-        }
+//         if($segs[count($segs) - 1] == 'order_by') {
+//         	$params['order_by'] = $segs[count($segs)];
+//         }
+//         $user_order = explode('_', uri_assoc('order_by')); 
+//         if(count($user_order) == 2) 
+//         {
+//         	$params['order_by'] = $user_order['0'];
+//         	$params['flow_order'] = $user_order['1'];
+//         }
 		
         $data = array(
             'contacts'	=>	$this->mdl_contacts->get($params),
@@ -385,7 +456,8 @@ class Contact extends Admin_Controller {
         $data['baseurl'] = site_url();
         $data['pager'] = $this->mdl_contacts->page_links;
         if($search) $data['searched_string'] = $search;
-        if($search || $uid || $oid) $data['made_search'] = true;
+        //if($search || $uid || $oid) $data['made_search'] = true;
+        if($search) $data['made_search'] = true;
         
         //loading Smarty template
         $data['js_autofocus'] = $this->load->view('dashboard/jquery_set_focus', array('id'=>'search-box'), true);
@@ -507,6 +579,7 @@ class Contact extends Admin_Controller {
     			}
     		}
  */    		
+    		
     		//ready to save in ldap
     		if($this->$obj->save()) {
     			if(isset($this->$obj->uid))  redirect(site_url()."/contact/details/uid/".$this->$obj->uid);

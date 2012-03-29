@@ -68,7 +68,7 @@
 					{if isset($contact->aliases)} {$aliases = $contact->aliases} {/if}
 					
 					<table border="1" class="none" style="border: 1px solid #e8e8e8; width: 98%; margin-bottom: 2px;">
-						{counter start=0 skip=1 assign="count"}
+						{$count = 0}
 						{foreach $contact->show_fields as $key => $property_name}
 						
 							{if $contact->$property_name != ""}
@@ -92,19 +92,30 @@
 										{$already_wrote=0}
 										<!-- particular cases -->
 										{if $property_name == "mail" or $property_name == "omail"}
-											<a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
+											<span class="marker">&gt;&gt;</span><a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
 											{$already_wrote=1}
 										{/if}	
 
 										{if $property_name == "labeledURI" or $property_name == "oURL"}
-											<a href="{$contact->$property_name}" target="_blank">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
+											<span class="marker">&gt;&gt;</span><a href="{$contact->$property_name}" target="_blank">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
 											{$already_wrote=1}
 										{/if}
 										
 										{if $property_name=="jpegPhoto"}
 											{* skip the item. I take care of the photo later *}
 											{$already_wrote=1}
-										{/if}									
+										{/if}				
+
+										{if $property_name=="managerName" && $contact->$property_name != ""}
+											<span class="marker">&gt;&gt;</span><a href="/contact/search/{$contact->$property_name}">{$contact->$property_name}</a>
+											{$already_wrote=1}
+										{/if}
+																				
+										{if $property_name=="assistantName" && $contact->$property_name != ""}
+											<span class="marker">&gt;&gt;</span><a href="/contact/search/{$contact->$property_name}">{$contact->$property_name}</a>
+											{$already_wrote=1}
+										{/if}
+												
 										<!-- default case -->
 										{if $already_wrote==0} 
 											{$contact->$property_name|wordwrap:60:"<br/>":true}
@@ -137,9 +148,8 @@
 								{/if}
 									
 							</tr>
+							{$count = $count + 1}
 							{/if}
-							
-							{counter}
 						{/foreach}
 					</table>
 					<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
@@ -158,8 +168,8 @@
 							<div id="memberOf_{$org->oid}" style="margin-bottom: 30px;">
 								<div style="width: 100%; overflow:auto;">
 									<div style="float: left;">
-										<h3 style="margin-left: -15px;">
-											<a href="index.php/contact/details/oid/{$org->oid}">{$org->o}</a>
+										<h3 style="margin-left: -20px;">
+											<a href="index.php/contact/details/oid/{$org->oid}">{$org->o}</a><span class="marker_right">&lt;&lt;</span>
 				
 											{if {preg_match pattern=$org->oid subject=$contact->oAdminRDN}}
 											<img src="/images/gold_star_20.jpg" style="width: 20px; margin-left: 10px;" />
@@ -168,14 +178,14 @@
 		
 										</h3>
 									</div>
-									<div style="float:right; display:inline; width: 260px; font-size: 12px; padding-top: 9px;">
+									<div style="float:right; display:inline; width: 300px; font-size: 12px; padding-top: 9px;">
 										{if {preg_match pattern=$org->oid subject=$contact->oAdminRDN}} 
-											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Remove administration{/t}</a>
+											<span class="marker">&gt;&gt;</span><a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Remove administration{/t}</a>
 										{else}
-											<a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Make administrator{/t}</a>
+											<span class="marker">&gt;&gt;</span><a href="#" onClick="jqueryAssociate({ 'procedure':'personAdminOfOrganization','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Make administrator{/t}</a>
 										{/if}
 											&nbsp;|&nbsp;
-											<a href="#" onClick="jqueryDelete({ 'procedure':'deleteOrganizationMembership','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Delete Association{/t}</a>
+											<span class="marker">&gt;&gt;</span><a href="#" onClick="jqueryDelete({ 'procedure':'deleteOrganizationMembership','object_name':'organization','object_id':'{$org->oid}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Delete Association{/t}</a>
 									</div>
 								</div>
 								
@@ -237,7 +247,7 @@
 							<h3 style="margin-left: -15px; margin-top: 30px;">
 						{/if}
 					
-						<a href="/index.php/contact/details/uid/{$member->uid}">{$member->sn} {$member->givenName}</a>
+						<span class="marker">&gt;&gt;</span><a href="/index.php/contact/details/uid/{$member->uid}">{$member->sn} {$member->givenName}</a>
 						{if $member->oAdminRDN == $contact->oid}
 						<img src="/images/gold_star_20.jpg" style="width: 20px; margin-left: 10px;" />
 						<span style="font-size: 12px; margin-left: 3px;">({t}manager{/t})</span>
@@ -264,8 +274,8 @@
 								{if $property_name=="mail"}
 									<a href="mailto:{$member->$property_name}">{$member->$property_name|wordwrap:60:"<br/>":true}</a>
 									{$already_wrote=1}
-								{/if}
-									
+								{/if}								
+								
 								{* default case *}
 								{if $already_wrote==0}
 									{$member->$property_name|wordwrap:75:" ":true}
@@ -297,17 +307,17 @@
 							<div id="loc_{$loc->locId}" style="margin-bottom: 30px;">
 								<div style="width: 100%; overflow:auto;">
 									<div style="float: left;"><h3 style="margin-left: -15px;">{t}{$loc->locDescription}{/t}</h3></div>
-									<div style="float:right; display:inline; width: 311px; font-size: 14px; padding-top: 5px;">
+									<div style="float:right; display:inline; width: 300px; font-size: 12px; padding-top: 9px;">
 										{if $loc->locDescription|lower != 'home' && $loc->locDescription|lower != 'registered address'} 										
-											<a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
+											<span class="marker">&gt;&gt;</span><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','object_id':'{$loc->locId}','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Edit{/t}</a>
 											&nbsp;|&nbsp;
-											<a href="#" onClick="jqueryDelete({ 'procedure':'deleteLocation','object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
+											<span class="marker">&gt;&gt;</span><a href="#" onClick="jqueryDelete({ 'procedure':'deleteLocation','object_name':'location','object_id':'{$loc->locId}','hash':'set_here_the_hash' })">{t}Delete{/t}</a>
 
 											{if $loc->locLatitude}&nbsp;|&nbsp;{/if}
 										{/if}
 										
 										{if $loc->locLatitude}
-										<a href="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;source=embed" target="_blank">{t}Larger Map{/t}</a>
+										<span class="marker">&gt;&gt;</span><a href="http://maps.google.com/maps?q={$loc->locLatitude},+{$loc->locLongitude}+({$description})&amp;hl=en&amp;ie=UTF8&amp;t=h&amp;vpsrc=6&amp;ll={$loc->locLatitude},{$loc->locLongitude}&amp;spn=0.020352,0.025835&amp;z=14&amp;iwloc=A&amp;source=embed" target="_blank">{t}Larger Map{/t}</a>
 										{/if}
 									</div>
 								</div>

@@ -23,7 +23,7 @@ class Mdl_Contacts extends MY_Model {
      
     }
     
-    public function get(array $params) {
+    public function get(array $params, $by_location = false) {
     	
     	if(!is_array($params)) return false;
     	
@@ -33,17 +33,24 @@ class Mdl_Contacts extends MY_Model {
     	
     	$input=array();
     	
-    	if(empty($params['uid']) && empty($params['oid']))
+    	if(empty($params['uid']) && empty($params['oid']) && $by_location==false)
     	{
     		if(empty($params['client_id']))
     		{
 	    		//looking for all contacts
-	    		//(|(cn=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))
-	    		//$input['filter'] = '(|(cn=*'.$params['search'].'*)(o=*'.$params['search'].'*))';
     			$fields = array('cn','o','mail','omail','mobile','oMobile','homePhone','telephoneNumber','labeledURI','oURL');
     			$input['filter'] = '';
+    			$subsearches = preg_split('/ /', $params['search']);
+    			$count_subsearches = count($subsearches);
     			foreach ($fields as $field){
-    				$input['filter'] .= '('.$field.'=*'.$params['search'].'*)';
+    				if( $count_subsearches == 2 && $field == 'cn'){
+    					//searches for Mario Rossi and Rossi Mario
+    					$input['filter'] .= '('.$field.'=*'.$subsearches[0].' '.$subsearches[1].'*)';
+    					$input['filter'] .= '('.$field.'=*'.$subsearches[1].' '.$subsearches[0].'*)';
+    				} else {
+    					$input['filter'] .= '('.$field.'=*'.$params['search'].'*)';
+    				}
+    				
     			}
     			$input['filter'] = '(|'.$input['filter'].')';
     		} else {
@@ -57,6 +64,35 @@ class Mdl_Contacts extends MY_Model {
     			$input['filter'] = '(uid='.$params['uid'].')';
     		}
     		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
+    	}
+    	
+    	if($by_location) {
+    		$input['filter'] = '';
+    		
+    		if(is_array($params['search']) && !empty($params['search']['city'])) {
+    			$filter = '';
+    			$fields = array('mozillaHomeLocalityName','l');
+    			foreach ($fields as $field){
+    				$filter .= '('.$field.'=*'.$params['search']['city'].'*)';
+    			}
+    			$filter1 = '(|'.$filter.')';
+    		}
+    		
+    		if(is_array($params['search']) && !empty($params['search']['state'])) {
+    			$filter = '';
+    			$fields = array('mozillaHomeState','st');
+    			foreach ($fields as $field){
+    				$filter .= '('.$field.'=*'.$params['search']['state'].'*)';
+    			}
+    			$filter2 = '(|'.$filter.')';
+    		}
+    		
+    		if(isset($filter1) && isset($filter2)) {
+    			$input['filter'] = '(&'.$filter1.$filter2.')';
+    		} else {
+    			if(isset($filter1)) $input['filter']  = $filter1;
+    			if(isset($filter2)) $input['filter']  = $filter2;
+    		}
     	}
     	
     	//defaults

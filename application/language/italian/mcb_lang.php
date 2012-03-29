@@ -509,5 +509,5 @@ $lang['contact'] = 'Contatto';
 $lang['core_modules'] = 'Moduli Principali';
 $lang['enable'] = 'Abilita';
 $lang['disable'] = 'Disabilita';
-
+$lang['by location'] = 'per posizione';
 ?>

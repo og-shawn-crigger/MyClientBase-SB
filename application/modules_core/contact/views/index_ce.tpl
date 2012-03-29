@@ -33,8 +33,8 @@
 	<table class="table-clients">
 	<tr class="columns_header">
 		<td class="counter" style="background-color: black;">&nbsp;</td>
-		<td class="columns_header">{t}Name{/t}</td>
-		<td class="columns_header">{t}City{/t}</td>
+		<td class="columns_header">{t}Name{/t}</a></td>
+		<td class="columns_header">{t}City{/t}</a></td>
 		<td class="columns_header">{t}Telephone{/t}</td>
 		<td class="columns_header">{t}Mobile{/t}</td>
 	</tr>
@@ -43,7 +43,7 @@
     	{assign 'url' value="$baseurl/contact/details/uid/{$person->uid}"}
     	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$person->cn|truncate:25:" [...]":true}</td>
-		<td class="city">{$person->mozillaHomeLocalityName|truncate:25:" [...]":true|default:'-'}</td>
+		<td class="city">{$person->mozillaHomeLocalityName|truncate:24:" [...]":true|default:'-'}</td>
 		<td class="tel">{$person->mobile|default:'-'}</td>		
 		<td class="tel">{$person->homePhone|default:'-'}</td>
 		
@@ -83,7 +83,7 @@
     	{assign 'url' value="$baseurl/contact/details/oid/{$organization->oid}"}
     	<td class="counter">{counter}</td>
     	<td class="name">{a url=$url text=$organization->o|truncate:30:" [...]":true}</td>
-    	<td class="city">{$organization->l|truncate:25:" [...]":true|default:'-'}</td>
+    	<td class="city">{$organization->l|truncate:24:" [...]":true|default:'-'}</td>
     	<td class="tel">{$organization->telephoneNumber|default:'-'}</td>
     	<td class="tel">{$organization->oMobile|default:'-'}</td>
     </tr>

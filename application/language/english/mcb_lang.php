@@ -542,6 +542,7 @@ $lang['contact'] = 'Contact';
 $lang['core_modules'] = 'Core Modules';
 $lang['enable'] = 'Enable';
 $lang['disable'] = 'Disable';
+$lang['by location'] = 'by location';
 $lang['module_successfully_enabled'] = 'Module has been successfully enabled';
 $lang['module_successfully_disabled'] = 'Module has been successfully disabled';
 $lang['module_cant_change_status'] = 'The module status can not be modified';

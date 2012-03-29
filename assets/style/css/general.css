@@ -201,3 +201,13 @@ pre 			{	margin:1.5em 0;white-space:pre;}
     top: 1px;
     padding: 6px 10px 4px;
 }
+
+.marker, .marker_right {
+	color: green; 
+	font-size: 10px; 
+	margin-right: 3px;
+}
+
+.marker_right {
+	margin-left: 3px;
+}

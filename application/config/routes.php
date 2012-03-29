@@ -42,6 +42,7 @@ $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 
 $route['contact/search/:any'] = 'contact/index/';
+$route['contact/order_by/:any'] = 'contact/index/order_by/';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -188,11 +188,11 @@ class Mdl_Contact extends MY_Model {
 						
 			//do not mess with LDAP system fields
 			if($this->properties[$property]['no-user-modification'] == 1) continue;
-			
-			$pd = $this->properties[$property]['single-value'];
-			if($property == 'oAdminRDN') {
-				$a = '';
+	
+			if($property == 'locRDN') {
+				$a= '';
 			}
+			
 			if($this->properties[$property]['single-value'] == 1) {
 				if(!is_array($this->$property)) {
 					$output[$property] = $this->$property; 
@@ -280,9 +280,31 @@ class Mdl_Contact extends MY_Model {
 		}
 		 
 		//let's bind the values filled in the form with the obj. MY_Model stores form's values in $this->form_values.
-		if($with_form) {
-			if(!$this->arrayToObject($this->form_values, $creation)) return false;
-		}
+ 		if($with_form) {
+ 			
+ 			//in case of update of a person I have to protect the previously set values for the attributes o,locRDN,oRDN,oAdminRDN
+ 			if($this->objName == 'person') {
+ 				if(!empty($this->uid)) {
+ 					$original_values = array();
+ 					if(!empty($this->o)) $original_values['o'] = $this->o;
+ 					if(!empty($this->oRDN)) $original_values['oRDN'] = $this->oRDN;
+ 					if(!empty($this->oAdminRDN)) $original_values['oAdminRDN'] = $this->oAdminRDN;
+ 					if(!empty($this->locRDN)) $original_values['locRDN'] = $this->locRDN;
+ 				}
+ 			} 			
+
+ 			if(!$this->arrayToObject($this->form_values, $creation)) return false;
+ 			
+ 			//let's put the protected values back
+ 			if($this->objName == 'person') {
+ 				if(!empty($this->uid)) {
+ 					if(!empty($original_values['o'])) $this->o = $original_values['o'];
+ 					if(!empty($original_values['oRDN'])) $this->oRDN = $original_values['oRDN'];
+ 					if(!empty($original_values['oAdminRDN'])) $this->oAdminRDN = $original_values['oAdminRDN'];
+ 					if(!empty($original_values['locRDN'])) $this->locRDN = $original_values['locRDN'];
+ 				}
+ 			}
+ 		}
 		 
 		//validates the object before sending data to Contact Engine
 		$left = $this->validateObj($creation);
