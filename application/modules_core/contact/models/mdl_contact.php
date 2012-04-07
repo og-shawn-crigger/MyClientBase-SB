@@ -16,6 +16,7 @@ class Mdl_Contact extends MY_Model {
 	public $objClass;
 	public $objName;
 	public $properties;
+	public $binary_properties;
 	public $client_id;
 	public $show_fields;
 	public $hidden_fields;
@@ -124,6 +125,21 @@ class Mdl_Contact extends MY_Model {
 	    	}
     	}
     	return true;
+    }
+    
+    public function getBinaryProperties(){
+    	if(!isset($this->properties) || count($this->properties)==0)
+    	{
+    		$this->getProperties();	 
+    	}
+    	
+    	$this->binary_properties = array();
+    	
+    	foreach ($this->properties as $property_name => $property_features) {
+    		if($property_features['binary'] == 1) {
+    			$this->binary_properties[] = $property_name; 
+    		}
+    	}
     }
     
     protected function cleanAttributes()
@@ -293,7 +309,19 @@ class Mdl_Contact extends MY_Model {
  				}
  			} 			
 
- 			if(!$this->arrayToObject($this->form_values, $creation)) return false;
+ 			$data = $this->form_values;
+ 			
+ 			//binary files are not sent through POST, so I have to add them to the form values
+ 			$this->getBinaryProperties();
+ 			if(count($this->binary_properties)>0){
+ 				foreach ($this->binary_properties as $binary_attribute){
+ 					if(!empty($this->$binary_attribute) && !isset($data[$binary_attribute])){
+ 						$data[$binary_attribute] = $this->$binary_attribute;
+ 					}
+ 				}	
+ 			}
+ 			
+ 			if(!$this->arrayToObject($data, $creation)) return false;
  			
  			//let's put the protected values back
  			if($this->objName == 'person') {

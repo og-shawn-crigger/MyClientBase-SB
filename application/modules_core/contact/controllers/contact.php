@@ -341,6 +341,8 @@ class Contact extends Admin_Controller {
 	    			'search'		=>  array('city' => $city, 'state' => $state),
 	    	);    	
 	    	
+	    	$search = ($city) ? $city.','.$state : $state;
+	    	
 	    	$contacts = $this->mdl_contacts->get($params,true);
 	    	
 	    	if($contacts){
@@ -370,7 +372,6 @@ class Contact extends Admin_Controller {
 	    			'contacts'	=>	$contacts,
 	    			'statistics' => $statistics,
 	    	);
-	    	$search = $city.','.$state;
 	    	
     	} else {
     		$data = array();
@@ -562,26 +563,36 @@ class Contact extends Admin_Controller {
     	
     	if (!empty($obj) && $this->$obj->validateForm()) {
     		//it's a submit and the form has been validated. Let's check if there is any binary file uploaded
-/*     		$upload_info = saveUploadedFile();
+     		$upload_info = saveUploadedFile();
     		
     		//TODO error handling
     		if(is_array($upload_info['data'])) {
+    			
+    			$this->load->helper('file');
+
+
+    			
     			foreach ($upload_info['data'] as $element => $element_status)
     			{
-    				//reads the file and converts it in base64 and stores it in $obj
-    				$this->load->helper('file');
+    				//reads the file and converts it in base64 and stores it in $obj	
+    				if($element_status['full_path']){
+    					$binary_file = base64_encode(read_file($element_status['full_path']));
+    					if($binary_file) $this->$obj->$element = $binary_file;
+    				}
     				
-    				$binary_file = base64_encode(read_file($element_status['full_path']));
+    				//unlink($element_status['full_path']);
     				
-    				unlink($element_status['full_path']);
     				
-    				if($binary_file) $this->obj->$element = $binary_file;
     			}
-    		}
- */    		
+    		}    		
     		
     		//ready to save in ldap
     		if($this->$obj->save()) {
+    			
+//     			if(!$element_status['full_path']){
+//     				unlink($element_status['full_path']);
+//     			}
+    			
     			if(isset($this->$obj->uid))  redirect(site_url()."/contact/details/uid/".$this->$obj->uid);
 
     			if(isset($this->$obj->oid))  redirect(site_url()."/contact/details/oid/".$this->$obj->oid);
@@ -601,6 +612,8 @@ class Contact extends Admin_Controller {
     		foreach ($this->$obj->properties as $key => $property) {
     			$this->mdl_contacts->form_values[$key] = $this->$obj->$key;
     		} 
+    		
+    		$o = $this->$obj;
     		
     		//sets form submit url
     		if(isset($this->$obj->uid) && !empty($this->$obj->uid)) $form_url = site_url()."/contact/form/uid/".$this->$obj->uid;

@@ -114,7 +114,7 @@
 										{if $property_name=="assistantName" && $contact->$property_name != ""}
 											<span class="marker">&gt;&gt;</span><a href="/contact/search/{$contact->$property_name}">{$contact->$property_name}</a>
 											{$already_wrote=1}
-										{/if}
+										{/if}	
 												
 										<!-- default case -->
 										{if $already_wrote==0} 

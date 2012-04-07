@@ -165,6 +165,7 @@ class Mdl_Person extends Mdl_Contact {
     public function save($with_form = true)
     {
     	$creation = empty($this->uid) ? true : false; //if uid is not set than it's a creation otherwise an update
+    	
     	$return = parent::save($creation, $with_form);
     	
     	if($return)
