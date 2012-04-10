@@ -68,15 +68,15 @@ class Ajax extends Admin_Controller {
     	$params = $this->input->post('params');
     	if(!is_array($params) || count($params) == 0) $this->returnError('Some information are missing'); //TODO translate with CI standard way
     	 
-    	if(isset($params['form_type'])) $form_type = urlencode(trim($params['form_type']));
+    	if(isset($params['form_type'])) $form_type = urldecode(trim($params['form_type']));
     	if(!isset($form_type) || !$form_type) $this->returnError('Form type is missing.'); //TODO translate with CI standard way
     	
     	switch ($form_type){
-    		case 'form':
+    		case 'form': //retrieves and returns a form html
     			$this->getClassicForm($params);
     		break;
     		
-    		case 'search':
+    		case 'search': //performs a search
     			$this->getSearchResults($params);
     		break;
     		
@@ -89,13 +89,13 @@ class Ajax extends Admin_Controller {
     protected function getSearchResults(array $params){
     	$procedure = urlencode(trim($params['procedure']));
     	
-    	if(isset($params['object_name'])) $searched_object = urlencode(trim($params['object_name']));
-    	if(isset($params['searched_value'])) $searched_value = urlencode(trim($params['searched_value']));
+    	if(isset($params['object_name'])) $searched_object = urldecode(trim($params['object_name']));
+    	if(isset($params['searched_value'])) $searched_value = urldecode(trim($params['searched_value']));
     	
-    	if(isset($params['related_object_name'])) $related_object_name = urlencode(trim($params['related_object_name']));
-    	if(isset($params['related_object_id'])) $related_object_id = urlencode(trim($params['related_object_id']));
+    	if(isset($params['related_object_name'])) $related_object_name = urldecode(trim($params['related_object_name']));
+    	if(isset($params['related_object_id'])) $related_object_id = urldecode(trim($params['related_object_id']));
     	
-    	if(isset($params['url'])) $url = urlencode(trim($params['url']));
+    	if(isset($params['url'])) $url = urldecode(trim($params['url']));
     	if(!isset($url)) $this->returnError('No url specified');
     	
     	if(empty($searched_object) || empty($searched_value)) $this->returnError("Nothing to search.");
@@ -108,6 +108,7 @@ class Ajax extends Admin_Controller {
     	$input['method'] = 'POST';
     	if($searched_object == 'person') {
     		$input['sort_by'] = array('sn');
+    		//TODO make a search also switching name and surname?
     		$input['filter'] = '(|(cn=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))';
     	}
     	if($searched_object == 'organization') {
@@ -145,21 +146,43 @@ class Ajax extends Admin_Controller {
     	$data['results_got_number'] = $rest_return['status']['results_got_number'];
     	
     	//gets the html
-    	$html_form = $this->plenty_parser->parse('jquery_search.tpl', $data, true, 'smarty', 'ajax');
+    	switch ($params['procedure']) {
+    		case 'personToOrganizationMembership':
+    			$template = 'jquery_search.tpl';
+    		break;
+
+    		case 'searchPersonToAdd':
+    			if(isset($params['first_name'])) $data['first_name'] = $params['first_name'];
+    			if(isset($params['last_name'])) $data['last_name'] = $params['last_name'];
+    			if(isset($params['url'])) $data['url'] = $params['url'];
+    			$template = 'jquery_search_person_to_add.tpl';
+    		break;
+
+    		case 'searchOrganizationToAdd':
+    			if(isset($params['url'])) $data['url'] = $params['url'];
+    			$template = 'jquery_search_organization_to_add.tpl';
+    		break;
+    			    		
+    		default:
+    			$template = 'jquery_search.tpl';
+    		break;
+    	}
+    	
+    	$html_form = $this->plenty_parser->parse($template, $data, true, 'smarty', 'ajax');
     	
     	//returns the html to js
     	$to_js = array();
     	if(!empty($html_form)){
     		$to_js['html'] = urlencode($html_form);
-    		$to_js['div_id'] = urlencode(trim($data['div_id']));
-    		$to_js['form_name'] = urlencode(trim($data['form_name']));
-    		$to_js['procedure'] = urlencode(trim($params['procedure']));
+    		if(isset($data['div_id'])) $to_js['div_id'] = urlencode(trim($data['div_id']));
+    		if(isset($data['form_name'])) $to_js['form_name'] = urlencode(trim($data['form_name']));
+    		if(isset($params['procedure'])) $to_js['procedure'] = urlencode(trim($params['procedure']));
     		 
     		//these information are used by js to submit the form back to php
-    		$to_js['url'] = $url;
-    		$to_js['object_name'] = $params['object_name'];
-    		$to_js['related_object_name'] = $params['related_object_name'];
-    		$to_js['related_object_id'] = $params['related_object_id'];
+    		if(isset($params['url'])) $to_js['url'] = $url;
+    		if(isset($params['object_name'])) $to_js['object_name'] = $params['object_name'];
+    		if(isset($params['related_object_name'])) $to_js['related_object_name'] = $params['related_object_name'];
+    		if(isset($params['related_object_id'])) $to_js['related_object_id'] = $params['related_object_id'];
     		 
     		$this->output($to_js);
     	} else {

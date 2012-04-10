@@ -127,7 +127,7 @@
 								{/if}							
 								
 								{* outputs the visible fields accordingly to the order provided in the settings *}
-								{foreach $contact->show_fields as $key => $property}
+								{foreach $contact->show_fields as $key => $property name="foreach_property"}
 									{* output the "tab info" fields => all the fields except the ones specified in $settings *}
 									{if $fields[$property] and !in_array($property,$settings)}
 										{* here some GUI filters *}
@@ -147,18 +147,46 @@
 											{if isset($fields[$property]["checked"])} 
 												{$checked = $fields[$property]["checked"]}
 											{/if} 
-											{if $fields[$property]["type"] == "file"}
-												<dd style="margin-top: 5px; vertical-align: middle; float: left;"><input type="{$fields[$property]["type"]}" name="{$property}" /></dd>
+											
+											{if $property == 'sn' || $property == 'givenName' || $property == 'o'}
+												{$disabled = 'disabled'}
+												<input type="hidden" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" />
 											{else}
-												<dd style="margin-top: 5px; float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
+												{$disabled = ''}
+											{/if}
+											
+											{if $fields[$property]["type"] == "file"}
+												<dd style="margin-top: 5px; vertical-align: middle; float: left;">
+													<input type="{$fields[$property]["type"]}" name="{$property}" />
+												</dd>
+											{else}
+												<dd style="margin-top: 5px; float: left;">
+													<input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} {$disabled} />
+
+													{* set the first not disabled field as the focused one *}
+													{if $disabled == ''}
+														{if !isset($focus_set)}
+															<script type="text/javascript"> $("#{$property}").focus(); </script>
+															{$focus_set = true}
+														{/if}
+													{/if}
+												</dd>
 											{/if}
 										</dl>								
 									{/if}
 								{/foreach}
-								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">{t}ID{/t}: {$contact_id} | {t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate} 
-								{if $contact->entryUpdatedBy != ""}
-									| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
-								{/if}
+								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">
+									{if $contact_id != ""}
+										{t}ID{/t}: {$contact_id} | 
+									{/if}
+									
+									{if $contact->entryCreatedBy != ""}			
+										{t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate}
+									{/if}
+									 
+									{if $contact->entryUpdatedBy != ""}
+										| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
+									{/if}
 								</span><br/><br/>								
 								<span>
 									<input type="reset" id="btn_cancel"  class="mcbsb-regular-Button" btn_cancel" value="{t}cancel{/t}" />

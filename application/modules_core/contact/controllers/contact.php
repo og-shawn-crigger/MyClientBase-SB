@@ -409,9 +409,16 @@ class Contact extends Admin_Controller {
         
         if(!$search)
         {
-        	//try to retrieve from session
-        	$search = $this->session->userdata('search');
-        	$wanted_page = $this->get_wanted_page();
+        	$reset = $this->input->post('reset');
+        	if($reset) {
+        		$this->session->set_userdata('search', '');
+        		$search = '';
+        		$wanted_page = 0;
+        	} else {
+	        	//try to retrieve from session
+	        	$search = $this->session->userdata('search');
+	        	$wanted_page = $this->get_wanted_page();
+        	}
         } else {
         	//the user just hit the ENTER in the input box
         	//set into session
@@ -471,13 +478,13 @@ class Contact extends Admin_Controller {
 	{
 		//I can get the $contact_id in 4 possible ways: by uid, by oid, by POST and GET
 		$uid = $this->input->post('uid');
-		if(empty($uid)) unset($uid);
+		if(!$uid) unset($uid);
 		
 		if($uid_value = uri_assoc('uid')) //retrieving uid from GET
 		if($uid_value) $uid = $uid_value;
 		
 		$oid = $this->input->post('oid');
-		if(empty($oid)) unset($oid);
+		if(!$oid) unset($oid);
 		
 		if($oid_value = uri_assoc('oid')) //retrieving oid from GET
 		if($oid_value) $oid = $oid_value;
@@ -500,14 +507,8 @@ class Contact extends Admin_Controller {
 		}
 		
 		//retrieve the exact object (person or organization)
-
-// !!!!!!!!!!!!!!!!!!!!!!!!		
-//FIXME why not $this->contact->client_id without returning the obj?
-// !!!!!!!!!!!!!!!!!!!!!!!!
-
 		if(isset($contact_id)) {
-// 			$obj = new Mdl_Contact();
-// 			$obj->client_id = $contact_id;
+
 			$this->contact->client_id = $contact_id;
 			if(! $this->contact->get(null,false)) return false;
 			
@@ -521,13 +522,10 @@ class Contact extends Admin_Controller {
 			{
 				$oid = $this->contact->oid;
 			}
-				
-			//return $this->contact->objName;
+			
 		}
 		
 		if(isset($uid)) {
-// 			$obj = new Mdl_Person();
-// 			$obj->uid = $uid;
 			$this->person->uid = $uid;
 			if(! $this->person->get(null,false)) return false;
 			$this->person->prepareShow();
@@ -535,8 +533,6 @@ class Contact extends Admin_Controller {
 		}
 		
 		if(isset($oid)) {
-// 			$obj = new Mdl_Organization();
-// 			$obj->oid = $oid;
 			$this->organization->oid = $oid;
 			if(! $this->organization->get(null,false)) return false;
 			$this->organization->prepareShow();
@@ -559,8 +555,9 @@ class Contact extends Admin_Controller {
     		 
     		//$this->$obj->setFormRules();    		
     	}
-    	if($obj) $this->$obj->setFormRules();
     	
+    	if($obj) $this->$obj->setFormRules();
+
     	if (!empty($obj) && $this->$obj->validateForm()) {
     		//it's a submit and the form has been validated. Let's check if there is any binary file uploaded
      		$upload_info = saveUploadedFile();
@@ -569,8 +566,6 @@ class Contact extends Admin_Controller {
     		if(is_array($upload_info['data'])) {
     			
     			$this->load->helper('file');
-
-
     			
     			foreach ($upload_info['data'] as $element => $element_status)
     			{
@@ -578,20 +573,13 @@ class Contact extends Admin_Controller {
     				if($element_status['full_path']){
     					$binary_file = base64_encode(read_file($element_status['full_path']));
     					if($binary_file) $this->$obj->$element = $binary_file;
-    				}
-    				
-    				//unlink($element_status['full_path']);
-    				
-    				
+    					unlink($element_status['full_path']);
+    				}    				
     			}
     		}    		
     		
     		//ready to save in ldap
     		if($this->$obj->save()) {
-    			
-//     			if(!$element_status['full_path']){
-//     				unlink($element_status['full_path']);
-//     			}
     			
     			if(isset($this->$obj->uid))  redirect(site_url()."/contact/details/uid/".$this->$obj->uid);
 
@@ -604,16 +592,50 @@ class Contact extends Admin_Controller {
     	
     	
     	//it's not a form submit 
-    	if($obj) { 
+    	if($obj) { 		
+    		
     		//the contact is set so it's an early stage update and it needs to fill the form with the contact's data
     		$contact_id = $this->$obj->uid ? $this->$obj->uid : $this->$obj->oid;
 
+    		if(!$contact_id){
+    			//it's not an update but a new contact creation
+    			$form = $this->input->post('form');
+
+    			 
+    			
+    			
+    			switch ($this->$obj->objName) {
+    				case 'person':
+    					if(empty($form)) {
+    						//this means that the form has been submitted automatically by js => no contacts found in the search
+    						$first_name = $this->input->post('first_name');
+    						$last_name = $this->input->post('last_name');
+    					} else {
+    						foreach ($form as $item) {
+    							if($item['field'] == 'first_name') $first_name = $item['value'];
+    							if($item['field'] == 'last_name') $last_name = $item['value'];
+    						}
+    					}
+    					
+    					if(isset($first_name) && $first_name) $this->$obj->givenName = $first_name;
+    					if(isset($last_name) && $last_name) $this->$obj->sn = $last_name;
+    				break;
+    				
+    				case 'organization':
+    					if(empty($form)) {
+    						$organization_name = $this->input->post('organization_name');
+    					}
+    					if(isset($organization_name) && $organization_name) $this->$obj->o = $organization_name;
+    				break;
+    			}
+    		}
+    		
     		//preparing the form
     		foreach ($this->$obj->properties as $key => $property) {
     			$this->mdl_contacts->form_values[$key] = $this->$obj->$key;
     		} 
     		
-    		$o = $this->$obj;
+    		$o = $this->$obj;    		
     		
     		//sets form submit url
     		if(isset($this->$obj->uid) && !empty($this->$obj->uid)) $form_url = site_url()."/contact/form/uid/".$this->$obj->uid;
@@ -630,7 +652,6 @@ class Contact extends Admin_Controller {
     			$this->$obj->setFormRules();
     			
     			$form_url = site_url()."/contact/form/add/".$obj;
-    		
     	}
 
     	

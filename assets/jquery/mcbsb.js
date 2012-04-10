@@ -134,19 +134,73 @@ function jqueryAssociate(params) {
 	}
 }
 
+//this intercepts the "enter" keystroke
+function submitenter(myfield,e)
+{
+//	console.log('submitenter');
+//	console.log(myfield);
+//	console.log(e);
+	var keycode;
+	if (window.event) keycode = window.event.keyCode;
+	else if (e) keycode = e.which;
+	else return true;
+	
+	if (keycode == 13)
+	{
+		myfield.form.submit();
+	    return false;
+	}
+	else
+	   return true;
+}
+
+
+function toggle_animate(tag_id, tag_focus, margintop) {
+
+	$("#" + tag_id ).toggle();
+	$("#" + tag_id ).animate({
+		width: "100%",
+		//opacity: 0.4,
+		marginTop: margintop + "px",
+		//marginLeft: "3.6in",
+		fontSize: "3em",
+		borderWidth: "10px"
+	}, 0 );
+	$("#" + tag_focus).focus();
+}
+
 function search(params){
 
-	searched_value = $('#input_search').val();
+//	console.log('search');
+//	console.log(params);
+	
+	if(typeof params.search_tag_id == "undefined" || params.search_tag_id == ''){
+		//the default tag id for the input box is 'input_search'
+		search_tag_id = 'input_search';
+		//searched_value = $('#input_search').val();
+	} else {
+		search_tag_id = params.search_tag_id;
+	}
+	
+//	console.log(search_tag_id);
+	
+	if(typeof params.searched_value == "undefined" || params.searched_value == '') {
+		//gets the value from the input box
+		searched_value = urlencode($('#' + search_tag_id).val());
+	} else {
+		searched_value = urlencode(params.searched_value);
+	}
+	
+//	console.log(searched_value);
 	
 	if(typeof searched_value !== "undefined" && searched_value){
 
 		params.searched_value = searched_value;
 		
 		jqueryForm(params, function(response){
-
-			$("#search_organization").toggle();
-
-		    alert('Done');
+			//console.log('search function is closing');
+			$('#' + params.form_name).toggle();
+		    //alert('Done');
 		});	
 	} else {
 		return false;
@@ -154,8 +208,8 @@ function search(params){
 };	
 
 function jqueryForm(params) {
-	console.log('jqueryForm');
-	console.log(params);
+//	console.log('jqueryForm');
+//	console.log(params);
 	$.ajax({
 		async: false,
 		type: 'POST',
@@ -169,7 +223,7 @@ function jqueryForm(params) {
 	})
 	.done(function(json){
 		if(typeof json.error !== "undefined" && json.error){
-			console.log('jqueryForm has an error');
+//			console.log('jqueryForm has an error');
 			alert(urldecode(json.error));
 		}
 	});
@@ -177,8 +231,9 @@ function jqueryForm(params) {
 
 
 function openJqueryForm(json){
-	console.log('openJqueryForm');
-	console.log('json');
+//	console.log('openJqueryForm');
+//	console.log(json);
+	
 	var tag = $("<div></div>");
 	var procedure = '';
 	selected_radio = ''; //global
@@ -213,7 +268,8 @@ function openJqueryForm(json){
 }
 
 function postFormToAjax(url,dataType,type,form_name,object_name,related_object_name,related_object_id,selected_radio,procedure){
-	console.log('postFormToAjax');
+	//console.log('postFormToAjax');
+	
 	var form = document.forms[form_name];
 	var formObj = retrieveForm(form);
 
@@ -233,8 +289,19 @@ function postFormToAjax(url,dataType,type,form_name,object_name,related_object_n
 		}
 	})
     .success(function(json) {
+    	//console.log('form validation has been successfull');
+    	
+    	url = urldecode(url);
+    	
+    	//let's see if the final url is an ajax request
+    	if(!url.match(/^\/ajax/)) {
+        	//if it's a page so I just submit the form to it
+        	$('#'+form_name).submit();
+        	return true;
+    	}    	
+    	
     	jQuery.ajax({
-        	url		: urldecode(url),
+        	url		: url,
         	dataType: dataType,
         	type	: type,
             data    : {
@@ -250,6 +317,7 @@ function postFormToAjax(url,dataType,type,form_name,object_name,related_object_n
             error	: errorCallback,
         })
 		.done(function(json){
+			//console.log('last ajax query has been completed');
 			if(typeof json.error !== "undefined" && json.error){
 				//console.log('postFormToAjax has an error at POST stage.');
 				//console.log(json);
@@ -257,7 +325,8 @@ function postFormToAjax(url,dataType,type,form_name,object_name,related_object_n
 				//return false;
 			}
 		})        
-        .success(function(json) {    	    	
+        .success(function(json) {
+        	//console.log('last ajax query has been successfull');
         	if(typeof json.message !== "undefined" && json.message){
         		alert(urldecode(json.message));
             	window.location.hash = json.focus_tab;

@@ -7,7 +7,7 @@
 $(function() {
     $('[type=radio]').live("click", function() {
     	selected_radio = $(this).val(); 
-        console.log('click' + selected_radio);
+        //console.log('click' + selected_radio);
     });
 });
 </script>
@@ -47,8 +47,9 @@ $(function() {
 			<p>{t}No organization found{/t}</p>
 			{/if}
 		{/if}
-	</fieldset>
+	</fieldset>	
 	</form>
+	
 	{if $results_number > $results_got_number}
 		<p style="margin-top: 10px; margin-bottom: 0px;">{t}Your research produced too many results: refine your search or click{/t} <a title="{t}Get more results{/t}" href="/contact/search/{$searched_value}" style="background-color: green; color: white;">{t}HERE{/t}</a> {t}to see all the results.{/t}</p>
 	{/if}	
