@@ -250,3 +250,24 @@ msgstr "statistiche"
 
 msgid "Search"
 msgstr "Cerca"
+
+msgid "add one"
+msgstr "aggiungi"
+
+msgid "Reset"
+msgstr "Reimposta"
+
+msgid "You can safely add this contact"
+msgstr "Puoi tranquillamente aggiungere questo contatto"
+
+msgid "Add a person"
+msgstr "Aggiungi persona"
+
+msgid "Add an organization"
+msgstr "Aggiungi organizzazione"
+
+msgid "Updated by"
+msgstr "Aggiornato da"
+
+msgid "updated by"
+msgstr "aggiornato da"

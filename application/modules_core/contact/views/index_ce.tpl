@@ -84,8 +84,8 @@
 				<span class="marker">&gt;&gt;</span><a id="show_add_person_link" href="#" style="font-size: 13px; color: white;">{t}add one{/t}</a>
 				<div id="add_person" title="Form" style="display: none;">
 					<form id="add_person_form" style="background-color: transparent;">
-						<input title="{t}first name{/t}" style="margin-left: 150px; margin-right: 0px; width: 160px;"type="text" name="firstname" id="first_name" />
-						<input title="{t}last name{/t}" style="margin-right: 5px; margin-left: 0px; width: 160px;"type="text" name="lastname" id="last_name"/>
+						<input title="{t}first name{/t}" style="margin-left: 160px; margin-right: 0px; width: 155px;"type="text" name="firstname" id="first_name" />
+						<input title="{t}last name{/t}" style="margin-right: 2px; margin-left: 0px; width: 155px;"type="text" name="lastname" id="last_name"/>
 					</form>
 				</div>	
 			</h3>

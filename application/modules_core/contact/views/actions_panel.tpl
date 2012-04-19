@@ -112,7 +112,7 @@
 				</form>
 				<p style="margin-top: -20px; margin-bottom: 0px;">
 				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 5px;">{t}First Name{/t}</span>
-				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 58px;">{t}Last Name{/t}</span>
+				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 65px;">{t}Last Name{/t}</span>
 				</p>
 			</div>
 		</li>
