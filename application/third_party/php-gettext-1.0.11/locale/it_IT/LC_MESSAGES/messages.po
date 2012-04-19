@@ -271,3 +271,21 @@ msgstr "Aggiornato da"
 
 msgid "updated by"
 msgstr "aggiornato da"
+
+msgid "Maybe the contact you are trying to add is already present in the system"
+msgstr "Forse il contatto che stai aggiungendo é giá presente nel sistema"
+ 
+msgid "If you are sure that this contact is not yet in the system, please click"
+msgstr "Se sei sicuro che il contatto non é presente nel sistema, clicca"
+
+msgid "Displaying"
+msgstr "Mostro"
+
+msgid "on"
+msgstr "su"
+
+msgid "person"
+msgstr "persona"
+
+msgid "found"
+msgstr "trovate"

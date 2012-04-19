@@ -38,7 +38,9 @@
 			if (event.which == 13)
 			{
 				first_name = $('#first_name').val();
+				if(first_name == '') return false;
 				last_name = $('#last_name').val();
+				if(last_name == '') return false;
 				searched_value = first_name + ' ' + last_name;
 				 
 				search({ 

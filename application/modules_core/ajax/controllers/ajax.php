@@ -109,7 +109,7 @@ class Ajax extends Admin_Controller {
     	if($searched_object == 'person') {
     		$input['sort_by'] = array('sn');
     		//TODO make a search also switching name and surname?
-    		$input['filter'] = '(|(cn=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))';
+    		$input['filter'] = '(|(cn=*'.$searched_value.'*)(displayName=*'.$searched_value.'*)(mail=*'.$searched_value.'*)(mobile=*'.$searched_value.'*)(homePhone=*'.$searched_value.'*)(o=*'.$searched_value.'*))';
     	}
     	if($searched_object == 'organization') {
     		$input['sort_by'] = array('o');

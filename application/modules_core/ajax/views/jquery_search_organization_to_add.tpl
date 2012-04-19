@@ -6,7 +6,7 @@
 
 {if count($orgs) gt 0}
 	<p>
-	{t}Maybe the contact you are trying to add is already present in the system.{/t}
+	{t}Maybe the contact you are trying to add is already present in the system{/t}.
 	</p>
 {/if}
 <div id="{$div_id}" title="Form">
