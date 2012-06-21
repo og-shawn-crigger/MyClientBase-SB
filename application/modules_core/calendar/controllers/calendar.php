@@ -23,11 +23,39 @@ class Calendar extends Admin_Controller {
 	}
 
 	function index() {
-
-		$this->load->view('index');
+		$data = array();
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['base_url'] = base_url();
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+		$this->load->view('index',$data);
 
 	}
 
+	public function jquery_get_invoices($status = 'open') {
+
+		$function = "get_" . $status;
+
+		$invoices = $this->mdl_invoices->$function();
+
+		$inv_array = array();
+
+		foreach ($invoices as $invoice) {
+			
+			$inv_array[] = array(
+				'id'    => $invoice->invoice_id,
+				'title' => $invoice->client_name . ' (' . display_currency($invoice->invoice_total) . ')',
+				//'title' => $invoice->invoice_id,
+				'start' => date('Y-m-d', $invoice->invoice_due_date),
+				'url'   => './invoices/edit/invoice_id/'. $invoice->invoice_id,
+			);
+
+		}
+
+		echo json_encode($inv_array);
+		
+	}
+
+	//TODO Dam this function has been removed in 0.12. Should I remove it too?
 	function get_overdue() {
 
 		$data = array(

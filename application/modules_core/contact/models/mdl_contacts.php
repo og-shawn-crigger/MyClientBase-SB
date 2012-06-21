@@ -55,7 +55,7 @@ class Mdl_Contacts extends MY_Model {
     			$input['filter'] = '(|'.$input['filter'].')';
     		} else {
     			//looking for a single contact but I don't know if it's an organization or a person
-    			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))'; //TODO why the $client_id is not extracted?
+    			$input['filter'] = '(|(uid='.$params['client_id'].')(oid='.$params['client_id'].'))';
     		}
     	} else {
     		//looking for a specific contact

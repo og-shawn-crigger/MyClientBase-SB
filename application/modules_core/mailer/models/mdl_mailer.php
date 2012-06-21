@@ -67,9 +67,18 @@ class Mdl_Mailer extends MY_Model {
 
 	public function email_invoice($invoice, $invoice_template, $from_email, $from_name, $to, $subject, $email_body, $email_footer, $invoice_as_body, $email_cc = NULL, $email_bcc = NULL) {
 
-		$this->load->helper($this->mdl_mcb_data->setting('pdf_plugin'));
-
-		$this->load->helper('mailer/phpmailer');
+		$this->load->helper(array(
+			$this->mdl_mcb_data->setting('pdf_plugin'),
+			'mailer/phpmailer',
+			'mcb_currency',
+			'mcb_invoice',
+			'mcb_date',
+			'mcb_custom',
+			'mcb_invoice_amount',
+			'mcb_invoice_item',
+			'mcb_invoice_payment',
+			'mcb_numbers')
+		);
 
 		if (!$invoice->invoice_is_quote) {
 
@@ -120,10 +129,6 @@ class Mdl_Mailer extends MY_Model {
 			$email_bcc);
 
 		$this->mdl_invoices->delete_invoice_file($filename . '.pdf');
-
-		$this->load->model('invoices/mdl_invoice_history');
-
-		$this->mdl_invoice_history->save($invoice->invoice_id, $this->session->userdata('user_id'), $this->lang->line('emailed_invoice') . ' to ' . $to);
 
 	}
 

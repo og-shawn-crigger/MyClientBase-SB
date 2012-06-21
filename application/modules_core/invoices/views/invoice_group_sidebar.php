@@ -1,6 +1,6 @@
-<div class="section_wrapper">
+<div class="section_wrapper" style="background-color: gray">
 
-	<h3 class="title_black"><?php echo $this->lang->line('invoice_groups'); ?></h3>
+	<h3 class="title_black"><?php echo $this->lang->line('main_actions'); ?></h3>
 
 	<ul class="quicklinks content toggle">
 		<li><?php echo anchor('invoices/invoice_groups', $this->lang->line('view_invoice_groups')); ?></li>

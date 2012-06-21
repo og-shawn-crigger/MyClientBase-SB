@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "dashboard";
+$route['default_controller'] = "contact";
 $route['404_override'] = '';
 
 $route['contact/search/:any'] = 'contact/index/';

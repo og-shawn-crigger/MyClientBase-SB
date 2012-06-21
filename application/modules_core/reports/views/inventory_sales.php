@@ -52,13 +52,13 @@
 
 </script>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $this->lang->line('inventory_sales'); ?></h3>
 
-		<div class="content toggle">
+		<div class="content toggle" style="min-height: 0px;">
 
 			<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
@@ -74,12 +74,10 @@
 
                 <?php $this->load->view('partial_output_type'); ?>
 
-				<input type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
-
-				<div style="clear: both;">&nbsp;</div>
+				<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
 
 			</form>
-
+			<div style="clear: both;">&nbsp;</div>
 		</div>
 
 	</div>

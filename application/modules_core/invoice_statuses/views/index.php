@@ -20,7 +20,7 @@
 					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 				<?php foreach ($invoice_statuses as $invoice_status) { ?>
-				<tr>
+				<tr class="hoverall">
 					<td class="first"><?php echo $invoice_status->invoice_status_id; ?></td>
 					<td><?php echo $invoice_status->invoice_status; ?></td>
 					<td><?php echo $this->mdl_invoice_statuses->status_types[$invoice_status->invoice_status_type]; ?></td>

@@ -1,12 +1,10 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $page_title; ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle">
 
@@ -37,7 +35,7 @@
 
 				<br />
 
-				<textarea name="template_content" style="width: 850px; height: 650px;"><?php echo $this->mdl_templates->form_value('template_content'); ?></textarea>
+				<textarea name="template_content" style="width: 730px; height: 650px;"><?php echo $this->mdl_templates->form_value('template_content'); ?></textarea>
 
 				<div style="clear: both;">&nbsp;</div>
 
@@ -52,5 +50,8 @@
 	</div>
 
 </div>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

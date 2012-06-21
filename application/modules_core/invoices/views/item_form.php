@@ -4,13 +4,11 @@
 
 <?php $this->load->view('dashboard/jquery_date_picker'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $this->lang->line('invoice_number') . ' ' . invoice_id($invoice); ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle">
 
@@ -62,19 +60,19 @@
 					<dd>
 						<select name="tax_rate_id" id="tax_rate_id">
 							<?php foreach ($tax_rates as $tax_rate) { ?>
-							<option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if(($this->mdl_items->form_value('tax_rate_id') == $tax_rate->tax_rate_id)) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent) . '% - ' . $tax_rate->tax_rate_name; ?></option>
+							<option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if(($this->mdl_items->form_value('tax_rate_id') == $tax_rate->tax_rate_id)) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')) . '% - ' . $tax_rate->tax_rate_name; ?></option>
 							<?php } ?>
 						</select>
                         <select name="item_tax_option" id="item_tax_option">
-                            <option value="0" <?php if (!$this->mdl_items->form_value('item_tax_option')) { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_0'); ?></option>
-                            <option value="1" <?php if ($this->mdl_items->form_value('item_tax_option') == 1) { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_1'); ?></option>
+                            <option value="0" <?php if ($this->mdl_items->form_value('item_tax_option') == "0") { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_0'); ?></option>
+                            <option value="1" <?php if ($this->mdl_items->form_value('item_tax_option') == "1") { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_1'); ?></option>
                         </select>
 					</dd>
 				</dl>
                 
 				<dl>
 					<dt><label><?php echo $this->lang->line('apply_invoice_tax'); ?>: </label></dt>
-					<dd><input type="checkbox" name="is_taxable" id="is_taxable" value="1" <?php if ($this->mdl_items->form_value('is_taxable')) { ?>checked="checked"<?php } ?> /></dd>
+					<dd><input type="checkbox" name="is_taxable" id="is_taxable" value="1" <?php if ((!uri_assoc('invoice_item_id', 4) and $this->mdl_mcb_data->setting('default_apply_invoice_tax')) or $this->mdl_items->form_value('is_taxable')) { ?>checked="checked"<?php } ?> /></dd>
 				</dl>
                 
                 <dl id="dl_save_as_inventory">
@@ -89,9 +87,10 @@
 				</dl>
 				<?php } ?>
 
-				<input type="submit" name="btn_submit_item" id="btn_submit" value="<?php echo $this->lang->line('save_item'); ?>" />
-				<input type="submit" name="btn_cancel" id="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-
+				<span style="float: right">
+						<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" name="btn_submit_item" id="btn_submit" value="<?php echo $this->lang->line('save_item'); ?>" />
+						<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" name="btn_cancel" id="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</span>
 			</form>
 
 		</div>
@@ -99,5 +98,8 @@
 	</div>
 
 </div>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

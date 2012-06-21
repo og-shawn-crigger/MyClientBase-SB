@@ -6,8 +6,9 @@ class Invoices extends Admin_Controller {
 
 		parent::__construct();
 
+		$this->load->model('contact/mdl_contacts');
+		
 		$this->load->model('mdl_invoices');
-
 	}
 
 	function index() {
@@ -16,113 +17,160 @@ class Invoices extends Admin_Controller {
 
 		$this->redir->set_last_index();
 
-		$this->load->helper('text');
-
+		//parse the url
 		$order_by = uri_assoc('order_by');
-
 		$order = uri_assoc('order');
-
-		$client_id = uri_assoc('client_id');
-
 		$status = uri_assoc('status');
-
 		$is_quote = uri_assoc('is_quote');
-
+				
 		$params = array(
-			'paginate'				=>	TRUE,
-			'limit'					=>	$this->mdl_mcb_data->setting('results_per_page'),
-			'page'					=>	uri_assoc('page'),
-			'where'					=>	array(),
-			'active_clients_only'	=>	1
+				'paginate'				=>	TRUE,
+				'limit'					=>	$this->mdl_mcb_data->setting('results_per_page'),
+				'page'					=>	uri_assoc('page'),
+				'where'					=>	array(),
+				//'active_clients_only'	=>	1
 		);
+		
+		//contains the info sent to the view
+		$data = array();
+		
+		//gets the contact if specified in the url
+		if($contact = $this->retrieve_contact()) $client_id = $contact->client_id;
 
 		$params['where']['mcb_invoices.invoice_is_quote'] = ($is_quote) ? 1 : 0;
+		
+		if (isset($client_id)) $params['where']['mcb_invoices.client_id'] = $client_id;
 
-		if (!$this->session->userdata('global_admin')) $params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-
-		if ($client_id) {
-
-			$params['where']['mcb_invoices.client_id'] = $client_id;
-
-		}
-
-		if ($status) {
-
-			$params['where']['invoice_status'] = $status;
-
-		}
+		if ($status) $params['where']['invoice_status'] = $status;
 
 		switch ($order_by) {
 			case 'invoice_id':
 				$params['order_by'] = 'mcb_invoices.invoice_number ' . $order;
-				break;
-			case 'client':
-				$params['order_by'] = 'client_name ' . $order;
-				break;
+			break;
+			
 			case 'amount':
 				$params['order_by'] = 'invoice_total ' . $order;
-				break;
+			break;
+			
 			case 'duedate':
 				$params['order_by'] = 'mcb_invoices.invoice_due_date ' . $order;
-				break;
+			break;
+			
 			case 'date':
 				$params['order_by'] = 'mcb_invoices.invoice_date_entered ' . $order;
-				break;
+			break;
+			
 			default:
 				$params['order_by'] = 'mcb_invoices.invoice_date_entered DESC, mcb_invoices.invoice_number DESC';
 		}
 
 		$invoices = $this->mdl_invoices->get($params);
-
-		$data = array(
-			'invoices'		=>	$invoices,
-			'sort_links'	=>	TRUE
-		);
+		
+		$data['invoices'] =	$invoices;
+		$data['sort_links']	= TRUE;
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');		
 
 		$this->load->view('index', $data);
-
 	}
 
-	function create() {
+	public function retrieve_contact()
+	{
+		$params = retrieve_uid_oid();
+		 
+		//check: I need at least one of the 3 parameters uid,oid,client_id
+		if(is_null($params) || count($params)==0) return false;
+		 
+		return $this->mdl_invoices->get_contact($params);
+	}	
+	
+
+	
+	public function create() {
 
 		if ($this->input->post('btn_cancel')) {
-
-			redirect('invoices');
-
+			if ($this->input->post('btn_cancel')) {
+				 
+				//see if we where creating a quote or not for the proper redirect
+				//             if ( strstr(uri_string(), "quote") )
+				//                 redirect('invoices/index/is_quote/1');
+				//             else
+				//               redirect('invoices');
+				//             }
+				if ( strstr(uri_string(), "quote")) {
+					if(strtolower($contact->objName) == "person") {
+						redirect('invoices/index/uid/'.$contact->client_id.'/is_quote/1');
+					} else {
+						redirect('invoices/index/oid/'.$contact->client_id.'/is_quote/1');
+					}
+				}
+			}
 		}
+		
+		if($contact = $this->retrieve_contact())
+		{
+			$client_id = $contact->client_id;
+		} else {
+			redirect($this->session->userdata('last_index'));
+			//TODO display an error
+		}
+		
+		if(strtolower($contact->objName) == "person")
+		{
+			$this->mdl_invoices->set_form_value('client_id_autocomplete_label', $contact->cn);
+			$client_id_key = 'uid';
+		}
+		
+		if(strtolower($contact->objName) == "organization")
+		{
+			$this->mdl_invoices->set_form_value('client_id_autocomplete_label', $contact->o);
+			$client_id_key = 'oid';
+		}
+		$this->mdl_invoices->set_form_value('client_id_key', $client_id_key);
 
-		if (!$this->mdl_invoices->validate_create()) {
-
-			$this->load->model(array('clients/mdl_clients','mdl_invoice_groups'));
-
+		
+		if (!$this->mdl_invoices->validate_create()) { //it means that the form has not been submitted or it's not a valid submit
+			
+			$this->load->model('mdl_invoice_groups');
+			
+			//should I create an invoice or quote form?
+			if ( strstr(uri_string(), "quote")) $is_quote = true;
+				
 			/* If client_id exists in URL, pre-select the client */
-			if (uri_assoc('client_id') and !$_POST) {
+			if ($client_id and !$_POST) {
 
-				$this->mdl_invoices->set_form_value('client_id', uri_assoc('client_id'));
-
+				$this->mdl_invoices->set_form_value('client_id', $client_id);
 			}
-
-			elseif (uri_assoc('client_id', 4) and !$_POST) {
-
-				$this->mdl_invoices->set_form_value('client_id', uri_assoc('client_id', 4));
-
-			}
-
-			$this->load->helper('text');
 
 			$data = array(
-				'clients'			=>	$this->mdl_clients->get_active(),
 				'invoice_groups'	=>	$this->mdl_invoice_groups->get()
 			);
 
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+			
 			$this->load->view('choose_client', $data);
 
 		}
 
 		else {
 
+			if (!$client_id) {
+				
+				$db_array = array(
+					'client_name'	=>	$this->input->post('client_id_autocomplete_label'),
+					'client_active'	=>	1
+				);
+
+				$this->mdl_clients->save($db_array);
+				
+				$client_id = $this->db->insert_id();
+
+			}
+
 			$package = array(
-				'client_id'				=>	$this->input->post('client_id'),
+				'client_id'				=>	$client_id,
+				'client_id_key'			=>  $client_id_key,
 				'invoice_date_entered'	=>	$this->input->post('invoice_date_entered'),
 				'invoice_group_id'		=>	$this->input->post('invoice_group_id'),
 				'invoice_is_quote'		=>	$this->input->post('invoice_is_quote')
@@ -150,6 +198,8 @@ class Invoices extends Admin_Controller {
 
 	}
 
+
+	
 	function edit() {
 
 		$tab_index = ($this->session->flashdata('tab_index')) ? $this->session->flashdata('tab_index') : 0;
@@ -160,7 +210,7 @@ class Invoices extends Admin_Controller {
 
 		$this->load->model(
 			array(
-			'clients/mdl_clients',
+			//'clients/mdl_clients',
 			'payments/mdl_payments',
 			'tax_rates/mdl_tax_rates',
 			'invoice_statuses/mdl_invoice_statuses',
@@ -169,19 +219,16 @@ class Invoices extends Admin_Controller {
 			)
 		);
 
-		$this->load->helper('text');
-
 		$params = array(
 			'where'	=>	array(
 				'mcb_invoices.invoice_id'	=>	uri_assoc('invoice_id')
 			)
 		);
 
-        if (!$this->session->userdata('global_admin')) {
-
-            $params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-
-        }
+//TODO remove this ACL
+//         if (!$this->session->userdata('global_admin')) {
+//             $params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
+//         }
 
 		$invoice = $this->mdl_invoices->get($params);
 
@@ -191,13 +238,9 @@ class Invoices extends Admin_Controller {
 
 		}
 
-		$client_params = array(
-			'select' =>  'mcb_clients.client_id, mcb_clients.client_name'
-		);
-
 		$user_params = array(
 			'where' =>  array(
-				'mcb_users.client_id'   =>  0
+				'mcb_users.user_client_id'   =>  0
 			)
 		);
 
@@ -214,7 +257,6 @@ class Invoices extends Admin_Controller {
 			'invoice_items'     =>  $this->mdl_invoices->get_invoice_items($invoice->invoice_id),
 			'invoice_tax_rates' =>  $this->mdl_invoices->get_invoice_tax_rates($invoice->invoice_id),
 			'tags'              =>  $this->mdl_invoices->get_invoice_tags($invoice->invoice_id),
-			'clients'			=>	$this->mdl_clients->get_active($client_params),
 			'tax_rates'			=>	$this->mdl_tax_rates->get(),
 			'invoice_statuses'	=>	$this->mdl_invoice_statuses->get(),
 			'tab_index'			=>	$tab_index,
@@ -222,6 +264,9 @@ class Invoices extends Admin_Controller {
 			'users'             =>  $this->mdl_users->get($user_params)
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				
 		$this->load->view('invoice_edit', $data);
 
 	}
@@ -235,28 +280,37 @@ class Invoices extends Admin_Controller {
 	}
 
 	function generate_pdf() {
-
-		$invoice_id = uri_assoc('invoice_id');
-
+		
 		$this->load->library('lib_output');
-
 		$this->load->model('invoices/mdl_invoice_history');
-
-		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_invoice_pdf'));
-
+		
+		$invoice_id = uri_assoc('invoice_id');
+		$invoice = $this->mdl_invoices->get_by_id($invoice_id);		
+		
+		if($invoice->invoice_is_quote) {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_quote_pdf'));
+		} else {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_invoice_pdf'));
+		}
+		
 		$this->lib_output->pdf($invoice_id, uri_assoc('invoice_template'));
 
 	}
 
 	function generate_html() {
 
-		$invoice_id = uri_assoc('invoice_id');
-
 		$this->load->library('invoices/lib_output');
 
 		$this->load->model('invoices/mdl_invoice_history');
 
-		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_invoice_html'));
+		$invoice_id = uri_assoc('invoice_id');
+		$invoice = $this->mdl_invoices->get_by_id($invoice_id);
+		
+		if($invoice->invoice_is_quote) {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_quote_html'));
+		} else {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('generated_invoice_html'));
+		}
 
 		$this->lib_output->html($invoice_id, uri_assoc('invoice_template'));
 
@@ -276,15 +330,25 @@ class Invoices extends Admin_Controller {
 
 		$this->_post_handler();
 
-		$invoice_id = uri_assoc('invoice_id');
+		if(!$invoice_id = uri_assoc('invoice_id')) {
+			redirect('invoices/index/is_quote/1');
+		}
 
 		if (!$this->mdl_invoices->validate_quote_to_invoice()) {
 
 			$this->load->model('mdl_invoice_groups');
 
+			//$invoice = $this->mdl_invoices->get_by_id($invoice_id);
+			
+			$params = array('where' => array('mcb_invoices.invoice_id' => $invoice_id));
+			
+			$invoice = $this->mdl_invoices->get($params);
+			
+			$client_id = $invoice->client_id;
+			
 			$data = array(
 				'invoice_groups'	=>	$this->mdl_invoice_groups->get(),
-				'invoice'			=>	$this->mdl_invoices->get_by_id($invoice_id)
+				'invoice'			=>  $invoice
 			);
 
 			$this->load->view('quote_to_invoice', $data);
@@ -303,39 +367,38 @@ class Invoices extends Admin_Controller {
 
 	function _post_handler() {
 
-		if ($this->input->post('btn_add_new_item')) {
+		if ($this->input->post('btn_add_new_item') || $this->input->get('btn_add_new_item')) {
 
 			redirect('invoices/items/form/invoice_id/' . uri_assoc('invoice_id'));
 
 		}
 
-		elseif ($this->input->post('btn_add_payment')) {
+		elseif ($this->input->post('btn_add_payment') || $this->input->get('btn_add_payment')) {
 
 			redirect('payments/form/invoice_id/' . uri_assoc('invoice_id'));
 
 		}
 
-		elseif ($this->input->post('btn_copy_invoice')) {
+		elseif ($this->input->post('btn_copy_invoice') || $this->input->get('btn_copy_invoice') ) {
 
 			redirect('invoices/copy/invoice_id/' . uri_assoc('invoice_id'));
 
 		}
 
-		elseif ($this->input->post('btn_add_invoice')) {
+		elseif ($this->input->post('btn_add_invoice') || $this->input->get('btn_add_invoice')) {
 
 			redirect('invoices/create');
 
 		}
 
-		elseif ($this->input->post('btn_add_quote')) {
-
-			redirect('invoices/create/quote');
+		elseif ($this->input->post('btn_add_quote') || $this->input->get('btn_add_quote')) {            
+			    redirect('invoices/create/quote');
 
 		}
 
-		elseif ($this->input->post('btn_cancel')) {
-
-			redirect('invoices/index');
+		elseif ($this->input->post('btn_cancel') || $this->input->get('btn_cancel')) {
+            
+			    redirect('invoices/index');
 
 		}
 
@@ -373,13 +436,13 @@ class Invoices extends Admin_Controller {
 
 		}
 
-		elseif ($this->input->post('btn_quote_to_invoice')) {
+		elseif ($this->input->post('btn_quote_to_invoice') || $this->input->get('btn_quote_to_invoice') ) {
 
 			redirect('invoices/quote_to_invoice/invoice_id/' . uri_assoc('invoice_id'));
 
 		}
 
-		elseif ($this->input->post('btn_calendar_view')) {
+		elseif ($this->input->post('btn_calendar_view') || $this->input->get('btn_calendar_view')) {
 
 			redirect('calendar');
 
@@ -426,12 +489,11 @@ class Invoices extends Admin_Controller {
 	 */
 	function display_create_invoice() {
 
-		$this->load->model('clients/mdl_clients');
+		//$this->load->model('clients/mdl_clients');
 
 		$this->load->model('invoices/mdl_invoice_groups');
 
 		$data = array(
-			'clients'			=>	$this->mdl_clients->get(),
 			'invoice_groups'	=>	$this->mdl_invoice_groups->get()
 		);
 

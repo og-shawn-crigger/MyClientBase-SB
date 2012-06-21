@@ -36,7 +36,7 @@ class Client_Credits extends Admin_Controller {
 
 		if (!$this->mdl_client_credits->validate()) {
 
-			$this->load->model('clients/mdl_clients');
+			//$this->load->model('clients/mdl_clients');
 
 			if (!$_POST AND uri_assoc('client_credit_id', 4)) {
 
@@ -49,12 +49,8 @@ class Client_Credits extends Admin_Controller {
 				$this->mdl_client_credits->set_date();
 
 			}
-			
-			$data = array(
-				'clients'	=>	$this->mdl_clients->get()
-			);
 
-			$this->load->view('client_credit_form', $data);
+			$this->load->view('client_credit_form');
 
 		}
 

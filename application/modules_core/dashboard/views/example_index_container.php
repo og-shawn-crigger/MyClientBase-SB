@@ -6,8 +6,6 @@
 
 		<h3 class="title_black"><?php echo $this->lang->line('tax_rates'); ?><?php $this->load->view('dashboard/btn_add'); ?></h3>
 
-		<?php $this->load->view('dashboard/system_messages'); ?>
-
 		<div class="content toggle no_padding">
 
 			<table>

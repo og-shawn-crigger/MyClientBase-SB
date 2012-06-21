@@ -67,11 +67,10 @@ class MY_Model extends CI_Model {
 	public $order_by;
 
 	public $form_values = array();
-
+	
 	public function __construct() {
 
 		parent::__construct();
-
 	}
 
 	public function form_value($var) {
@@ -126,7 +125,8 @@ class MY_Model extends CI_Model {
 		if (isset($params['where']) and is_array($params['where']) and isset($params['where'][$this->primary_key])) {
 
 			// return a single row if the primary key exists in the where element
-			return $query->row();
+			$a = $query->row();
+			return $a; //$query->row();
 
 		}
 
@@ -152,8 +152,13 @@ class MY_Model extends CI_Model {
 		$this->_prep_joins();
 
 		$query = $this->db->get($this->table_name);
-
-		return $query->row();
+		
+		//this is  for debug purposes
+		//$arr = $query->row_array();
+		
+		$row = $query->row();
+		
+		return $row;
 
 	}
 
@@ -552,10 +557,9 @@ class MY_Model extends CI_Model {
 	public function prep_validation($id) {
 
 		// this function will return the initial values to populate a form on an edit
+		$result = $this->get(array('where'=>array($this->primary_key => $id)));
 
-		$result = $this->get(array('where'=>array($this->primary_key=>$id)));
-
-		foreach ($result as $key=>$value) {
+		foreach ($result as $key  => $value) {
 
 			$this->form_values[$key] = $value;
 
@@ -593,8 +597,7 @@ class MY_Model extends CI_Model {
 
 		echo "</pre>";
 
-	}
-
+	} 
 }
 
 ?>

@@ -3,112 +3,27 @@
 $config = array(
     'mcb_menu'  =>  array(
 		'contact'   =>  array(
-		 	'title'     =>  'contact',
+		 	'title'     =>  'contacts',
 		    'href'      =>  'contact/index',
-			'submenu'   =>  array(
-					'clients'  =>  array(
-							'title' =>  'by location',
-							'href'  =>  'contact/by_location'
-					)
-			)
-		),    		
-        'clients'   =>  array(
-            'title'     =>  'clients',
-            'href'      =>  'clients/index',
-            'submenu'   =>  array(
-                'clients'  =>  array(
-                    'title' =>  'view_clients',
-                    'href'  =>  'clients/index'
-                ),
-                'clients/form'   =>  array(
-                    'title' =>  'add_client',
-                    'href'  =>  'clients/form'
-                )
-            )
-        ),        
+		),
+    	/*    		       
+    	'assignments'   =>  array(
+    		'title'     =>  'assignments',
+    		'href'      =>  'assignments/index',
+    	),
+    	*/    		
         'invoices'  =>  array(
-            'title'     =>  'invoices',
+            'title'     =>  'invoices&quotes',
             'href'      =>  'invoices/index',
-            'submenu'   =>  array(
-                'quotes'  =>  array(
-                    'title'     =>  'quotes',
-                    'href'      =>  'invoices/index/is_quote/1',
-                    'submenu'   =>  array(
-                        'invoices/index/is_quote/1' =>  array(
-                            'title' =>  'view_quotes',
-                            'href'  =>  'invoices/index/is_quote/1'
-                        ),
-                        'invoices/create/quote'    =>  array(
-                            'title' =>  'create_quote',
-                            'href'  =>  'invoices/create/quote'
-                        ),
-                        'invoices/index/is_quote/1' =>  array(
-                            'title' =>  'view_quotes',
-                            'href'  =>  'invoices/index/is_quote/1'
-                        )
-                    )
-                ),
-                'payments'  =>  array(
-                    'title'     =>  'payments',
-                    'href'      =>  'payments/index',
-                    'submenu'   =>  array(
-                        'payments/index'    =>  array(
-                            'title' =>  'view_payments',
-                            'href'  =>  'payments/index'
-                        ),
-                        'payments/form' =>  array(
-                            'title' =>  'enter_payment',
-                            'href'  =>  'payments/form'
-                        ),
-                        'payments/payment_methods'  =>  array(
-                            'title'         =>  'payment_methods',
-                            'href'          =>  'payments/payment_methods',
-                            'global_admin'  =>  TRUE
-                        ),
-                        'templates/index/type/payment_receipts' =>  array(
-                            'title'         =>  'receipt_templates',
-                            'href'          =>  'templates/index/type/payment_receipts',
-                            'global_admin'  =>  TRUE
-                        )
-                    )
-                ),
-                'invoices/index'    =>  array(
-                    'title' =>  'view_invoices',
-                    'href'  =>  'invoices/index'
-                ),
-                'invoices/create'   =>  array(
-                    'title' =>  'create_invoice',
-                    'href'  =>  'invoices/create'
-                ),
-
-                'invoice_search'    =>  array(
-                    'title' =>  'invoice_search',
-                    'href'  =>  'invoice_search'
-                ),
-                'templates/index/type/invoices' =>  array(
-                    'title'         =>  'invoice_templates',
-                    'href'          =>  'templates/index/type/invoices',
-                    'global_admin'  =>  TRUE
-                )
-            )
         ),
         'inventory' =>  array(
             'title'         =>  'inventory',
             'href'          =>  'inventory/index',
-            'submenu'       =>  array(
-                'inventory/index'   =>  array(
-                    'title'         =>  'inventory_items',
-                    'href'          =>  'inventory/index'
-                ),
-                'inventory/inventory_types' =>  array(
-                    'title'         =>  'inventory_types',
-                    'href'          =>  'inventory/inventory_types'
-                )
-            )
         ),
         'reports'   =>  array(
             'title'         =>  'reports',
             'submenu'       =>  array(
+            	/*
 				'dashboard' =>  array(
 				            'title' =>  'dashboard',
 				            'href'  =>  'dashboard'
@@ -117,6 +32,12 @@ $config = array(
                     'title' =>  'client_list',
                     'href'  =>  'reports/client_list'
                 ),
+                */
+            		
+            	'contacts_by_location'  =>  array(
+            					'title' =>  'contacts_by_location',
+            					'href'  =>  'contact/by_location'
+            	),            	
                 'client_statement'  =>  array(
                     'title' =>  'client_statement',
                     'href'  =>  'reports/client_statement'
@@ -132,15 +53,10 @@ $config = array(
             )
         ),
         'system'    =>  array(
-            'title'         =>  'system',
+            'title'         =>  'mcbsb_settings',
             'href'          =>  'settings',
             'global_admin'  =>  TRUE,
             'submenu'       =>  array(
-                'client_center' =>  array(
-                    'title'         =>  'client_center',
-                    'href'          =>  'client_center/admin',
-                    'global_admin'  =>  TRUE
-                ),
 				'mcb_core_modules'   =>  array(
 				                    'title'         =>  'core_modules',
 				                    'href'          =>  'mcb_modules/core',
@@ -156,6 +72,10 @@ $config = array(
                     'href'          =>  'fields/index',
                     'global_admin'  =>  TRUE,
                 ),
+            	'invoices/templates'   =>  array(
+            		'title'         =>  'invoice_templates',
+            		'href'          =>  'templates/index/type/invoices'
+            	),		 
                 'invoices/invoice_groups'   =>  array(
                     'title'         =>  'invoice_groups',
                     'href'          =>  'invoices/invoice_groups'
@@ -165,6 +85,16 @@ $config = array(
                     'href'          =>  'invoice_statuses/index',
                     'global_admin'  =>  TRUE,
                 ),
+            	'payments/payment_methods'  =>  array(
+            			'title'         =>  'payment_methods',
+            			'href'          =>  'payments/payment_methods',
+            			'global_admin'  =>  TRUE
+            	),            		
+            	'templates/index/type/payment_receipts' =>  array(
+            			'title'         =>  'payment_receipt_templates',
+            			'href'          =>  'templates/index/type/payment_receipts',
+            			'global_admin'  =>  TRUE
+            	),            		
                 'settings'  =>  array(
                     'title'         =>  'system_settings',
                     'href'          =>  'settings/index',

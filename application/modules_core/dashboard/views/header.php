@@ -66,8 +66,10 @@
 
             });
 
-        </script>          
-		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>		
+        </script>
+
+		<?php if (isset($header_insert)) { if (!is_array($header_insert)) { $this->load->view($header_insert); } else { foreach ($header_insert as $insert) { $this->load->view($insert); } } } ?>
+
 	</head>
 	<body>
 	<!-- top anchor -->
@@ -85,15 +87,16 @@
  		-->
  		
 		<div id="navigation_wrapper">
-
 			<ul class="sf-menu" id="navigation">
 
                 <?php 
                 	echo modules::run('mcb_menu/header_menu/display', array('view'=>'dashboard/header_menu')); 
                 ?>
-
 			</ul>
-
 		</div>
 
+		<div id="subnavigation_wrapper">
+			<?php $this->load->view('dashboard/system_messages'); ?>
+		</div>
+		
 		<div class="container_10" id="center_wrapper">

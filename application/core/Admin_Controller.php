@@ -3,15 +3,17 @@
 class Admin_Controller extends MX_Controller {
 
 	public static $is_loaded;
-
-	function __construct() {
-
+	
+	public function __construct() {
+		
 		parent::__construct();
-
-		$this->load->library('session');
-
+			
+		$a = get_class($this);
+		
         $this->load->helper('url');
-
+        
+        $this->load->driver('plenty_parser');
+        
 		$user_id = $this->session->userdata('user_id');
 
         if (!$user_id) {

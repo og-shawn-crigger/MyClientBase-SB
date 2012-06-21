@@ -20,7 +20,7 @@ class Client_List extends Admin_Controller {
 
     public function jquery_display_results($output_type = 'view') {
         
-        $this->load->model('clients/mdl_clients');
+        //$this->load->model('clients/mdl_clients');
 
         $client_params = array(
             'select'    =>  'mcb_clients.*'

@@ -23,7 +23,6 @@ class Mdl_Recover extends MY_Model {
         if ($query->num_rows()) {
 
             $this->load->helper('mailer/phpmailer');
-            $this->load->helper('text');
 
             $user = $query->row();
 

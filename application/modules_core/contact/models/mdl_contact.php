@@ -355,8 +355,11 @@ class Mdl_Contact extends MY_Model {
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
 	
-		if($this->crr->has_no_errors) return true; 
-		
+		if($this->crr->has_no_errors) {
+			$this->mcbsb->success = 'contact_updated';
+			return true; 
+		}
+		$this->mcbsb->error = 'contact_not_updated';
 		return false;
 	}
 	
@@ -366,8 +369,12 @@ class Mdl_Contact extends MY_Model {
 		
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
 		
-		if($this->crr->has_no_errors) 	return true;
+		if($this->crr->has_no_errors) {
+			$this->mcbsb->success = 'contact_created';
+			return true;
+		}
 
+		$this->mcbsb->error = 'contact_not_created';
 		return false;
 	}	
 	

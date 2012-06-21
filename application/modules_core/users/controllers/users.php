@@ -22,7 +22,7 @@ class Users extends Admin_Controller {
             'page'		=>	uri_assoc('page'),
             'order_by'	=>	'last_name, first_name',
             'where'     =>  array(
-                'mcb_users.client_id'   =>  0
+                'mcb_users.user_client_id'   =>  0
             )
         );
 
@@ -41,8 +41,6 @@ class Users extends Admin_Controller {
         if (!$this->mdl_users->validate()) {
 
 			$this->load->model('tax_rates/mdl_tax_rates');
-
-            $this->load->helper('form');
 
             if (!$_POST AND $user_id) {
 

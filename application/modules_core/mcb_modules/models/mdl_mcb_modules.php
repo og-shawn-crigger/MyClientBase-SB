@@ -7,6 +7,11 @@ class Mdl_MCB_Modules extends MY_Model {
     public $core_modules = array();
 
     public $custom_modules = array();
+    
+    public $enabled_modules = array(
+    									'all' => array(),
+    									'core' => array(),
+    									'custom' => array());
 
     public function __construct() {
 
@@ -40,6 +45,27 @@ class Mdl_MCB_Modules extends MY_Model {
 
     }
 
+    public function get_enabled(){
+    	$this->refresh();
+    	
+    	foreach ($this->core_modules as $module) {
+    		if($module->module_enabled) {
+    			$this->enabled_modules['all'][] = $module->module_name;
+    			$this->enabled_modules['core'][] = $module->module_name;
+    		}
+    	}
+    	
+    	foreach ($this->custom_modules as $module) {
+    		if($module->module_enabled) {
+    			$this->enabled_modules['all'][] = $module->module_name;
+    			$this->enabled_modules['custom'][] = $module->module_name;
+    		}
+    	}
+    	    	
+    	return $this->enabled_modules;
+    	
+    }
+    
     /* Refresh database core module records */
     private function refresh_core() {
 
@@ -269,10 +295,13 @@ class Mdl_MCB_Modules extends MY_Model {
     }
 
     public function check_enable($module_path) {
-
-        /* Is the $module_path module enabled? */
-        return $this->custom_modules[$module_path]->module_enabled;
-
+    	/* Is the $module_path module enabled? */
+    	
+    	if(isset($this->custom_modules[$module_path]) and $this->custom_modules[$module_path]->module_enabled) return true;
+    	
+    	if(isset($this->core_modules[$module_path]) and $this->core_modules[$module_path]->module_enabled) return true;
+    	
+    	return false;
     }
 
     public function load_custom_languages() {

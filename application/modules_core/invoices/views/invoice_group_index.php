@@ -1,20 +1,14 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
-	<div class="section_wrapper">
+	<div class="section_wrapper" style="background-color: #ff9000;">
 
-		<h3 class="title_black"><?php echo $this->lang->line('invoice_groups'); ?>
-		<span style="font-size: 60%;">
-		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_group'))); ?>
-		</span>
-		</h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
+		<h3 class="title_black"><?php echo $this->lang->line('invoice_groups'); ?></h3>
 
 		<div class="content toggle no_padding">
 
-			<table>
+			<table style="width: 100%;">
 				<tr>
 					<th scope="col" class="first"><?php echo $this->lang->line('name'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('group_prefix'); ?></th>
@@ -22,7 +16,7 @@
 					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 				<?php foreach ($invoice_groups as $invoice_group) { ?>
-				<tr>
+				<tr class="hoverall">
 					<td class="first"><?php echo $invoice_group->invoice_group_name; ?></td>
 					<td><?php echo $invoice_group->invoice_group_prefix; ?></td>
 					<td><?php echo $invoice_group->invoice_group_next_id; ?></td>

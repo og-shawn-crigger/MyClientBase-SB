@@ -2,19 +2,20 @@
 
 class Payments extends Admin_Controller {
 
-	function __construct() {
+	public function __construct() {
 
 		parent::__construct();
 
 		$this->_post_handler();
 
+		$this->load->model('contact/mdl_contacts');
+		
 		$this->load->model('mdl_payments');
 
 	}
 
-	function index() {
+	public function index() {
 
-		$this->load->helper('text');
 		$this->load->model('mdl_payment_table');
 
 		$this->redir->set_last_index();
@@ -60,11 +61,14 @@ class Payments extends Admin_Controller {
 			'table_headers'	=>	$this->mdl_payment_table->get_table_headers()
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				
 		$this->load->view('index', $data);
 
 	}
 
-	function form() {
+	public function form() {
 
 		$this->load->model('invoices/mdl_invoices');
 
@@ -74,8 +78,6 @@ class Payments extends Admin_Controller {
 
 		if (!$this->mdl_payments->validate()) {
 
-			$this->load->helper('text');
-
 			$this->load->model('mdl_payment_methods');
 
 			$data = array(
@@ -83,6 +85,9 @@ class Payments extends Admin_Controller {
 				'custom_fields'		=>	$this->mdl_payments->custom_fields
 			);
 
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				
 			if (!$_POST) {
 
 				if ($payment_id) {
@@ -109,11 +114,9 @@ class Payments extends Admin_Controller {
 					)
 				);
 
-				if (!$this->session->userdata('global_admin')) {
-
-					$params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-
-				}
+// 				if (!$this->session->userdata('global_admin')) {
+// 					$params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
+// 				}
 
 				$data['invoice'] = $this->mdl_invoices->get($params);
 
@@ -141,7 +144,7 @@ class Payments extends Admin_Controller {
 				if ($invoices) {
 
 					$data['invoices'] = $invoices;
-
+						
 					$this->load->view('form', $data);
 
 				}
@@ -172,7 +175,13 @@ class Payments extends Admin_Controller {
 
 				$this->mdl_invoice_amounts->adjust($this->input->post('invoice_id'));
 
+				$invoice_id = $this->input->post('invoice_id');
+
 			}
+
+			$this->load->model('invoices/mdl_invoice_history');
+
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), sprintf($this->lang->line('payment_entered'), display_currency($this->input->post('payment_amount'))));
 
 			$this->session->set_flashdata('tab_index', 2);
 
@@ -182,7 +191,7 @@ class Payments extends Admin_Controller {
 
 	}
 
-	function delete() {
+	public function delete() {
 
 		if (uri_assoc('payment_id')) {
 
@@ -202,7 +211,7 @@ class Payments extends Admin_Controller {
 
 	}
 
-	function receipt() {
+	public function receipt() {
 
 		$this->load->library('lib_output');
 
@@ -218,7 +227,7 @@ class Payments extends Admin_Controller {
 
 	}
 
-	function _post_handler() {
+	public function _post_handler() {
 
 		if ($this->input->post('btn_add')) {
 

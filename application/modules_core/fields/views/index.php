@@ -10,8 +10,6 @@
 			</span>
 		</h3>
 
-		<?php $this->load->view('dashboard/system_messages'); ?>
-
 		<div class="content toggle no_padding">
 
 			<table>

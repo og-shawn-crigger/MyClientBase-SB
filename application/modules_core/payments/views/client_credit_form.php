@@ -1,14 +1,10 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('dashboard/header', array('header_insert'=>array('invoices/jquery_client_ac', 'dashboard/jquery_date_picker'))); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
-
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $this->lang->line('enter_deposit'); ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle">
 
@@ -17,12 +13,8 @@
 			<dl>
 				<dt><label>* <?php echo $this->lang->line('client'); ?>: </label></dt>
 				<dd>
-					<select name="client_credit_client_id" id="client_credit_client_id">
-						<option value=""></option>
-						<?php foreach ($clients as $client) { ?>
-						<option value="<?php echo $client->client_id; ?>" <?php if ($this->mdl_client_credits->form_value('client_credit_client_id') == $client->client_id) { ?>selected="selected"<?php } ?>><?php echo $client->client_name; ?></option>
-						<?php } ?>
-					</select>
+					<input type="text" id="client_id_autocomplete_label" name="client_id_autocomplete_label" value="<?php echo $this->mdl_client_credits->form_value('client_id_autocomplete_label'); ?>" />
+					<input type="hidden" id="client_id_autocomplete_hidden" name="client_credit_client_id" value="<?php echo $this->mdl_client_credits->form_value('client_credit_client_id'); ?>"/>
 				</dd>
 			</dl>
 
@@ -53,5 +45,8 @@
 	</div>
 
 </div>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

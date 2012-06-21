@@ -144,10 +144,9 @@ class Mdl_Organization extends Mdl_Contact {
     	{
     		if($creation) $this->oid = $oid = $this->crr->data['oid'];
     		$update_return = $this->updateDefaultLocation($creation);
-    		    		
+    		
     		return $return;
     	}
-    	
     	
     	return false;
     }    

@@ -10,7 +10,7 @@ class Invoice_API extends Admin_Controller {
 
 	function display_create_invoice() {
 
-		$this->load->model('clients/mdl_clients');
+		//$this->load->model('clients/mdl_clients');
 
 		$this->load->model('invoices/mdl_invoice_groups');
 

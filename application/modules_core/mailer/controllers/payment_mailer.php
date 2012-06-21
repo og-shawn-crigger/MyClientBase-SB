@@ -91,7 +91,7 @@ class Payment_Mailer extends Admin_Controller {
 
             $this->mdl_mailer->email_payment_receipt($invoice, $template, $from_email, $from_name, $to, $subject, $email_body, $email_footer, $receipt_as_body, $email_cc, $email_bcc);
 
-            /* @todo - Add mdl_invoices->save_invoice_history */
+            //TODO - Add mdl_invoices->save_invoice_history
 
             redirect($this->session->userdata('last_index'));
 

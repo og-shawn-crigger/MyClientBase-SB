@@ -20,14 +20,14 @@
 
 <div class="grid_8" id="content_wrapper">
 
-	<div class="section_wrapper">
+	<div class="section_wrapper" style="background-color: #ff9c00;">
 		<div>
 			{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
 				{$contact_ref = $contact->cn}
 				{$contact_id = $contact->uid}
 				{$contact_id_key = "uid"}
 				{$object_type = 'person'}
-				<h3 class="title_black">{$contact->cn}</h3>
+				<h3 class="title_black">{$contact->cn|ucwords}</h3>
 			{/if}		
 			
 			{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
@@ -35,7 +35,7 @@
 				{$contact_id = $contact->oid}
 				{$contact_id_key = "oid"}
 				{$object_type = 'organization'}
-				<h3 class="title_black">{$contact->o}</h3>
+				<h3 class="title_black">{$contact->o|ucwords}</h3>
 			{/if}					
 		</div>
 	
@@ -47,7 +47,7 @@
 					<li><a href="#tab_client">{t}Info{/t}</a></li>
 
 					{if $contact_locs}
-					<li><a href="#tab_locations">{t}Locations{/t}</a></li>
+					<li><a href="#tab_locations">{t}Locations{/t} ({$contact_locs|count})</a></li>
 					{/if}
 															
 					{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass} and $members}
@@ -55,11 +55,26 @@
 					{/if}
 					
 					{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
-						<li><a href="#tab_memberOf">{t}Member of{/t}</a></li>
-					{/if}					
-					<!-- 
-					<li><a href="#tab_invoices">{citranslate lang=$language text='invoices'}</a></li>
-					 -->
+						<li><a href="#tab_memberOf">{t}Member of{/t} ({$contact_orgs|count})</a></li>
+					{/if}	
+					
+					{if isset($ss_contact_folder_num_items)}				
+						<li>
+							<a href="#tab_documents">{t}Documents{/t}
+							{if $ss_contact_folder_num_items}
+								({$ss_contact_folder_num_items})
+							{/if}
+							</a>
+						</li>
+					{/if}
+
+					{if isset($quotes_html) and {$quotes|count} > 0}
+						<li><a href="#tab_quotes">{citranslate lang=$language text='quotes'} ({$quotes|count})</a></li>
+					{/if}
+										
+					{if isset($invoices_html) and {$invoices|count} > 0}
+						<li><a href="#tab_invoices">{citranslate lang=$language text='invoices'} ({$invoices|count})</a></li>
+					{/if}	
 				</ul>
 				
 				
@@ -368,13 +383,34 @@
 					
 				</div>
 				{/if}
-				
+	 					
+	 			<div id="tab_documents">
+					<table class="contact-details-left" style="border: 1px solid #e8e8e8; width: 98%; margin-left: 15px; margin-bottom: 3px; padding-bottom: 0px;">
+						{foreach $ss_contact_folder_content as $index => $item}
+							<tr valign="top" style="background-color: {cycle values="#FFF,#e8e8e8"};">
+								<td class="field" style="width: 30%;">
+								{*
+								http://tooljardev:3000/folder/a9ab79f56e1402f016798a6bfa41ec64e8d0ff54?type=file&path=coyote_willy%2Fapache-maven.pdf&hash=625c3f38aa791a274e4ac4799eb85dfb3b2d2d5f&name=apache-maven.pdf
+								http://tooljardev:3000/folder/a9ab79f56e1402f016798a6bfa41ec64e8d0ff54?path=coyote_willy%2Fapache-maven.pdf&hash=625c3f38aa791a274e4ac4799eb85dfb3b2d2d5f&name=apache-maven.pdf
+								*}
+									<a target="_blank" href="{$ss_contacts_doc_folder_url}?type={$item->type}&{$item->url}">{$item->name}</a>
+								</td>
+							</tr>
+						{/foreach}										
+					</table>	 			
+	 			</div>
 
-				<!-- 
-						<div id="tab_invoices">
-							{$invoices_html}
-						</div>
-	 					-->
+	 			{if isset($quotes_html)}
+					<div id="tab_quotes">
+						{$quotes_html}
+					</div>
+				{/if}
+					 			
+	 			{if isset($invoices_html)}
+					<div id="tab_invoices">
+						{$invoices_html}
+					</div>
+				{/if}
 			</div>
 		</div>
 	

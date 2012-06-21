@@ -14,12 +14,8 @@ class Ajax extends Admin_Controller {
         $this->callback = urldecode(trim($this->input->get('callback')));
         
         $this->securityChecks();
-        //$this->_post_handler();
 
-        //add html tidy parser for codeigniter
-        
-        //TODO Ideally you would autoload the parser
-        $this->load->driver('plenty_parser');
+        //TODO add html tidy parser for codeigniter
         
         $this->load->model('contact/mdl_contacts');
     }
@@ -197,9 +193,6 @@ class Ajax extends Admin_Controller {
     	if(isset($params['related_object_name'])) $related_object_name = urlencode(trim($params['related_object_name']));
     	if(isset($params['related_object_id'])) $related_object_id = urlencode(trim($params['related_object_id']));
     	if(isset($params['hash'])) $hash = urlencode(trim($params['hash']));
-    	
-//     	$this->load->library('session');
-//     	$a = $this->session->all_userdata();
     	
     	$data =array();
     	

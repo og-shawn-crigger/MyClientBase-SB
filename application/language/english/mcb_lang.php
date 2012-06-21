@@ -151,7 +151,7 @@ $lang['invoice_history'] = 'Invoice History';
 $lang['invoice_item_form'] = 'Invoice Item Form';
 $lang['invoice_items'] = 'Invoice Items';
 $lang['invoice_logo'] = 'Invoice Logo';
-$lang['invoice_number'] = 'Invoice #';
+$lang['invoice_number'] = 'Num #';
 $lang['invoice_options_saved'] = 'The invoice options have been saved.';
 $lang['invoice_payments'] = 'Invoice Payments';
 $lang['invoice_search'] = 'Invoice Search';
@@ -231,7 +231,7 @@ $lang['provide_to_install'] = 'Provide the information below to install MyClient
 $lang['quantity'] = 'Quantity';
 $lang['quicklinks'] = 'Quicklinks';
 $lang['quote'] = 'Quote';
-$lang['quote_number'] = 'Quote #';
+$lang['quote_number'] = 'Num #';
 $lang['quote_only'] = 'Quote Only';
 $lang['quote_to_invoice'] = 'Quote to Invoice';
 $lang['quotes'] = 'Quotes';
@@ -432,8 +432,8 @@ $lang['allow_client_login'] = 'Allow Client Login';
 $lang['allow_clients_change_data'] = 'Allow Clients to change the following data';
 $lang['allow_login_password_required'] = 'The Password field is required when the Allow Login option is selected.';
 $lang['allow_login_username_required'] = 'The Username field is required when the Allow Login option is selected.';
-$lang['client_center'] = 'Client Center';
-$lang['client_center_form'] = 'Client Center Form';
+//$lang['client_center'] = 'Client Center';
+//$lang['client_center_form'] = 'Client Center Form';
 $lang['client_currency_symbol'] = 'Client Currency Symbol';
 $lang['client_currency_symbol_placement'] = 'Client Currency Symbol Placement';
 $lang['client_generated_invoice_html'] = 'Client Generated HTML Invoice';
@@ -457,7 +457,7 @@ $lang['email_footer'] = 'Email Footer';
 $lang['footer'] = 'Footer';
 $lang['inventory_type_in_use'] = 'The Inventory Type specified is already in use.';
 
-/* NEW FOR 0.9.6 */
+/* NEW FOR 0.9.6 (0.10)*/
 //$lang['item_tax_option_0'] = 'Add to Total';
 //$lang['item_tax_option_1'] = 'Include in Total';
 $lang['account_deposits'] = 'Account Deposits';
@@ -489,6 +489,39 @@ $lang['months'] = array("January","February","March","April","May","June","July"
 $lang['monthsShort'] = array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 $lang['days'] = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
 $lang['daysShort'] = array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+
+/* NEW FOR 0.11 */
+$lang['active'] = 'Active';
+$lang['amount_greater_than_zero'] = 'The Amount must be greater than zero.';
+$lang['default_invoice_email_template'] = 'Default Invoice Email Template';
+$lang['default_item_tax_option'] = 'Default Item Tax Option';
+$lang['default_overdue_invoice_email_template'] = 'Default Overdue Invoice Email Template';
+$lang['default_payment_method'] = 'Default Payment Method';
+$lang['email_body'] = 'Email Body';
+$lang['email_footer'] = 'Email Footer';
+$lang['email_template_form'] = 'Email Template Form';
+$lang['email_template_title'] = 'Email Template Title';
+$lang['email_templates'] = 'Email Templates';
+$lang['merchant_account_id'] = 'Merchant Account ID';
+$lang['merchant_currency_code'] = 'Merchant Currency Code';
+$lang['merchant_driver'] = 'Merchant Driver';
+$lang['merchant_enabled'] = 'Merchant Enabled';
+$lang['merchant_online_payment'] = 'Online Payment';
+$lang['merchant_pay_online'] = 'Pay Online';
+$lang['merchant_payment_cancelled'] = 'Your payment has been cancelled.';
+$lang['merchant_payment_finished'] = 'Thank you for your payment.';
+$lang['merchant_test_mode'] = 'Merchant Test Mode';
+$lang['no'] = 'No';
+$lang['off'] = 'Off';
+$lang['on'] = 'On';
+$lang['yes'] = 'Yes';
+
+/* NEW FOR 0.12 */
+$lang['clear'] = 'Clear';
+$lang['default_apply_invoice_tax'] = 'Default Apply Invoice Tax to Items';
+$lang['group_by'] = 'Group By';
+$lang['payment_entered'] = 'A payment of %s was applied';
+
 
 /* SMALL BUSINESS */
 $lang['mysearch'] = 'Search';
@@ -546,5 +579,25 @@ $lang['by location'] = 'by location';
 $lang['module_successfully_enabled'] = 'Module has been successfully enabled';
 $lang['module_successfully_disabled'] = 'Module has been successfully disabled';
 $lang['module_cant_change_status'] = 'The module status can not be modified';
-$lang['action_panel'] = 'Action Panel';
+$lang['actions_panel'] = 'Actions Panel';
+
+/* After 2012-06-16 */
+$lang['invoices&quotes'] = 'Invoices & Quotes';
+$lang['main_actions'] = 'Main Actions';
+$lang['mcbsb_settings'] = 'MCB-SB Settings';
+$lang['created_quote'] = 'created this quote';
+$lang['emailed_quote'] = 'emailed quote';
+$lang['generated_quote_pdf'] = 'generated quote PDF';
+$lang['generated_quote_html'] = 'generated quote HTML';
+$lang['saved_quote_options'] = 'saved quote options';
+$lang['contact_created'] = 'Contact has been created';
+$lang['contact_not_created'] = 'Contact has not been created';
+$lang['contact_updated'] = 'Contact has been updated';
+$lang['contact_not_updated'] = 'Contact has not been updated';
+$lang['location_created'] = 'Location has been created';
+$lang['location_not_created'] = 'Location has not been created';
+$lang['location_updated'] = 'Location has been updated';
+$lang['location_not_updated'] = 'Location has not been updated';
+$lang['contacts_by_location'] = 'Contacts by location';
+$lang['assignments'] = 'Assignments';
 ?>

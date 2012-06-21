@@ -4,8 +4,6 @@
 
 <div class="grid_7" id="content_wrapper">
 
-	<?php $this->load->view('dashboard/system_messages'); ?>
-
 	<?php if ($this->mdl_mcb_data->setting('dashboard_show_overdue_invoices') == "TRUE" and $overdue_invoices) { ?>
 
 	<div class="section_wrapper">

@@ -4,16 +4,17 @@
 
 class Contact extends Admin_Controller {
 
+	public $enabled_modules;
+	
     function __construct() {
 
         parent::__construct();
-
+                
         $this->_post_handler();
 
-        //TODO Ideally you would autoload the parser
-        $this->load->driver('plenty_parser');
-
         $this->load->model('mdl_contacts');
+        
+        $this->enabled_modules = $this->mdl_mcb_modules->get_enabled();
     }
 
     /**
@@ -31,8 +32,7 @@ class Contact extends Admin_Controller {
      * @license		GPL
      * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
      * @since		Feb 6, 2012
-     * 
-     * @todo		
+     * 	
      */
     private function get_wanted_page()
     {
@@ -64,8 +64,7 @@ class Contact extends Admin_Controller {
      * @license		GPL
      * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
      * @since		Feb 6, 2012
-     * 
-     * @todo		
+     * 	
      */
     private function update_config(&$obj, $configfile)
     {
@@ -326,8 +325,6 @@ class Contact extends Admin_Controller {
     }
     
     public function by_location(){
-    	//TODO is this necessary?
-    	$this->load->helper('text');
     	
     	$city = urldecode(trim($this->input->post('city')));
     	$state = urldecode(trim($this->input->post('state')));
@@ -394,9 +391,7 @@ class Contact extends Admin_Controller {
     }
     
     public function index($search = null) {
-		//TODO is this necessary?
-        $this->load->helper('text');
-        
+    	
         $search = urldecode(trim($this->input->post('search')));
         
         //let's look in the URL
@@ -543,21 +538,18 @@ class Contact extends Admin_Controller {
 	}
     
     public function form() {
-
-    	$this->load->helper(array('form', 'url'));
-    	
+    	    	
     	//let's see with which kind of object we are dealing with
     	$obj = $this->getContactById();
     	
     	if(!$obj) {
     		if($add_value = uri_assoc('add')) //retrieving uid from GET
-    		if($add_value) $obj = $add_value;
-    		 
+    		if($add_value) $obj = $add_value;	 
     		//$this->$obj->setFormRules();    		
     	}
-    	
-    	if($obj) $this->$obj->setFormRules();
 
+    	if($obj) $this->$obj->setFormRules();
+    	
     	if (!empty($obj) && $this->$obj->validateForm()) {
     		//it's a submit and the form has been validated. Let's check if there is any binary file uploaded
      		$upload_info = saveUploadedFile();
@@ -706,42 +698,74 @@ class Contact extends Admin_Controller {
     	
         $this->redir->set_last_index();
 
-        $this->load->helper('text');  //TODO why not autoload?
-
-       
-         $this->load->model(
-            array(
-            'invoices/mdl_invoices',
-            'templates/mdl_templates'
-            )
+        $this->load->model(
+        		array(
+        				'invoices/mdl_invoices',
+        				'templates/mdl_templates'
+        		)
         );
-
-		$contact = $this->retrieve_contact();
-
-        $invoice_params = array(
-            'where'	=>	array(
-                'mcb_invoices.client_id'        =>	$contact->client_id,
-                'mcb_invoices.invoice_is_quote' =>  0
-            )
-        );
-
-        if (!$this->session->userdata('global_admin')) {
-
-            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-
+        
+        //array sent to the view
+        $data = array();
+        
+        //set the focus of the tab
+        if ($this->session->flashdata('tab_index')) {
+        
+        	$tab_index = $this->session->flashdata('tab_index');
+        
+        } else {
+        
+        	$tab_index = 0;
+        
         }
 
-         $invoices = $this->mdl_invoices->get($invoice_params);
+        $data['tab_index']	=	$tab_index;
+        $data['baseurl'] = site_url();
+        $data['profile_view'] = true;
+        $data['enabled_modules'] = $this->enabled_modules;
 
-        if ($this->session->flashdata('tab_index')) {
-
-            $tab_index = $this->session->flashdata('tab_index');
-
-        } else {
-
-            $tab_index = 0;
-
-        } 
+		if($contact = $this->retrieve_contact()) {
+			$data['contact'] =	$contact;
+		} else {
+			//TODO redirect somewhere
+		}
+		
+		//getting the invoices for the contact
+		if(in_array('Invoices',$this->enabled_modules['all'])) {
+			
+	        $tmpdata = array();
+			
+			$invoice_params = array(
+	            'where'	=>	array(
+	                'mcb_invoices.client_id'        =>	$contact->client_id,
+	                'mcb_invoices.invoice_is_quote' =>  0
+	            )
+	        );
+	
+	        //TODO is this necessary?
+	        //prevents common useres from seeing the invoices made by someonelse
+// 	        if (!$this->session->userdata('global_admin')) {
+// 	            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
+// 	        }
+	
+	         $invoices = $this->mdl_invoices->get($invoice_params);
+	         $tmpdata['invoices'] = $invoices;
+	         $data['invoices'] = $invoices;
+	         $data['invoices_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
+	         
+	         $quote_params = array(
+	         		'where'	=>	array(
+	         				'mcb_invoices.client_id'        =>	$contact->client_id,
+	         				'mcb_invoices.invoice_is_quote' =>  1
+	         		)
+	         );
+	         	         
+	         $quotes = $this->mdl_invoices->get($quote_params);
+	         $tmpdata['invoices'] = $quotes;
+	         $data['quotes'] = $quotes;
+	         $data['quotes_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
+	         
+		}
  
         //getting Locations
         if(isset($contact->locRDN)) $locs = explode(",", $contact->locRDN);
@@ -801,18 +825,81 @@ class Contact extends Admin_Controller {
 	    	}
         }
         
+        /*
+        //sparkleshare plugin
+        //retrieves documents for the contact
+        //user: git
+        $ss_ident =	'z0S9ZSya';
+        $ss_authCode = '1AFDm30dwMXkL0pdHTZmAGQATgJ1AV1Yi50clqm0RUV_EbRxaN4EiDO8c59NB662p4AVWUeBHkihrKArK0L_RqF3ugs7U3Cf9lqmr_1XbynEdVaJbevKAVvQiuWDusdMskSQewFf1Gya4ZIVqbniTiJiYtl-wm45En1txvWtKfBfcrj7iL77hGtCfCZWq_o4Ivr4lXHd';        
+		$ss_host = 'tooljardev';
+		$ss_port = '3000';
+        
+		// Load the configuration file
+		$this->load->config('rest');
+		 
+		// Load the rest client
+		$this->load->spark('restclient/2.0.0');
+		
+		$this->rest->initialize(array('server' => 'http://'.$ss_host.':'.$ss_port.'/api/'));
+		$this->rest->api_key($ss_ident, 'X-SPARKLE-IDENT');
+		$this->rest->api_key($ss_authCode, 'X-SPARKLE-AUTH');
+        $result = $this->rest->get('getFolderList', null, 'json');
+        if($result)
+        {
+        	foreach ($result as $key => $folder) {
+        		if($folder->name = 'Contacts documents') {
+        			$ss_contacts_doc_folder_id = $folder->id;
+        			$ss_contacts_doc_folder_url = 'http://'.$ss_host.':'.$ss_port.'/folder/'.$ss_contacts_doc_folder_id;
+        		}
+        	}
+        }
+        
+        if($ss_contacts_doc_folder_id) {
+        	//list folder content	
+        	$this->rest->api_key($ss_ident, 'X-SPARKLE-IDENT');
+        	$this->rest->api_key($ss_authCode, 'X-SPARKLE-AUTH');
+        	$ss_contacts_doc_folder_content = $this->rest->get('getFolderContent/'.$ss_contacts_doc_folder_id, null, 'json');
+        	
+        	//look for the contact's folder
+        	$contact_folder = 'coyote_willy';
+        	if($ss_contacts_doc_folder_content) {
+        		foreach ($ss_contacts_doc_folder_content as $key => $item) {
+        			if($item->type == 'dir' && $item->name == $contact_folder) {
+        				$ss_contact_folder_id = $item->id;
+        				$ss_contact_folder_url = $item->url;
+        			}
+        		}
+        	}
+        	
+        	if($ss_contact_folder_id) {
+				//get contact's content
+        		$this->rest->api_key($ss_ident, 'X-SPARKLE-IDENT');
+        		$this->rest->api_key($ss_authCode, 'X-SPARKLE-AUTH');
+        		$ss_contact_folder_content = $this->rest->get('getFolderContent/'.$ss_contacts_doc_folder_id.'?'.$ss_contact_folder_url, null, 'json');
+        	}
+        	
+        	if($ss_contact_folder_content) {
+        		
+        		//I don't want to list directories for now => I remove the folder items
+        		//I also count the items
+        		foreach ($ss_contact_folder_content as $key => $item) {
+        			if($item->type == 'dir') {
+        				unset($ss_contact_folder_content[$key]);
+        			} else {
+        				//if it's a hidden file I do not show it
+        				$match = preg_match('/^\./', $item->name);
+        				if($match == 1)	unset($ss_contact_folder_content[$key]);
+        			}        			 
+        		}
+        		        		
+         		$ss_contact_folder_num_items = count($ss_contact_folder_content);
+        	}
+        }
+        */
+        
         $location_model = clone $this->location;
+        $data['location_model'] = $location_model;
         
-        
-        //preparing output for views
-        $data = array(
-            'contact'	=>	$contact,
-            //'invoices'	=>	$invoices,
-            'tab_index'	=>	$tab_index,
-            'baseurl'	=>	site_url(),
-        	'profile_view' => true,
-        	'location_model' => $location_model,
-        );
         if(isset($contact_locs)) $data['contact_locs'] = $contact_locs;
         if(isset($contact_orgs)) $data['contact_orgs'] = $contact_orgs;
         if(isset($members))
@@ -821,41 +908,27 @@ class Contact extends Admin_Controller {
         	$data['member_fields'] = array('mobile', 'homePhone', 'companyPhone', 'facsimileTelephoneNumber',  'mail');
         }
         	         
+        if(isset($ss_contact_folder_num_items) && $ss_contact_folder_num_items > 0) {
+        	$data['ss_contacts_doc_folder_url'] = $ss_contacts_doc_folder_url;
+	        $data['ss_contact_folder_content'] = $ss_contact_folder_content;
+	        $data['ss_contact_folder_num_items'] = $ss_contact_folder_num_items;
+        }
+        
+        //loading Smarty templates
         $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
         $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
-        
-        //loading Smarty template
-        //$data['invoices_html'] = $this->load->view('invoices/invoice_table',$data,true);
         
         //loading CI template
         $this->load->view('details', $data);
 
     }
     
-    //TODO this function is called only in this file. I think I can refactor code so that I can get the rid of it
     public function retrieve_contact()
-    {
-    	$uid = uri_assoc('uid');
-    	$oid = uri_assoc('oid');
-    	if(empty($uid) && empty($oid)) 
-    	{
-    		if(uri_assoc('client_id'))
-    		{
-    			$client_id = uri_assoc('client_id');   //retrieving client_id from GET
-    		} else {
-    			if($this->input->post('client_id')) $client_id = $this->input->post('client_id'); //retrieving client_id from POST
-    		}
-    	}
-    	
-    	if($uid) $params = array('uid' => $uid);
-    	if($oid) $params = array('oid' => $oid);    		 
-    	if(isset($client_id) && $client_id) $params = array('client_id' => $client_id);
+    {	
+    	$params = retrieve_uid_oid();
     	
     	//check: I need at least one of the 3 parameters uid,oid,client_id
-    	if(!isset($params) || count($params)==0) return false;
-    	
-    	//perform the request to Contact Engine    	
-    	//$rest_return = ;
+    	if(is_null($params) || count($params)==0) return false;
     	
     	//when the request is performed using client_id || uid || oid as input I get an object in return, not an array
     	if(is_object($obj = $this->get($params)))

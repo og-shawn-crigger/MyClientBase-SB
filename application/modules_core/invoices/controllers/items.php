@@ -34,6 +34,7 @@ class Items extends Admin_Controller {
 			elseif (!$_POST AND !uri_assoc('invoice_item_id', 4)) {
 
 				$default_item_tax_rate_id = $this->mdl_mcb_userdata->setting('default_item_tax_rate_id');
+				$default_item_tax_option = $this->mdl_mcb_userdata->setting('default_item_tax_option');
 
 				if (!$default_item_tax_rate_id) {
 
@@ -41,9 +42,16 @@ class Items extends Admin_Controller {
 
 				}
 
+				if ($default_item_tax_option == "") {
+					
+					$default_item_tax_option = $this->mdl_mcb_data->setting('default_item_tax_option');
+
+				}
+
 				$this->mdl_items->set_form_value('item_date', format_date(time()));
 				$this->mdl_items->set_form_value('item_qty', 1);
 				$this->mdl_items->set_form_value('tax_rate_id', $default_item_tax_rate_id);
+				$this->mdl_items->set_form_value('item_tax_option', $default_item_tax_option);
 
 			}
 
@@ -62,6 +70,11 @@ class Items extends Admin_Controller {
 				'custom_fields'     =>	$this->mdl_items->custom_fields
 			);
 
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+			
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+						
 			$this->load->view('item_form', $data);
 
 		}

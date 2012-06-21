@@ -4,13 +4,11 @@
 
 <div class="container_10" id="center_wrapper">
 
-	<div class="grid_7" id="content_wrapper">
+	<div class="grid_8" id="content_wrapper">
 
 		<div class="section_wrapper">
 
 			<h3 class="title_black"><?php echo $this->lang->line('inventory_item_form'); ?></h3>
-
-			<?php $this->load->view('dashboard/system_messages'); ?>
 
 			<div class="content toggle">
 
@@ -48,7 +46,7 @@
                         <dd>
                             <select name="inventory_tax_rate_id">
                                 <?php foreach ($tax_rates as $tax_rate) { ?>
-                                <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if(($this->mdl_inventory->form_value('inventory_tax_rate_id') == $tax_rate->tax_rate_id) or (!$this->mdl_inventory->form_value('inventory_tax_rate_id') and $this->mdl_mcb_data->setting('default_item_tax_rate_id') == $tax_rate->tax_rate_id)) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent) . '% - ' . $tax_rate->tax_rate_name; ?></option>
+                                <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if(($this->mdl_inventory->form_value('inventory_tax_rate_id') == $tax_rate->tax_rate_id) or (!$this->mdl_inventory->form_value('inventory_tax_rate_id') and $this->mdl_mcb_data->setting('default_item_tax_rate_id') == $tax_rate->tax_rate_id)) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')) . '% - ' . $tax_rate->tax_rate_name; ?></option>
                                 <?php } ?>
                             </select>
                         </dd>
@@ -82,6 +80,10 @@
 	</div>
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>'inventory/sidebar')); ?>
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php 
+	//$this->load->view('dashboard/sidebar', array('side_block'=>'inventory/sidebar'));
+	echo $actions_panel; 
+?>
 
 <?php $this->load->view('dashboard/footer'); ?>

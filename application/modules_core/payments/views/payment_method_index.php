@@ -1,14 +1,10 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('payment_methods'); ?>
-		<span style="font-size: 60%;">
-		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_payment_method'))); ?>
-		</span>
-		</h3>
+		<h3 class="title_black"><?php echo $this->lang->line('payment_methods'); ?></h3>
 
 		<div class="content toggle no_padding">
 
@@ -19,7 +15,7 @@
 					<th scope="col" class="last" width="20%;"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 				<?php foreach ($payment_methods as $payment_method) { ?>
-				<tr>
+				<tr class="hoverall">
 					<td class="first"><?php echo $payment_method->payment_method_id; ?></td>
 					<td><?php echo $payment_method->payment_method; ?></td>
 					<td class="last">
@@ -47,6 +43,7 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar'); ?>
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

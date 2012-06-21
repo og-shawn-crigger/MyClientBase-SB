@@ -9,38 +9,70 @@ class Inventory extends Admin_Controller {
         $this->_post_handler();
 
         $this->load->model('mdl_inventory');
-
     }
 
     public function index() {
-
+    	
         $this->redir->set_last_index();
+        $this->load->model('mdl_inventory_table');
 
         $params = array(
             'paginate'	=>	TRUE,
             'page'		=>	uri_assoc('page'),
-            'order_by'	=>	'inventory_name'
         );
+
+        $order_by = uri_assoc('order_by');
+
+        $order = uri_assoc('order');
+
+	switch ($order_by) {
+
+		case 'inventory_id':
+		    $params['order_by'] = 'inventory_id ' . $order;
+		    break;
+		case 'inventory_type':
+		    $params['order_by'] = 'inventory_type ' . $order;
+		    break;
+		case 'inventory_item':
+		    $params['order_by'] = 'inventory_name ' . $order;
+		    break;
+		case 'inventory_stock':
+		    $params['order_by'] = 'inventory_stock ' . $order;
+		    break;
+		case 'inventory_price':
+		    $params['order_by'] = 'inventory_unit_price ' . $order;
+		    break;
+		default:
+		    $params['order_by'] = 'inventory_name ' . $order;
+
+	}
 
         $items = $this->mdl_inventory->get($params);
 
         $data = array(
-            'items'	=>	$items
+            'items'			=>	$items,
+            'table_headers'	=>	$this->mdl_inventory_table->get_table_headers()
         );
+        
+        $data['site_url'] = site_url($this->uri->uri_string());   
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'inventory');
 
         $this->load->view('index', $data);
 
     }
 
     public function form() {
-		
-		$inventory_id = uri_assoc('inventory_id');
+
+        if($this->session->flashdata('page'))
+        {
+            $this->session->set_flashdata('page', $this->session->flashdata('page'));            
+        }
+        
+	    $inventory_id = uri_assoc('inventory_id');
 
         if (!$this->mdl_inventory->validate()) {
 
             $this->load->model(array('mdl_inventory_types', 'tax_rates/mdl_tax_rates'));
-
-            $this->load->helper('form');
 
             if (!$_POST AND $inventory_id) {
 
@@ -52,17 +84,19 @@ class Inventory extends Admin_Controller {
                 'inventory_types' =>    $this->mdl_inventory_types->get(),
                 'tax_rates'       =>    $this->mdl_tax_rates->get()
             );
-
+			
+            $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', null, true, 'smarty', 'inventory');
+            
             $this->load->view('form', $data);
 
         }
 
         else {
-			
+
 			if (!$inventory_id) {
-				
+
 				$this->load->model('mdl_inventory_stock');
-				
+
 			}
 
             $this->mdl_inventory->save($this->mdl_inventory->db_array(), $inventory_id, $this->input->post('initial_stock_quantity'));
@@ -134,26 +168,29 @@ class Inventory extends Admin_Controller {
 
         $inventory = $this->mdl_inventory->get($params);
 
-        echo format_number($inventory->inventory_stock);
+        echo format_number($inventory->inventory_stock, FALSE);
 
     }
 
     public function _post_handler() {
 
         if ($this->input->post('btn_add')) {
-
+            
+            if(uri_assoc('page'))
+            {
+                $this->session->set_flashdata('page', uri_assoc('page'));    
+            }            
             redirect('inventory/form');
-
         }
 
-        if ($this->input->post('btn_cancel')) {
-
-            redirect('inventory/index');
-
+        if ($this->input->post('btn_cancel')) {            
+            if($this->session->flashdata('page'))
+            {
+                redirect('inventory/index/page/'.$this->session->flashdata('page'));
+            }
+            else
+                redirect('inventory/index');
         }
-
     }
-
 }
-
 ?>

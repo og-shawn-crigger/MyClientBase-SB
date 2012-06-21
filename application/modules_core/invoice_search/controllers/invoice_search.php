@@ -7,14 +7,14 @@ class Invoice_Search extends Admin_Controller {
 		$this->load->model(
 			array(
 			'mdl_invoice_search',
-			'clients/mdl_clients',
+			//'clients/mdl_clients',
 			'invoice_statuses/mdl_invoice_statuses'
 			)
 		);
 
 		if (!$this->mdl_invoice_search->validate()) {
 
-			$this->load->model('clients/mdl_clients');
+			//$this->load->model('clients/mdl_clients');
 
 			$this->load->model('invoice_statuses/mdl_invoice_statuses');
 
@@ -108,7 +108,7 @@ class Invoice_Search extends Admin_Controller {
 			/* Add invoice id if provided */
 			if ($this->input->post('invoice_number')) {
 
-				$params['where'][] = "mcb_invoices.invoice_number LIKE '%" . $this->input->post('invoice_number') . "%'";
+				$params['like']['mcb_invoices.invoice_number'] = $this->input->post('invoice_number');
 
 			}
 

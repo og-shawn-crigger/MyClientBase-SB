@@ -10,6 +10,7 @@ class Inventory_Types extends Admin_Controller {
 
 		$this->load->model('mdl_inventory_types');
 
+		$this->load->driver('plenty_parser');
 	}
 
 	public function index() {
@@ -25,6 +26,9 @@ class Inventory_Types extends Admin_Controller {
 			'inventory_types' =>	$this->mdl_inventory_types->get($params),
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'inventory');
+		
 		$this->load->view('inventory_types_index', $data);
 
 	}
@@ -33,15 +37,15 @@ class Inventory_Types extends Admin_Controller {
 
 		if (!$this->mdl_inventory_types->validate()) {
 
-			$this->load->helper('form');
-
 			if (!$_POST AND uri_assoc('inventory_type_id', 4)) {
 
 				$this->mdl_inventory_types->prep_validation(uri_assoc('inventory_type_id', 4));
 
 			}
 
-			$this->load->view('inventory_types_form');
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', null, true, 'smarty', 'inventory');
+			
+			$this->load->view('inventory_types_form',$data);
 
 		}
 

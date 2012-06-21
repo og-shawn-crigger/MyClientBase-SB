@@ -18,4 +18,11 @@
 
     <?php } ?>
 
+		<tr style="font-weight: bold;">
+			<td class="first"><?php echo $this->lang->line('total'); ?></td>
+			<td style="text-align: right;"><?php echo $grand_totals['num_invoices']; ?></td>
+			<td style="text-align: right;"><?php echo display_currency($grand_totals['amt_sales']); ?></td>
+			<td class="last" style="text-align: right;"><?php echo display_currency($grand_totals['amt_sales_inc_tax']); ?></td>
+		</tr>
+
 </table>

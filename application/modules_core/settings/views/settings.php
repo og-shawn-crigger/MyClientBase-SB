@@ -17,20 +17,13 @@
 	});
 </script>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
 		<div class="section_wrapper">
 
-			<h3 class="title_black"><?php echo $this->lang->line('system_settings'); ?>
-				<span style="font-size: 60%;">
-				<input type="submit" name="btn_save_settings" class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" value="<?php echo $this->lang->line('save_settings'); ?>" />
-				</span>
-
-			</h3>
-
-			<?php $this->load->view('dashboard/system_messages'); ?>
+			<h3 class="title_black"><?php echo $this->lang->line('system_settings'); ?></h3>
 
 			<div class="content toggle">
 
@@ -86,15 +79,15 @@
 					</div>
 
 				</div>
-
+				
+				<input  class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" name="btn_save_settings" value="<?php echo $this->lang->line('save_settings'); ?>" />
+				
 				<div style="clear: both;">&nbsp;</div>
-
 			</div>
 
 		</div>
-
 	</form>
-
+	
 </div>
 
 <?php $this->load->view('dashboard/footer'); ?>

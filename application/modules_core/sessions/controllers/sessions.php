@@ -36,7 +36,7 @@ class Sessions extends CI_Controller {
 
         $this->_load_language();
 
-        $this->load->helper(array('url', 'form'));
+        //$this->load->helper(array('url', 'form'));
 
         $this->load->model('mdl_auth');
 
@@ -63,18 +63,8 @@ class Sessions extends CI_Controller {
                 // update the last login field for this user
                 $this->mdl_auth->update_timestamp('mcb_users', 'user_id', $user->user_id, 'last_login', time());
 
-                if ($user->client_id) {
-
-                    redirect('client_center');
-
-                }
-
-                else {
-					//DAM's quickie
-                    //redirect('dashboard');
-                	redirect('clients');
-                }
-
+                //default home page
+                redirect('contact');
             }
 
         }
@@ -99,7 +89,7 @@ class Sessions extends CI_Controller {
 
         $this->load->model('mdl_recover');
 
-        $this->load->helper(array('url', 'form'));
+        //$this->load->helper(array('url', 'form'));
 
         if (!$this->mdl_recover->validate_recover()) {
 

@@ -68,11 +68,25 @@
 </dl>
 
 <dl>
-	<dt><?php echo $this->lang->line('email_body_template'); ?>: </dt>
-    <dd><textarea name="email_settings[email_body]" style="width: 500px; height: 100px;"><?php echo $this->mdl_mcb_data->setting('email_body'); ?></textarea></dd>
+	<dt><?php echo $this->lang->line('default_invoice_email_template'); ?>: </dt>
+	<dd>
+		<select name="email_settings[default_invoice_email_template]">
+			<option value=""></option>
+			<?php foreach ($email_templates as $email_template) { ?>
+				<option value="<?php echo $email_template->email_template_id; ?>" <?php if ($this->mdl_mcb_data->setting('default_invoice_email_template') == $email_template->email_template_id) { ?>selected="selected"<?php } ?>><?php echo $email_template->email_template_title; ?></option>
+			<?php } ?>
+		</select>
+	</dd>
 </dl>
 
 <dl>
-	<dt><?php echo $this->lang->line('email_footer_template'); ?>: </dt>
-    <dd><textarea name="email_settings[email_footer]" style="width: 500px; height: 100px;"><?php echo $this->mdl_mcb_data->setting('email_footer'); ?></textarea></dd>
+	<dt><?php echo $this->lang->line('default_overdue_invoice_email_template'); ?>: </dt>
+	<dd>
+		<select name="email_settings[default_overdue_invoice_email_template]">
+			<option value=""></option>
+			<?php foreach ($email_templates as $email_template) { ?>
+				<option value="<?php echo $email_template->email_template_id; ?>" <?php if ($this->mdl_mcb_data->setting('default_overdue_invoice_email_template') == $email_template->email_template_id) { ?>selected="selected"<?php } ?>><?php echo $email_template->email_template_title; ?></option>
+			<?php } ?>
+		</select>
+	</dd>
 </dl>

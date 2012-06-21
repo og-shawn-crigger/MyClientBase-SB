@@ -19,7 +19,7 @@ class Contacts extends Admin_Controller {
 
 		if (!$this->mdl_contacts->validate()) {
 
-			$this->load->helper('form');
+			//$this->load->helper('form');
 
 			if (!$_POST AND uri_assoc('contact_id', 4)) {
 

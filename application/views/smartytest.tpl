@@ -1,8 +1,3 @@
-<html>
-<head>
-    <title>{$title}</title>
-</head>
-<body>
-    {$body}
-</body>
-</html>
+<div id="subnavigation_wrapper">
+	{$content}
+</div>

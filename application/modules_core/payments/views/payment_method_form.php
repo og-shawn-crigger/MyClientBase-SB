@@ -2,13 +2,11 @@
 
 <div class="container_10" id="center_wrapper">
 
-	<div class="grid_10" id="content_wrapper">
+	<div class="grid_8" id="content_wrapper">
 
 		<div class="section_wrapper">
 
 			<h3 class="title_black"><?php echo $this->lang->line('payment_method_form'); ?></h3>
-
-			<?php $this->load->view('dashboard/system_messages'); ?>
 
 			<div class="content toggle">
 
@@ -21,9 +19,11 @@
 
                 <div style="clear: both;">&nbsp;</div>
 
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
-				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-
+				<span style="float: right">
+					<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+					<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</span>
+			             
 				</form>
 
 			</div>
@@ -32,5 +32,8 @@
 
 	</div>
 </div>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

@@ -10,7 +10,7 @@ class Sales_by_Customer extends Admin_Controller {
 
     public function index() {
 
-        $this->load->model('clients/mdl_clients');
+        //$this->load->model('clients/mdl_clients');
 
         $data = array(
             'output_types' => array('pdf', 'view')
@@ -25,9 +25,24 @@ class Sales_by_Customer extends Admin_Controller {
 		$this->load->model('mdl_sales_by_customer');
 
 		$totals = $this->mdl_sales_by_customer->get($from_date, $to_date);
+
+		$grand_totals = array(
+			'amt_sales'			=>	0,
+			'amt_sales_inc_tax'	=>	0,
+			'num_invoices'		=>	0
+		);
+
+		foreach ($totals as $total) {
+			
+			$grand_totals['amt_sales'] += $total->amt_sales;
+			$grand_totals['amt_sales_inc_tax'] += $total->amt_sales_inc_tax;
+			$grand_totals['num_invoices'] += $total->num_invoices;
+
+		}
 		
 		$data = array(
-			'totals'	=>	$totals
+			'totals'		=>	$totals,
+			'grand_totals'	=>	$grand_totals
 		);
 
 		if ($output_type == 'view') {

@@ -14,13 +14,16 @@ class Cron extends Cron_Controller {
 
     function email_overdue($cron_key) {
 
-        $this->load->library('session');
+    	//TODO delme
+        //$this->load->library('session');
 
         $this->_check_auth($cron_key);
 
-        $this->load->model('invoices/mdl_invoices');
+        $this->load->model(array('invoices/mdl_invoices', 'mailer/mdl_mailer', 'email_templates/mdl_email_templates'));
 
-        $this->load->model('mailer/mdl_mailer');
+		$default_template = $this->mdl_email_templates->get_by_id($this->mdl_mcb_data->setting('default_overdue_invoice_email_template'));
+		$email_body = ($default_template) ? $default_template->email_template_body : ' ';
+		$email_footer = ($default_template) ? $default_template->email_template_footer : ' ';
 
         $params = array(
 			'where'	=>	array(
@@ -43,8 +46,6 @@ class Cron extends Cron_Controller {
             $from_email = $invoice->from_email_address;
             $from_name = $invoice->from_first_name . ' ' . $invoice->from_last_name;
             $subject = $this->lang->line('overdue_invoice_reminder');
-            $email_body = $this->mdl_mcb_data->setting('email_body');
-			$email_footer = $this->mdl_mcb_data->setting('email_footer');
             $email_cc = $this->mdl_mcb_data->setting('default_cc');
             $email_bcc = $this->mdl_mcb_data->setting('default_bcc');
             $invoice_as_body = $this->mdl_mcb_data->setting('default_email_body');

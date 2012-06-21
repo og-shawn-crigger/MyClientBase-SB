@@ -85,32 +85,40 @@
 			height: 350,
 			
 			eventSources:[
-
+				
 				{
-					url: "calendar/get_overdue",
-          color: 'red',
-          textColor: 'white'
+					url: "calendar/jquery_get_invoices/overdue",
+          			color: 'red',
+          			textColor: 'white'
 				},
+				
 				{
-					url: "calendar/get_open",
+					url: "calendar/jquery_get_invoices/open",
 					color: 'blue',
 					textColor: 'white'
 				},
-
+				
+				{
+					url: "calendar/jquery_get_invoices/quotes",
+					color: 'green',
+					textColor: 'white'
+				},				
+				
 
 			],
 
-
+			//TODO Dam: this event has been dropped in 0.12. Should I remove it too?
+			/*
 			eventDrop: function(event, delta) {
 				alert(event.title + ' was moved ' + delta + ' days\n' +
 					'(should probably update your database)');
 			},
-
+			*/
 			loading: function(bool) {
 				if (bool) $('#loading').show();
 				else $('#loading').hide();
 			}
-
+			
 		});
 
 	});
@@ -126,7 +134,7 @@
 		}
 
 	#calendar {
-		width: 900px;
+		width: 730px;
 		margin: 0 auto;
 		}
 

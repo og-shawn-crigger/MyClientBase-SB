@@ -82,7 +82,7 @@
 
 <div class="container_10" id="center_wrapper">
 
-	<div class="grid_7" id="content_wrapper">
+	<div class="grid_8" id="content_wrapper">
 
 		<div class="section_wrapper">
 						
@@ -113,7 +113,7 @@
 						<br/>
 						<span style="color: red;">*</span> <span style="text-size: 12px; margin-bottom: 5px;">{t}means mandatory field{/t}</span><br/><br/>						
 							
-						<div id="tab_contact">
+						<div id="tab_contact" style="margin-bottom: 20px;">
 						
 							<form method="post" action={$form_url} {$form_addon}>
 							
@@ -132,8 +132,8 @@
 									{if $fields[$property] and !in_array($property,$settings)}
 										{* here some GUI filters *}
 										
-										<dl style="float: left; width: 100%; background-color: {cycle values="#FFF,#e8e8e8"};">
-									
+										{* <dl style="float: left; width: 100%; background-color: {cycle values="#FFF,#e8e8e8"};"> *}
+										<dl style="float: left; width: 100%; height: 35px; margin-top: 0px;">
 											{* aliases substitution *}
 											{if isset($contact->aliases) and isset($property) and isset($contact->aliases.$property)}
 												{$fieldname = $contact->aliases.$property}
@@ -141,7 +141,7 @@
 												{$fieldname = $property}
 											{/if}					
 			
-											<dt style="margin-top: 5px; float: left; text-align: left; width: 40%;">{t}{$fieldname|capitalize|regex_replace:"/_/":" "}{/t}{$fields[$property]["required"]}:</dt>
+											<dt style="margin-top: 2px; margin-bottom: 2px; float: left; text-align: left; width: 40%;">{t}{$fieldname|capitalize|regex_replace:"/_/":" "}{/t}{$fields[$property]["required"]}:</dt>
 											
 											{$checked = ""}
 											{if isset($fields[$property]["checked"])} 
@@ -156,11 +156,11 @@
 											{/if}
 											
 											{if $fields[$property]["type"] == "file"}
-												<dd style="margin-top: 5px; vertical-align: middle; float: left;">
+												<dd style="margin-top: 5px; vertical-align: middle; float: left;  background-color: transparent;">
 													<input type="{$fields[$property]["type"]}" name="{$property}" />
 												</dd>
 											{else}
-												<dd style="margin-top: 5px; float: left;">
+												<dd style="margin-top: 5px; float: left; background-color: transparent;">
 													<input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} {$disabled} />
 
 													{* set the first not disabled field as the focused one *}
@@ -172,32 +172,36 @@
 													{/if}
 												</dd>
 											{/if}
-										</dl>								
+										</dl>										
 									{/if}
 								{/foreach}
-								<span style="font-size: 12px; margin-top: 5px; margin-left: 5px;  color: gray;">
-									{if $contact_id != ""}
-										{t}ID{/t}: {$contact_id} | 
-									{/if}
-									
-									{if $contact->entryCreatedBy != ""}			
-										{t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate}
-									{/if}
-									 
-									{if $contact->entryUpdatedBy != ""}
-										| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
-									{/if}
-								</span><br/><br/>								
-								<span>
-									<input type="reset" id="btn_cancel"  class="mcbsb-regular-Button" btn_cancel" value="{t}cancel{/t}" />
-									<input type="submit" id="btn_submit"  class="mcbsb-regular-Button"  name="btn_submit" value="{t}submit{/t}" />
-								</span>	
-							</form>
 
+								<dl>
+									<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit"  name="btn_submit" value="{t}submit{/t}" />
+								</dl>
+								{* <input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="reset" id="btn_cancel"  name="btn_cancel" value="{t}cancel{/t}" /> *}
+									
+							</form>
 							
-						</div>
-            								
-            			<div id="tab_settings">
+							<div style="font-size: 12px; margin-top: 25px; margin-left: 5px;  color: gray;">
+								{if $contact_id != ""}
+									{t}ID{/t}: {$contact_id} | 
+								{/if}
+								
+								{if $contact->entryCreatedBy != ""}			
+									{t}Created by{/t}: {$contact->entryCreatedBy} @{$contact->entryCreationDate}
+								{/if}
+								 
+								{if $contact->entryUpdatedBy != ""}
+									| {t}Updated by{/t}: {$contact->entryUpdatedBy} @{$contact->entryUpdateDate}
+								{/if}
+							</div>							
+						</div>	
+																
+							
+
+            			
+            			<div id="tab_settings" style="margin-bottom: 30px;">
             				
                        		<form method="post" action={$form_url} {$form_addon}>
                        		
@@ -211,7 +215,7 @@
 								{* output the "tab settings" fields *}
 								{foreach $contact->show_fields as $key => $property}
 									{if $fields[$property] and in_array($property,$settings)}
-										<dl style="background-color: {cycle values="#FFF,#e8e8e8"}; float: left; width: 100%;">
+										<dl style="float: left; width: 100%; height: 35px; margin-top: 0px;">
 											
 											{* aliases substitution *}
 											{if isset($contact->aliases) and isset($property) and isset($contact->aliases.$property)}
@@ -226,14 +230,13 @@
 											{if isset($fields[$property]["checked"])} 
 												{$checked = $fields[$property]["checked"]}
 											{/if} 
-											<dd style="float: left;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
+											<dd style="float: left; background-color: transparent;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
 										</dl>								
 									{/if}
 								{/foreach}
-								<span>
-									<input type="reset" id="btn_cancel"  class="mcbsb-regular-Button" name="btn_cancel" value="{t}cancel{/t}" />
-									<input type="submit" id="btn_submit"  class="mcbsb-regular-Button"  name="btn_submit" value="{t}submit{/t}" />
-								</span>
+								<dl>
+									<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit"  name="btn_submit" value="{t}submit{/t}" />
+								</dl>
 							</form>	
 		    			</div>
 					</div>				

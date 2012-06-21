@@ -1,22 +1,19 @@
 <div class="left_box">
 
     <dl>
-        <dt><label><?php echo $this->lang->line('invoice_number'); ?>: </label></dt>
-        <dd><input type="text" name="invoice_number" value="<?php echo $invoice->invoice_number; ?>" /></dd>
+        <dt><label>
+        <?php if (!$invoice->invoice_is_quote) { 
+                echo $this->lang->line('invoice_number'); 
+            } else { echo $this->lang->line('quote_number'); }   ?>: </label></dt>
+            
+        <dd><input style="width: 60px;" type="text" name="invoice_number" value="<?php echo $invoice->invoice_number; ?>" /></dd>
     </dl>
 
 	<dl>
 		<dt><label><?php echo $this->lang->line('client'); ?>: </label></dt>
 		<dd>
-			<?php if ($invoice->client_active) { ?>
-			<select name="client_id">
-				<?php foreach ($clients as $client) { ?>
-				<option value="<?php echo $client->client_id; ?>" <?php if($invoice->client_id == $client->client_id) { ?>selected="selected"<?php } ?>><?php echo character_limiter($client->client_name, 25); ?></option>
-					<?php } ?>
-			</select>
-			<?php } else { ?>
-			<?php echo $invoice->client_name; ?>
-			<?php } ?>
+			<a href="/contact/details/<?php echo $invoice->client_id_key."/".$invoice->client_id; ?>"><?php echo $invoice->client_name; ?></a>
+			<input type="hidden" name="client_id" value="<?php echo $invoice->client_id; ?>" />
 		</dd>
 	</dl>
 
@@ -49,13 +46,13 @@
 
 	<dl>
 		<dt><label><?php echo (!$invoice->invoice_is_quote ? $this->lang->line('invoice_date') : $this->lang->line('date')); ?>: </label></dt>
-		<dd><input class="datepicker" type="text" name="invoice_date_entered" value="<?php echo format_date($invoice->invoice_date_entered); ?>" /></dd>
+		<dd><input style="width: 90px;" class="datepicker" type="text" name="invoice_date_entered" value="<?php echo format_date($invoice->invoice_date_entered); ?>" /></dd>
 	</dl>
 
 	<?php if (!$invoice->invoice_is_quote) { ?>
 	<dl>
 		<dt><label><?php echo $this->lang->line('due_date'); ?>: </label></dt>
-		<dd><input class="datepicker" type="text" name="invoice_due_date" value="<?php echo format_date($invoice->invoice_due_date); ?>" /></dd>
+		<dd><input style="width: 90px;" class="datepicker" type="text" name="invoice_due_date" value="<?php echo format_date($invoice->invoice_due_date); ?>" /></dd>
 	</dl>
 	<?php } ?>
 
@@ -71,16 +68,7 @@
 	</dl>
 	<?php } ?>
 
-	<dl>
-		<dt><label><?php echo $this->lang->line('generate'); ?>: </label></dt>
-		<dd>
-			<a href="javascript:void(0)" class="output_link" id="<?php echo $invoice->invoice_id . ':' . $invoice->client_id . ':' . $invoice->invoice_is_quote; ?>"><?php echo $this->lang->line('generate'); ?></a>
-		</dd>
-	</dl>
-
     <div style="clear: both;">&nbsp;</div>
-
-	<input type="submit" id="btn_submit" name="btn_submit_options_general" value="<?php echo $this->lang->line('save_options'); ?>" />
 
 </div>
 
@@ -128,5 +116,5 @@
 	<?php } ?>
 
 </div>
-
+<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_options_general" value="<?php echo $this->lang->line('save_options'); ?>" />
 <div style="clear: both;">&nbsp;</div>

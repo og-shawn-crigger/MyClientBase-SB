@@ -50,7 +50,7 @@
 
 </script>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<div class="section_wrapper">
 

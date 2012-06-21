@@ -17,7 +17,6 @@
  * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
  * @since		2012-01-21
  * 
- * @todo		Can be improved A LOT
  */
 function write_config($filename, array $config_items, $create=false) {
 	

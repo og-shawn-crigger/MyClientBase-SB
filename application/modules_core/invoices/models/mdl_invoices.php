@@ -6,17 +6,45 @@ class Mdl_Invoices extends MY_Model {
 
 		parent::__construct();
 
+		$this->load->model('contact/mdl_contacts');
+		
 		$this->table_name = 'mcb_invoices';
 
 		$this->primary_key = 'mcb_invoices.invoice_id';
 
 		$this->order_by = 'mcb_invoices.invoice_date_entered DESC, mcb_invoices.invoice_id DESC';
 
+// 		$this->select_fields = "
+// 		SQL_CALC_FOUND_ROWS
+// 		mcb_invoices.*,
+// 		mcb_invoice_amounts.*,
+//      mcb_clients.*,
+// 		mcb_invoice_groups.invoice_group_name,
+// 		mcb_invoice_groups.invoice_group_prefix,
+// 		mcb_users.username,
+// 	    mcb_users.company_name AS from_company_name,
+// 	    mcb_users.last_name AS from_last_name,
+// 	    mcb_users.first_name AS from_first_name,
+// 	    mcb_users.address AS from_address,
+// 		mcb_users.address_2 AS from_address_2,
+// 	    mcb_users.city AS from_city,
+// 	    mcb_users.state AS from_state,
+// 	    mcb_users.zip AS from_zip,
+// 		mcb_users.country AS from_country,
+// 	    mcb_users.phone_number AS from_phone_number,
+// 		mcb_users.email_address AS from_email_address,
+// 		mcb_users.fax_number AS from_fax_number,
+// 		mcb_users.web_address AS from_web_address,
+// 		mcb_users.tax_id_number AS from_tax_id_number,
+// 		mcb_invoice_statuses.*,
+// 		(DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) AS invoice_days_overdue,
+// 		IF(mcb_invoice_statuses.invoice_status_type NOT IN(3,2), IF((DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) > 0, 1, 0), 0) AS invoice_is_overdue";
+
 		$this->select_fields = "
-		SQL_CALC_FOUND_ROWS
 		mcb_invoices.*,
 		mcb_invoice_amounts.*,
-        mcb_clients.*,
+		mcb_invoice_groups.invoice_group_name,
+		mcb_invoice_groups.invoice_group_prefix,
 		mcb_users.username,
 	    mcb_users.company_name AS from_company_name,
 	    mcb_users.last_name AS from_last_name,
@@ -29,9 +57,10 @@ class Mdl_Invoices extends MY_Model {
 		mcb_users.country AS from_country,
 	    mcb_users.phone_number AS from_phone_number,
 		mcb_users.email_address AS from_email_address,
+		mcb_users.fax_number AS from_fax_number,
 		mcb_users.web_address AS from_web_address,
 		mcb_users.tax_id_number AS from_tax_id_number,
-		mcb_invoice_statuses.*,
+		mcb_invoice_statuses.*, 
 		(DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) AS invoice_days_overdue,
 		IF(mcb_invoice_statuses.invoice_status_type NOT IN(3,2), IF((DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) > 0, 1, 0), 0) AS invoice_is_overdue";
 
@@ -63,34 +92,130 @@ class Mdl_Invoices extends MY_Model {
 				'left'
 			),
 			'mcb_invoice_amounts'	=>	'mcb_invoice_amounts.invoice_id = mcb_invoices.invoice_id',
-			'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id'
+			'mcb_invoice_groups'	=>	array(
+				'mcb_invoice_groups.invoice_group_id = mcb_invoices.invoice_group_id',
+				'left'
+			)
 		);
 
 	}
+	
+	
+	/**
+	 * This method fill the invoice object with the contact information coming from Contact Engine 
+	 * 
+	 * @access		private
+	 * @param		$invoice  Object
+	 * @var			
+	 * @return		$invoice  Object
+	 * @example
+	 * @see
+	 * 
+	 * @author 		Damiano Venturin
+	 * @copyright 	2V S.r.l.
+	 * @license	GPL
+	 * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+	 * @since		Jun 21, 2012
+	 */
+	private function fill_invoice_contact(stdClass $invoice){
+	
+		if(! empty($invoice->client_id)) {
+			$params = array($invoice->client_id_key => $invoice->client_id);
+	
+			if($contact = $this->get_contact($params))
+			{
+				$invoice = $this->bind_ldap_fields_to_invoice($contact,$invoice);
+			}
+		}
+	
+		return $invoice;
+	}
+
+	private function bind_ldap_fields_to_invoice($contact, stdClass $invoice) {
+
+		if(!is_object($contact)) return $invoice;
+		
+		//these are the mandatory attributes to produce a document and they must be set
+		//otherwise it outputs errors inside the document
+		//TODO this has to go into a config file!
+		$mandatory_attributes = array(
+				'person' => array(),
+				'organization' => array()
+		);
+		
+		$mandatory_attributes['person'] = array(
+				'client_name' => 'cn',
+				'client_email_address' => 'mail',
+				'client_first_name' => 'givenName',
+				'client_last_name' => 'sn',
+				'client_address' => 'homePostalAddress',
+				'client_address_2' => '',
+				'client_city' => 'mozillaHomeLocalityName',
+				'client_state' => 'mozillaHomeState',
+				'client_zip' => 'mozillaHomePostalCode',
+				'client_country' => 'mozillaHomeCountryName',
+				'client_tax_id' => 'codiceFiscale'
+		);
+		
+		$mandatory_attributes['organization'] = array(
+				'client_name' => 'o',
+				'client_email_address' => 'omail',
+				'client_first_name' => '',
+				'client_last_name' => '',
+				'client_address' => 'street',
+				'client_address_2' => '',
+				'client_city' => 'l',
+				'client_state' => 'st',
+				'client_zip' => 'postalCode',
+				'client_country' => 'c',
+				'client_tax_id' => 'vatNumber'
+		);
+				
+
+		if(strtolower($contact->objName) == "person") {
+			foreach ($mandatory_attributes[strtolower($contact->objName)] as $attribute => $ldap_attribute) {
+				$invoice->$attribute = '';
+				if($ldap_attribute and isset($contact->$ldap_attribute)) {
+					$invoice->$attribute = $contact->$ldap_attribute;
+				}
+			}				
+		}
+
+		return $invoice;
+	}
+	
+	public function get_contact(array $params) {
+	
+		//when the request is performed using client_id || uid || oid as input I get an object
+		if(is_object($obj = $this->mdl_contacts->get($params)))
+		{
+			//$obj = $rest_return;
+			$obj->prepareShow();
+			return $obj;
+		}
+		return false;
+	}	
 
 	public function get($params = NULL) {
 
-		if (isset($params['active_clients_only']) and $params['active_clients_only']) {
+// 		if (isset($params['active_clients_only']) and $params['active_clients_only']) {
+// 			$this->db->where('mcb_clients.client_active', 1);
+// 		}
 
-			$this->db->where('mcb_clients.client_active', 1);
+		$tmp_invoices = parent::get($params);
 
-		}
+		if (is_array($tmp_invoices)) {
 
-		$invoices = parent::get($params);
-
-		if (is_array($invoices)) {
-
-			foreach ($invoices as $invoice) {
+			$invoices = array();
+			
+			foreach ($tmp_invoices as $invoice) {
 
 				$invoice = $this->set_invoice_additional($invoice, $params);
-
+				$invoices[] = $invoice;
 			}
 
-		}
-
-		else {
-
-			$invoices = $this->set_invoice_additional($invoices, $params);
+		} else {
+			$invoices = $this->set_invoice_additional($tmp_invoices, $params);
 
 		}
 
@@ -98,18 +223,27 @@ class Mdl_Invoices extends MY_Model {
 
 	}
 
+	public function get_by_id($invoice_id) {
+		
+		$params = array('where' => array('mcb_invoices.invoice_id' => $invoice_id));
+		
+		$invoice = $this->mdl_invoices->get($params);
+		
+		return $invoice;
+	}
+		
 	public function get_recent_open($limit = 10) {
 
 		$params = array(
 			'limit'	=>	$limit,
 			'where'	=>	array(
-				'invoice_status_type'	=>	1,
-				'invoice_is_quote'		=>	0
+				$this->table_name . '.invoice_status_type'	=>	1,
+				$this->table_name . '.invoice_is_quote'		=>	0
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	0
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -130,7 +264,7 @@ class Mdl_Invoices extends MY_Model {
 				'invoice_status_type'	=>	2,
 				'invoice_is_quote'		=>	0
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -151,7 +285,7 @@ class Mdl_Invoices extends MY_Model {
 				'invoice_status_type'	=>	3,
 				'invoice_is_quote'		=>	0
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -169,12 +303,12 @@ class Mdl_Invoices extends MY_Model {
 		$params = array(
 			'limit'	=>	$limit,
 			'where'	=>	array(
-				'invoice_is_quote'	=>	0
+				$this->table_name . '.invoice_is_quote'	=>	0
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	1
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -191,13 +325,13 @@ class Mdl_Invoices extends MY_Model {
 
 		$params = array(
 			'where'	=>	array(
-				'invoice_status_type'	=>	1,
-				'invoice_is_quote'		=>	0
+				$this->table_name . '.invoice_status_id'	=>	1,
+				$this->table_name . '.invoice_is_quote'		=>	0
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	0
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -214,12 +348,12 @@ class Mdl_Invoices extends MY_Model {
 
 		$params = array(
 			'where' =>  array(
-				'invoice_is_quote'  =>  0
+				$this->table_name . '.invoice_is_quote'  =>  0
 			),
 			'having'    =>  array(
 				'invoice_is_overdue'    =>  1
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -238,14 +372,14 @@ class Mdl_Invoices extends MY_Model {
 			'where'	=>	array(
 				'invoice_is_quote'	=>	1
 			),
-			'active_clients_only'	=>	1
+			//'active_clients_only'	=>	1
 		);
 
 		return $this->get($params);
 
 	}
 
-	public function save($client_id, $date_entered, $invoice_is_quote = 0, $strtotime = TRUE) {
+	public function save($client_id, $client_id_key, $date_entered, $invoice_is_quote = 0, $strtotime = TRUE) {
 
 		if ($strtotime) {
 
@@ -255,6 +389,7 @@ class Mdl_Invoices extends MY_Model {
 
 		$db_array = array(
 			'client_id'					=>	$client_id,
+			'client_id_key'				=>	$client_id_key,
 			'invoice_date_entered'		=>	$date_entered,
 			'invoice_due_date'			=>	$this->calculate_due_date($date_entered),
 			'user_id'					=>	$this->session->userdata('user_id'),
@@ -307,8 +442,14 @@ class Mdl_Invoices extends MY_Model {
 		 */
 		$this->load->model('invoices/mdl_invoice_history');
 
-		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('created_invoice'));
-
+		if($invoice_is_quote) {
+			$text = $this->lang->line('created_quote');
+		} else {
+			$text = $this->lang->line('created_invoice');
+		}
+		
+		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $text);
+		
 		return $invoice_id;
 
 	}
@@ -324,6 +465,7 @@ class Mdl_Invoices extends MY_Model {
 
 		$package = array(
 			'client_id'				=> $invoice->client_id,
+			'client_id_key'			=> $invoice->client_id_key,
 			'invoice_date_entered'	=> standardize_date(date('m/d/Y')),
 			'invoice_group_id'		=> $invoice->invoice_group_id,
 			'invoice_is_quote'		=> $invoice->invoice_is_quote,
@@ -457,8 +599,13 @@ class Mdl_Invoices extends MY_Model {
 
 		$this->load->model('invoices/mdl_invoice_history');
 
-		$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('saved_invoice_options'));
-
+		$invoice = $this->get_by_id($invoice_id);
+		
+		if($invoice->invoice_is_quote) {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('saved_quote_options'));
+		} else {
+			$this->mdl_invoice_history->save($invoice_id, $this->session->userdata('user_id'), $this->lang->line('saved_invoice_options'));
+		}
 		$this->session->set_flashdata('custom_success', $this->lang->line('invoice_options_saved'));
 
 	}
@@ -547,7 +694,7 @@ class Mdl_Invoices extends MY_Model {
 	public function validate_create() {
 
 		$this->form_validation->set_rules('invoice_date_entered', $this->lang->line('invoice_date'), 'required');
-		$this->form_validation->set_rules('client_id', $this->lang->line('client'), 'required');
+		$this->form_validation->set_rules('client_id_autocomplete_label', $this->lang->line('client'), 'required');
 		$this->form_validation->set_rules('invoice_group_id', $this->lang->line('invoice_group'), 'required');
 		$this->form_validation->set_rules('invoice_is_quote', $this->lang->line('quote_only'));
 
@@ -568,8 +715,8 @@ class Mdl_Invoices extends MY_Model {
 
 		$this->load->model(
 			array(
-			'mdl_invoice_groups',
-			'inventory/mdl_inventory_stock'
+				'mdl_invoice_groups',
+				'inventory/mdl_inventory_stock'
 			)
 		);
 
@@ -642,6 +789,8 @@ class Mdl_Invoices extends MY_Model {
 
 		}
 
+		$invoice = $this->fill_invoice_contact($invoice);
+		
 		return $invoice;
 
 	}
@@ -764,6 +913,7 @@ class Mdl_Invoices extends MY_Model {
 
 		$required_elements = array(
 			'client_id',
+			'client_id_key',
 			'invoice_date_entered',
 			'invoice_group_id'
 		);
@@ -786,7 +936,7 @@ class Mdl_Invoices extends MY_Model {
 
 		}
 
-		$invoice_id = $this->save($client_id, $invoice_date_entered, $invoice_is_quote);
+		$invoice_id = $this->save($client_id, $client_id_key, $invoice_date_entered, $invoice_is_quote);
 
 		if (isset($invoice_items)) {
 
@@ -887,9 +1037,9 @@ class Mdl_Invoices extends MY_Model {
 
 	public function delete_orphans() {
 
-		$this->db->query('DELETE FROM mcb_invoices WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
-		$this->db->query('DELETE FROM mcb_contacts WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
-		$this->db->query('DELETE FROM mcb_client_data WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
+		//$this->db->query('DELETE FROM mcb_invoices WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
+		//$this->db->query('DELETE FROM mcb_contacts WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
+		//$this->db->query('DELETE FROM mcb_client_data WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
 		$this->db->query('DELETE FROM mcb_inventory_stock WHERE inventory_id NOT IN (SELECT inventory_id FROM mcb_inventory)');
 		$this->db->query('DELETE FROM mcb_invoice_amounts WHERE invoice_id NOT IN (SELECT invoice_id FROM mcb_invoices)');
 		$this->db->query('DELETE FROM mcb_invoice_history WHERE invoice_id NOT IN (SELECT invoice_id FROM mcb_invoices)');

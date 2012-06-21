@@ -27,9 +27,10 @@ class Mdl_Client_Credits extends MY_Model {
 
 	public function validate() {
 
+		$this->form_validation->set_rules('client_id_autocomplete_label');
 		$this->form_validation->set_rules('client_credit_client_id', $this->lang->line('client'), 'required');
 		$this->form_validation->set_rules('client_credit_date', $this->lang->line('date'), 'required');
-		$this->form_validation->set_rules('client_credit_amount', $this->lang->line('amount'), 'required');
+		$this->form_validation->set_rules('client_credit_amount', $this->lang->line('amount'), 'required|callback_amount_validate');
 		$this->form_validation->set_rules('client_credit_note', $this->lang->line('note'));
 
 		foreach ($this->custom_fields as $custom_field) {
@@ -42,9 +43,28 @@ class Mdl_Client_Credits extends MY_Model {
 
 	}
 
+	public function amount_validate($amount) {
+
+		$amount = standardize_number($amount);
+
+		if ($amount <= 0) {
+
+			$this->form_validation->set_message('amount_validate', $this->lang->line('amount_greater_than_zero'));
+
+			return FALSE;
+
+		}
+		
+		return TRUE;
+
+	}
+
 	public function db_array() {
 
 		$db_array = parent::db_array();
+
+		unset($db_array['client_id_autocomplete_label']);
+
 		$db_array['client_credit_date'] = strtotime(standardize_date($db_array['client_credit_date']));
 		$db_array['client_credit_amount'] = standardize_number($db_array['client_credit_amount']);
 
@@ -61,6 +81,8 @@ class Mdl_Client_Credits extends MY_Model {
 			$this->set_form_value('client_credit_date', format_date($this->form_value('client_credit_date')));
 
 		}
+
+		$this->form_values['client_id_autocomplete_label'] = $this->form_values['client_name'];
 
 	}
 

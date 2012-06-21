@@ -2,7 +2,7 @@
 
 <?php echo modules::run('payments/payment_widgets/generate_dialog'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -11,8 +11,6 @@
 		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('enter_deposit'))); ?>
 		</span>
 		</h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle no_padding">
 

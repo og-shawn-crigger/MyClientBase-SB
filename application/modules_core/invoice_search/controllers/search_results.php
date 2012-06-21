@@ -28,7 +28,6 @@ class Search_Results extends Admin_Controller {
 		$this->redir->set_last_index();
 
 		$this->load->model('invoices/mdl_invoice_table');
-        $this->load->helper('text');
 
 		$page = uri_assoc('page', 4);
 

@@ -14,8 +14,6 @@
 	</dl>
 	<?php } ?>
 
-    <div style="clear: both;">&nbsp;</div>
-
-	<input type="submit" id="btn_submit" name="btn_submit_notes" value="<?php echo $this->lang->line('save_options'); ?>" />
+	<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_notes" value="<?php echo $this->lang->line('save_options'); ?>" />
 
 	<div style="clear: both;">&nbsp;</div>

@@ -28,12 +28,15 @@ class Payment_Methods extends Admin_Controller {
 			'payment_methods' =>	$this->mdl_payment_methods->get($params)
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+		
 		$this->load->view('payment_method_index', $data);
 
 	}
 
 	function form() {
-
+		
 		if (!$this->mdl_payment_methods->validate()) {
 
 			if (!$_POST AND uri_assoc('payment_method_id', 4)) {
@@ -41,8 +44,12 @@ class Payment_Methods extends Admin_Controller {
 				$this->mdl_payment_methods->prep_validation(uri_assoc('payment_method_id', 4));
 
 			}
-
-			$this->load->view('payment_method_form');
+			
+			$data = array();
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+						
+			$this->load->view('payment_method_form',$data);
 
 		}
 

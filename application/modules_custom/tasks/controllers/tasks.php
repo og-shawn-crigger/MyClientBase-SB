@@ -45,10 +45,6 @@ class Tasks extends Admin_Controller {
 
 		if (!$this->mdl_tasks->validate()) {
 
-			$this->load->helper('form');
-
-			$this->load->helper('text');
-
 			$this->load->model('clients/mdl_clients');
 
 			if (!$_POST AND $task_id) {

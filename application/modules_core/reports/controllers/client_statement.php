@@ -10,15 +10,10 @@ class Client_Statement extends Admin_Controller {
 
 	public function index() {
 
-		$this->load->model('clients/mdl_clients');
-
-		$client_params = array(
-			'select' => 'mcb_clients.*'
-		);
+		//$this->load->model('clients/mdl_clients');
 
 		$data = array(
-			'output_types' => array('pdf', 'view'),
-			'clients' => $this->mdl_clients->get($client_params)
+			'output_types' => array('pdf', 'view')
 		);
 
 		$this->load->view('client_statement', $data);

@@ -1,18 +1,10 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $page_title; ?>
-			<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>" style="display: inline;">
-				<span style="font-size: 60%;">
-				<input type="submit" class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" name="btn_create_template" value="<?php echo $this->lang->line('add'); ?>" <?php if(!$dir_is_writable) { ?>disabled<?php } ?>>
-				</span>
-			</form>
-		</h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
+		<h3 class="title_black"><?php echo $page_title; ?></h3>
 
 		<div class="content toggle no_padding">
 
@@ -29,7 +21,7 @@
 						<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 					</tr>
 					<?php foreach ($templates as $template) { ?>
-					<tr>
+					<tr class="hoverall">
 						<td class="first"><?php echo $template; ?></td>
 						<td class="last">
 							<a href="<?php echo site_url('templates/form/type/' . uri_assoc('type') . '/template_name/' . $template); ?>" title="<?php echo $this->lang->line('edit'); ?>">
@@ -51,6 +43,10 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar'); ?>
+<?php //$this->load->view('dashboard/sidebar'); ?>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
+
 
 <?php $this->load->view('dashboard/footer'); ?>

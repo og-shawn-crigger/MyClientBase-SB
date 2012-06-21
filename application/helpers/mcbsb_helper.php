@@ -17,6 +17,28 @@
  * 
  */
 
+function retrieve_uid_oid(){
+	$CI = &get_instance();
+	$uid = uri_assoc('uid');
+	$oid = uri_assoc('oid');
+	
+	if(empty($uid) && empty($oid))
+	{
+		if(uri_assoc('client_id'))
+		{
+			$client_id = uri_assoc('client_id');   //retrieving client_id from GET
+		} else {
+			if($CI->input->get_post('client_id')) $client_id = $this->input->post('client_id'); //retrieving client_id from POST
+		}
+	}
+	 
+	if($uid) $params = array('uid' => $uid);
+	if($oid) $params = array('oid' => $oid);
+	if(isset($client_id) && $client_id) $params = array('client_id' => $client_id);
+	
+	return isset($params) ? $params : null;	
+}
+
 function only_chars_nums_underscore($string)
 {
     if(is_array($string)) return false;

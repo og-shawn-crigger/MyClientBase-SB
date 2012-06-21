@@ -25,7 +25,7 @@
     <dd>
 	<select name="default_tax_rate_id">
 	    <?php foreach ($tax_rates as $tax_rate) { ?>
-	    <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($this->mdl_mcb_data->setting('default_tax_rate_id') == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent); ?>% - <?php echo $tax_rate->tax_rate_name; ?></option>
+	    <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($this->mdl_mcb_data->setting('default_tax_rate_id') == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')); ?>% - <?php echo $tax_rate->tax_rate_name; ?></option>
 	    <?php } ?>
 	</select>
     </dd>
@@ -46,10 +46,26 @@
     <dd>
 	<select name="default_item_tax_rate_id">
 	    <?php foreach ($tax_rates as $tax_rate) { ?>
-	    <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($this->mdl_mcb_data->setting('default_item_tax_rate_id') == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent); ?>% - <?php echo $tax_rate->tax_rate_name; ?></option>
+	    <option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($this->mdl_mcb_data->setting('default_item_tax_rate_id') == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')); ?>% - <?php echo $tax_rate->tax_rate_name; ?></option>
 	    <?php } ?>
 	</select>
     </dd>
+</dl>
+
+<dl>
+	<dt><?php echo $this->lang->line('default_item_tax_option'); ?></dt>
+	<dd>
+	<select name="default_item_tax_option">
+		<option value=""></option>
+		<option value="0" <?php if ($this->mdl_mcb_data->setting('default_item_tax_option') == "0") { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_0'); ?></option>
+		<option value="1" <?php if ($this->mdl_mcb_data->setting('default_item_tax_option') == "1") { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('item_tax_option_1'); ?></option>
+	</select>
+	</dd>
+</dl>
+
+<dl>
+    <dt><?php echo $this->lang->line('default_apply_invoice_tax'); ?>: </dt>
+    <dd><input type="checkbox" name="default_apply_invoice_tax" value="1" <?php if ($this->mdl_mcb_data->setting('default_apply_invoice_tax')) { ?>checked="checked"<?php } ?>/></dd>
 </dl>
 
 <dl>

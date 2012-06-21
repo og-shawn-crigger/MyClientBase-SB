@@ -6,21 +6,24 @@ class Mdl_Payments extends MY_Model {
 
 		parent::__construct();
 
+		$this->load->model('contact/mdl_contacts');
+		
 		$this->table_name = 'mcb_payments';
 
 		$this->primary_key = 'mcb_payments.payment_id';
 
 		$this->select_fields = "
-		SQL_CALC_FOUND_ROWS *";
+		SQL_CALC_FOUND_ROWS *,
+		mcb_payments.payment_method_id";
 
 		$this->order_by = 'mcb_payments.payment_date DESC';
 
 		$this->joins = array(
 			'mcb_invoices'			=>	'mcb_invoices.invoice_id = mcb_payments.invoice_id',
-			'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id',
+			//'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id',
 			'mcb_payment_methods'	=>	array('mcb_payment_methods.payment_method_id = mcb_payments.payment_method_id', 'left')
 		);
-		
+
 		$this->limit = $this->mdl_mcb_data->setting('results_per_page');
 
 		$this->custom_fields = $this->mdl_fields->get_object_fields(5);
@@ -49,8 +52,59 @@ class Mdl_Payments extends MY_Model {
 		return parent::validate($this);
 
 	}
+	
+	private function retrieve_contact(stdClass $payment) {
+		
+		if(! empty($payment->client_id)) {
+			$params = array($payment->client_id_key => $payment->client_id);
+		
+			if($contact = $this->get_contact($params))
+			{
+				if(strtolower($contact->objName) == "person") $payment->client_name = $contact->cn;
+		
+				if(strtolower($contact->objName) == "organization") $payment->client_name = $contact->o;
+			}
+		}
+		return $payment;
+	}
+	
+	public function get(array $params) {
+		$tmp_payments = parent::get($params);
+		
+		$payments = array();
+		
+		if(is_array($tmp_payments)) {
+			foreach ($tmp_payments as $payment) {
 
+				$payments[] = $this->retrieve_contact($payment);
+			}
+		} else {
+			//only one result
+			if(is_object($tmp_payments)) {
+				return $this->retrieve_contact($tmp_payments);
+			} else {
+				return false;
+			}	
+		}
+		
+		return $payments;
+	}
+
+	private function get_contact(array $params){
+	
+		//when the request is performed using client_id || uid || oid as input I get an object
+		if(is_object($obj = $this->mdl_contacts->get($params)))
+		{
+			//$obj = $rest_return;
+			$obj->prepareShow();
+			return $obj;
+		}
+		return false;
+	}
+	
 	public function amount_validate($payment_amount) {
+
+		$payment_amount = standardize_number($payment_amount);
 
 		if (uri_assoc('invoice_id')) {
 
@@ -64,39 +118,51 @@ class Mdl_Payments extends MY_Model {
 
 		}
 
-		$this->db->select('invoice_balance');
+		if (isset($invoice_id)) {
 
-		$this->db->where('invoice_id', $invoice_id);
+			if ($payment_amount <= 0) {
 
-		$invoice_balance = $this->db->get('mcb_invoice_amounts')->row()->invoice_balance;
-
-		if (!uri_assoc('payment_id')) {
-
-			if ($payment_amount > $invoice_balance) {
-
-				$this->form_validation->set_message('amount_validate', $this->lang->line('amount_cannot_exceed_invoice_balance'));
+				$this->form_validation->set_message('amount_validate', $this->lang->line('amount_greater_than_zero'));
 
 				return FALSE;
+				
+			}
+
+			$this->db->select('invoice_balance');
+
+			$this->db->where('invoice_id', $invoice_id);
+
+			$invoice_balance = $this->db->get('mcb_invoice_amounts')->row()->invoice_balance;
+
+			if (!uri_assoc('payment_id')) {
+
+				if ($payment_amount > $invoice_balance) {
+
+					$this->form_validation->set_message('amount_validate', $this->lang->line('amount_cannot_exceed_invoice_balance'));
+
+					return FALSE;
+
+				}
 
 			}
 
-		}
+			elseif (uri_assoc('payment_id')) {
 
-		elseif (uri_assoc('payment_id')) {
+				$params = array(
+					'where'	=>	array(
+						'mcb_payments.payment_id'	=>	uri_assoc('payment_id')
+					)
+				);
 
-			$params = array(
-				'where'	=>	array(
-					'mcb_payments.payment_id'	=>	uri_assoc('payment_id')
-				)
-			);
+				$original_amount = parent::get($params)->payment_amount;
 
-			$original_amount = parent::get($params)->payment_amount;
+				if ($payment_amount > ($invoice_balance + $original_amount)) {
 
-			if ($payment_amount > ($invoice_balance + $original_amount)) {
+					$this->form_validation->set_message('amount_validate', $this->lang->line('amount_cannot_exceed_invoice_balance'));
 
-				$this->form_validation->set_message('amount_validate', $this->lang->line('amount_cannot_exceed_invoice_balance'));
+					return FALSE;
 
-				return FALSE;
+				}
 
 			}
 

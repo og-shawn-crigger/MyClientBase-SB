@@ -25,6 +25,7 @@ class Profile extends Admin_Controller {
 				$this->mdl_users->set_form_value('default_tax_rate_id', $this->mdl_mcb_userdata->setting('default_tax_rate_id'));
 				$this->mdl_users->set_form_value('default_tax_rate_option', $this->mdl_mcb_userdata->setting('default_tax_rate_option'));
 				$this->mdl_users->set_form_value('default_item_tax_rate_id', $this->mdl_mcb_userdata->setting('default_item_tax_rate_id'));
+				$this->mdl_users->set_form_value('default_item_tax_option', $this->mdl_mcb_userdata->setting('default_item_tax_option'));
 
             }
 

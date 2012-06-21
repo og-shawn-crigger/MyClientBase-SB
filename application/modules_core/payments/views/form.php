@@ -2,13 +2,11 @@
 
 <?php $this->load->view('dashboard/jquery_date_picker'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('payment_form'); ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
+		<h3 class="title_black"><?php echo $this->lang->line('payment'); ?></h3>
 
 		<div class="content toggle">
 
@@ -22,12 +20,12 @@
 						<option value=""><?php echo $this->lang->line('choose_an_invoice'); ?></option>
 						<?php foreach ($invoices as $invoice) { ?>
 						<option value="<?php echo $invoice->invoice_id; ?>" <?php if ($invoice->invoice_id == $this->mdl_payments->form_value('invoice_id')) { ?>selected="selected"<?php } ?>>
-							#<?php echo invoice_id($invoice); ?> <?php echo display_currency($invoice->invoice_balance); ?> (<?php echo character_limiter($invoice->client_name, 20); ?>)
+							#<?php echo invoice_id($invoice); ?> <?php echo display_currency($invoice->invoice_balance, FALSE); ?> (<?php echo character_limiter($invoice->client_name, 20); ?>)
 						</option>
 						<?php } ?>
 					</select>
 					<?php } else { ?>
-						#<?php echo invoice_id($invoice); ?> <?php echo display_currency($invoice->invoice_balance); ?> (<?php echo $invoice->client_name; ?>)
+						#<?php echo invoice_id($invoice); ?> <?php echo display_currency($invoice->invoice_balance, FALSE); ?> (<?php echo $invoice->client_name; ?>)
 					<?php } ?>
 				</dd>
 			</dl>
@@ -49,7 +47,7 @@
 						<option <?php if (!$this->mdl_payments->form_value('payment_method_id')) { ?>selected="selected"<?php } ?>></option>
 						<option value="9999" <?php if ($this->mdl_payments->form_value('payment_method_id') == '9999') { ?>selected="selected"<?php } ?>><?php echo $this->lang->line('apply_credit'); ?></option>
 						<?php foreach ($payment_methods as $payment_method) { ?>
-						<option value="<?php echo $payment_method->payment_method_id; ?>" <?php if ($this->mdl_payments->form_value('payment_method_id') == $payment_method->payment_method_id) { ?>selected="selected"<?php } ?>><?php echo $payment_method->payment_method; ?></option>
+						<option value="<?php echo $payment_method->payment_method_id; ?>" <?php if ((!uri_assoc('payment_id') and $this->mdl_mcb_data->setting('default_payment_method') == $payment_method->payment_method_id) OR ($this->mdl_payments->form_value('payment_method_id') == $payment_method->payment_method_id)) { ?>selected="selected"<?php } ?>><?php echo $payment_method->payment_method; ?></option>
 						<?php } ?>
 					</select>
 				</dd>
@@ -67,10 +65,12 @@
 			</dl>
 			<?php } ?>
 
+			<span style="float: right">
+				<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_single_payment" value="<?php echo $this->lang->line('submit'); ?>" />
+				<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+			</span>
+			
             <div style="clear: both;">&nbsp;</div>
-
-			<input type="submit" id="btn_submit" name="btn_submit_single_payment" value="<?php echo $this->lang->line('submit'); ?>" />
-			<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
         </form>
 
@@ -80,6 +80,7 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar'); ?>
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
 <?php $this->load->view('dashboard/footer'); ?>

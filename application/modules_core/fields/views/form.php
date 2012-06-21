@@ -1,12 +1,10 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $this->lang->line('custom_field_form'); ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle">
 

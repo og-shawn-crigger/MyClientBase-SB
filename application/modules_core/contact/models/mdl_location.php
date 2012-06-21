@@ -153,14 +153,14 @@ class Mdl_Location extends MY_Model {
 			} else {
 				if(is_array($this->$property)) {
 					if(count($this->$property) > 1) {
-						$output[$property] = $this->$property; //TODO test
+						$output[$property] = $this->$property; 
 					} else {
-						$output[$property] = $this->$property[0]; //TODO test
+						$output[$property] = $this->$property[0]; 
 					}
 				} else {
 					if(!empty($this->$property))
 					{
-						$output[$property] = $this->$property; //TODO test
+						$output[$property] = $this->$property;
 					} else {
 						$output[$property] = array();
 					}
@@ -301,7 +301,12 @@ class Mdl_Location extends MY_Model {
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
 	
-		if($this->crr->has_no_errors) return true; 
+		if($this->crr->has_no_errors) {
+			$this->mcbsb->success = 'location_updated';
+			return true; 
+		}
+		
+		$this->mcbsb->success = 'location_not_updated';
 		
 		return false;
 	}
@@ -314,8 +319,11 @@ class Mdl_Location extends MY_Model {
 		
 		if($this->crr->has_no_errors) {
 			$this->locId = $this->crr->data['locId'];
+			$this->mcbsb->success = 'location_created';
 			return true;
 		}
+		
+		$this->mcbsb->error = 'location_not_created';
 		
 		return false;		
 	}	

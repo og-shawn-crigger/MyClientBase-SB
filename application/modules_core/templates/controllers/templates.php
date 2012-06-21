@@ -38,6 +38,9 @@ class Templates extends Admin_Controller {
 			'page_title'		=>	$this->page_titles['index'][$this->type]
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
+		
 		$this->load->view('index', $data);
 
 	}
@@ -57,6 +60,9 @@ class Templates extends Admin_Controller {
 				'template_dir'		=>	$this->mdl_templates->template_dir[$this->type],
 				'page_title'		=>	$this->page_titles['form'][$this->type]
 			);
+			
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
 
 			$this->load->view('form', $data);
 
@@ -88,7 +94,7 @@ class Templates extends Admin_Controller {
 
 	function _post_handler() {
 
-		if ($this->input->post('btn_create_template')) {
+		if ($this->input->post('btn_create_template') || $this->input->get('btn_create_template')) {
 
 			redirect('templates/form/type/' . $this->type);
 

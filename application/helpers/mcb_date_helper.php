@@ -1,12 +1,17 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-function format_date($unix_timestamp_date = NULL) {
+function format_date($unix_timestamp_date = NULL, $return_time = false) {
 
 	if ($unix_timestamp_date) {
 
 		global $CI;
 
-		return date($CI->mdl_mcb_data->setting('default_date_format'), $unix_timestamp_date);
+		$return_date = date($CI->mdl_mcb_data->setting('default_date_format'), $unix_timestamp_date);
+
+		if($return_time) {
+			$return_date .= " " . date('H:i:s', $unix_timestamp_date);
+		}
+		return $return_date;
 
 	}
 

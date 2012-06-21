@@ -1,12 +1,10 @@
 <?php $this->load->view('dashboard/header'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
 		<h3 class="title_black"><?php echo $this->lang->line('inventory_type_form'); ?></h3>
-
-		<?php $this->load->view('dashboard/system_messages'); ?>
 
 		<div class="content toggle">
 
@@ -29,5 +27,11 @@
 	</div>
 
 </div>
+
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php 
+	//$this->load->view('dashboard/sidebar', array('side_block'=>'inventory/sidebar'));
+	echo $actions_panel; 
+?>
 
 <?php $this->load->view('dashboard/footer'); ?>

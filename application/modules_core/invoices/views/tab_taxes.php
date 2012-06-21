@@ -6,7 +6,7 @@
 		<div class="tax_rate" style="margin-left: 200px;">
 		<select name="tax_rate_id[]">
 			<?php foreach ($tax_rates as $tax_rate) { ?>
-			<option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($invoice_tax_rate->tax_rate_id == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent) . '% - ' . $tax_rate->tax_rate_name; ?></option>
+			<option value="<?php echo $tax_rate->tax_rate_id; ?>" <?php if($invoice_tax_rate->tax_rate_id == $tax_rate->tax_rate_id) { ?>selected="selected"<?php } ?>><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')) . '% - ' . $tax_rate->tax_rate_name; ?></option>
 			<?php } ?>
 		</select>
 		<select name="tax_rate_option[]">
@@ -31,9 +31,6 @@
 	<dd><input type="text" name="invoice_discount" value="<?php echo format_number($invoice->invoice_discount); ?>" /></dd>
 </dl>
 
-<dl>
-	<dt></dt>
-	<dd><input type="submit" name="btn_submit_options_tax" value="<?php echo $this->lang->line('save_options'); ?>" /></dd>
-</dl>
+<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_options_tax" value="<?php echo $this->lang->line('save_options'); ?>" /></dd>
 
 <div style="clear: both;">&nbsp;</div>

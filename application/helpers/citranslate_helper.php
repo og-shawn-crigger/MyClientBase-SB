@@ -16,7 +16,6 @@
  * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
  * @since		Jan 21, 2012
  * 
- * @todo		
  */
 function setupCiTranslate($lang) {
 

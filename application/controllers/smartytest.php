@@ -16,8 +16,7 @@ class Smartytest extends CI_Controller {
     {
         parent::__construct();
         
-        //TODO Ideally you would autoload the parser
-        $this->load->driver('plenty_parser');
+        //$this->load->driver('plenty_parser');
     }
 
     public function index()

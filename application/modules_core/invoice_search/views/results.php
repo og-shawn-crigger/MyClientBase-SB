@@ -2,7 +2,7 @@
 
 <?php echo modules::run('invoices/widgets/generate_dialog'); ?>
 
-<div class="grid_10" id="content_wrapper">
+<div class="grid_11" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -14,8 +14,6 @@
 		</h3>
 
 		<div class="content toggle no_padding">
-
-			<?php $this->load->view('dashboard/system_messages'); ?>
 
 			<?php $this->load->view('invoices/invoice_table'); ?>
 

@@ -22,8 +22,6 @@ class Dashboard extends Admin_Controller {
 
         $this->redir->set_last_index();
 
-        $this->load->helper('text');
-
 		$this->load->model(
 			array(
 			'invoices/mdl_invoices',

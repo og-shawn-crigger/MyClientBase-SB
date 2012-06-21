@@ -184,12 +184,10 @@ class MX_Loader extends CI_Loader
 					if(is_dir(SPARKPATH.$item.'/'.$subitem) and $subitem != '.' and $subitem != '..')
 					{
 						Modules::$locations[SPARKPATH.$item.'/'.$subitem.'/'] = '../sparks/'.$item;
-						$b = Modules::$locations; //TODO delme
 					}
 				}
 			}
 		}
-		$b = Modules::$locations; //TODO delme
 	}
 	
 	/** Load a module spark **/
@@ -364,14 +362,14 @@ class MX_Loader extends CI_Loader
 
 		if ( ! file_exists($_ci_path))
 			show_error('Unable to load the requested file: '.$_ci_file);
-
+		
 		if (is_array($_ci_vars))
 			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $_ci_vars);
 
 		extract($this->_ci_cached_vars);
 
 		ob_start();
-
+		
 		if ((bool) @ini_get('short_open_tag') === FALSE AND CI::$APP->config->item('rewrite_short_tags') == TRUE) {
 			echo eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', file_get_contents($_ci_path))));
 		} else {

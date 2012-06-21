@@ -63,7 +63,7 @@
 	});
 </script>
 
-<div class="contact_search">
+<div class="contact_search" style="background-color: red;">
 <form method="post" action="">
 	<div>
 		{"{t}search{/t}"|capitalize}: <input title="{t}Search for name, organization name, vat number, phone, email, website{/t}" class="contact_search" type="text" name="search" id="search-box" value="">

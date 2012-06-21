@@ -77,12 +77,42 @@
 	});
 </script>
 
-<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px;">
-
-	<h3 class="title_black">{t}Actions Panel{/t}</h3>
-
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: gray;">
+	
+	<h3 class="title_black">{t}Main Actions{/t}</h3>
 	<ul class="quicklinks content toggle" >
 		<li><a id="back_to_profile" href="/contact/">{t}Search contact{/t}</a></li>
+		
+		<li>
+			<a id="show_add_person_link" href="#">{t}Add a person{/t}</a>
+			<div id="add_person" title="Form" style="display: none;">		
+				<form id="add_person_form" style="background-color: transparent; margin-top: 0px; margin-bottom: 0px;">
+					<input title="{t}first name{/t}" style="margin-left: 0px; margin-right: 0px; width: 100px;"type="text" name="firstname" id="first_name" />
+					<input title="{t}last name{/t}" style="margin-right: 5px; margin-left: 0px; width: 100px;"type="text" name="lastname" id="last_name"/>
+				</form>
+				<p style="margin-top: -20px; margin-bottom: 0px;">
+				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 5px;">{t}First Name{/t}</span>
+				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 65px;">{t}Last Name{/t}</span>
+				</p>
+			</div>
+		</li>
+		
+		<li>
+			<a id="show_add_organization_link" href="#" >{t}Add an organization{/t}</a>
+			<div id="add_organization" title="Form" style="display: none;">
+				<form id="add_organization_form" style="background-color: transparent;">
+					<input title="{t}organization name{/t}" style="margin-left: 0px; margin-right: 0px; width: 220px;"type="text" name="organizationname" id="organization_name" />
+				</form>
+			</div>				
+		</li>		
+	</ul>
+
+</div>
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+	<h3 class="title_black">{t}Contact Actions{/t}</h3>
+
+	<ul class="quicklinks content toggle" >
+		
 		{if !$profile_view}<li><a id="back_to_profile" href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
 		
 		{if $profile_view && $contact_id != ""}
@@ -103,30 +133,8 @@
 			</div>
 		{/if}
 		
-		<li>
-			<a id="show_add_person_link" href="#">{t}Add a person{/t}</a>
-			<div id="add_person" title="Form" style="display: none;">		
-				<form id="add_person_form" style="background-color: transparent; margin-top: 0px; margin-bottom: 0px;">
-					<input title="{t}first name{/t}" style="margin-left: 0px; margin-right: 0px; width: 100px;"type="text" name="firstname" id="first_name" />
-					<input title="{t}last name{/t}" style="margin-right: 5px; margin-left: 0px; width: 100px;"type="text" name="lastname" id="last_name"/>
-				</form>
-				<p style="margin-top: -20px; margin-bottom: 0px;">
-				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 5px;">{t}First Name{/t}</span>
-				<span style="font-size: 10px; color: gray; font-style: italic; margin-left: 65px;">{t}Last Name{/t}</span>
-				</p>
-			</div>
-		</li>
-		
-		
-		<li>
-			<a id="show_add_organization_link" href="#" >{t}Add an organization{/t}</a>
-			<div id="add_organization" title="Form" style="display: none;">
-				<form id="add_organization_form" style="background-color: transparent;">
-					<input title="{t}organization name{/t}" style="margin-left: 0px; margin-right: 0px; width: 220px;"type="text" name="organizationname" id="organization_name" />
-				</form>
-			</div>				
-		</li>
-		
+		<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
+		<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
 		<!--
 		<li>
 				<form method="post" action="" style="display: inline;">
@@ -137,5 +145,5 @@
 		</li>
 		 -->						
 	</ul>
-
+	
 </div>
