@@ -56,10 +56,8 @@ class Mcb_Modules extends Admin_Controller {
 		{
 			$this->session->set_flashdata('custom_error', $this->lang->line('module_cant_change_status'));
 			return false;
-		} else {
-			return true;
-		}
-			
+		} 
+		return true;	
 	}
 	
 	//DAM: enables a core module
@@ -100,7 +98,6 @@ class Mcb_Modules extends Admin_Controller {
 		
 	}
 	
-	//DAM: installs a custom module
 	public function install() {
 		
 		$module_path = $this->getDbItem();
@@ -115,7 +112,6 @@ class Mcb_Modules extends Admin_Controller {
 		$this->db->update('mcb_modules', $db_array);
 
 		redirect('mcb_modules');
-
 	}
 
 	/*

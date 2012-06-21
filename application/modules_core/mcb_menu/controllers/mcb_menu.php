@@ -61,14 +61,31 @@ class MCB_Menu extends Admin_Controller {
                     }
 
                 }
-
             }
-
         }
 
+        //TODO is the items position handled somewhere?
+        
+        
+        //TODO this is a quick and dirty. It requires some adjustments: 
+        //for instance submenus are not taken in consideration
+         
+        //adding custom modules items
+        foreach ($this->mdl_mcb_modules->custom_modules as $module) {
+        	if ($module->module_enabled) { 
+        		//do not override core modules
+        		if(!isset($menu_items[$module->module_name])){
+        			$menu_items[$module->module_name]['title'] = $module->module_name;
+        			$menu_items[$module->module_name]['href'] = $module->module_path;
+        		}
+        	}
+        }
+        			        
         return $menu_items;
     }
 
+    /*
+    //TODO I'm commenting this on purpose to see what breaks
 	function generate_control_center() {
 
 		$control_center = $this->config->item('control_center');
@@ -90,17 +107,26 @@ class MCB_Menu extends Admin_Controller {
 		return $control_center;
 
 	}
-
-	function display($params) {
-
+	*/
+    
+	function display($params = null) {
+ 
+		$a = '';
+		
 		$data = array(
 			'menu_items'    =>  $this->generate()
 		);
-
-		$this->load->view($params['view'], $data);
-
+		
+		//gets the html menu from the template
+		$plenty_parser = new Plenty_parser();	
+		$plenty_parser->parse('menu.tpl', $data, false, 'smarty');
+		
+		//$this->load->view($params['view'], $data);
+		
 	}
 
+	/*
+	 //TODO I'm commenting this on purpose to see what breaks
 	function display_control_center($params) {
 
 		if ($this->uri->segment(1) == 'dashboard') {
@@ -114,7 +140,8 @@ class MCB_Menu extends Admin_Controller {
 		}
 
 	}
-
+	*/
+	
 	function check_permission($uri_string, $global_admin) {
 
 		foreach ($this->config->item('mcb_menu') as $menu_item) {

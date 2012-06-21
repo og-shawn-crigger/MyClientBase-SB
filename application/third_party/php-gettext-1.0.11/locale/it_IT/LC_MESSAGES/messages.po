@@ -287,5 +287,8 @@ msgstr "su"
 msgid "person"
 msgstr "persona"
 
+msgid "Actions Panel"
+msgstr "Pannello Azioni"
+
 msgid "found"
 msgstr "trovate"

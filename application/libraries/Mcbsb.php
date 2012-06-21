@@ -16,10 +16,13 @@ class Mcbsb {
 		$this->success = '';
 		$this->warning = '';
 		$this->system_messages = array();
+
 	}
 	
 	public function __destruct() {
 		//this is executed after the controller has been unloaded
+		
+		//TODO I think I can load the header from here
 	}
 	
 	public function __set($attribute, $value) {
@@ -80,6 +83,14 @@ class Mcbsb {
 		}
 		
 		return $this->system_messages;
+	}
+	
+	public function display_menu() {
+		$plenty_parser = new Plenty_parser();
+		$data = array();
+		//$menu = $plenty_parser->parse('menu.tpl', $data, true, 'smarty', 'mcbsbmanager');
+		$menu = $plenty_parser->parse('menu.tpl', $data, true, 'smarty');
+		return $menu;
 	}
 	
 }

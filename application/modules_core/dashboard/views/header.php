@@ -90,7 +90,7 @@
 			<ul class="sf-menu" id="navigation">
 
                 <?php 
-                	echo modules::run('mcb_menu/header_menu/display', array('view'=>'dashboard/header_menu')); 
+                	echo modules::run('mcb_menu/header_menu/display');
                 ?>
 			</ul>
 		</div>

@@ -600,4 +600,7 @@ $lang['location_updated'] = 'Location has been updated';
 $lang['location_not_updated'] = 'Location has not been updated';
 $lang['contacts_by_location'] = 'Contacts by location';
 $lang['assignments'] = 'Assignments';
+$lang['module_home_page'] = 'Module Home Page';
+$lang['mcbsb_manager'] = 'MCB-SB Manager';
+$lang['disabled'] = 'disabled';
 ?>

@@ -66,7 +66,24 @@ class Mdl_MCB_Modules extends MY_Model {
     	
     }
     
-    /* Refresh database core module records */
+    /**
+     * This method parses the config file of every core modules and refreshes the database module records 
+     * 
+     * @access		private
+     * @param		nothing
+     * @var			
+     * @return		nothing
+     * @example
+     * @see
+     * 
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Jun 21, 2012
+     * 
+     * @todo refactor this method and refresh_custom: they have duplicated code
+     */
     private function refresh_core() {
 
         $this->load->helper('directory');
@@ -140,7 +157,24 @@ class Mdl_MCB_Modules extends MY_Model {
 
     }
 
-    /* Refresh database custom module records */
+    /**
+     * This method parses the config file of every custom modules and refreshes the database module records
+     *
+     * @access		private
+     * @param		nothing
+     * @var
+     * @return		nothing
+     * @example
+     * @see
+     *
+     * @author 		Damiano Venturin
+     * @copyright 	2V S.r.l.
+     * @license		GPL
+     * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+     * @since		Jun 21, 2012
+     *
+     * @todo refactor this method and refresh_core: they have duplicated code
+     */
     private function refresh_custom() {
 
         $this->load->helper('directory');

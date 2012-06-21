@@ -14,7 +14,8 @@
 					<th scope="col" class="first"><?php echo $this->lang->line('name'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('description'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('version'); ?></th>
-					<th scope="col"><?php echo $this->lang->line('author'); ?></th>
+					<th scope="col"><?php echo $this->lang->line('module_home_page'); ?></th>
+					<th scope="col"><?php echo $this->lang->line('status'); ?></th>
 					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 
@@ -37,7 +38,14 @@
 							echo $module->module_version;
 						} ?>
 					</td>
-					<td><a href="<?php echo $module->module_homepage; ?>"><?php echo $module->module_author; ?></a></td>
+					<td><a href="<?php echo $module->module_homepage; ?>"><?php echo $module->module_homepage; ?></a></td>
+					<td><?php 
+						if($module->module_enabled) {
+							echo $this->lang->line('enabled');
+						} else {
+							echo $this->lang->line('disabled');
+						}
+					?></td>
 					<td class="last">
 					<?php 
 					if($module->module_change_status == "1") {
