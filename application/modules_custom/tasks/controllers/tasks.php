@@ -1,25 +1,42 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
 class Tasks extends Admin_Controller {
-
+	
 	function __construct() {
 
 		parent::__construct();
 
 		if (!$this->mdl_mcb_modules->check_enable('tasks')) {
-
-			redirect('dashboard');
-
+			redirect('contact');
 		}
 
+		$this->load->helper('date');
+		
 		$this->load->model('mdl_tasks');
 
 	}
 
+	/**
+	 * Retrieves all the tasks and shows them in a table
+	 * 
+	 * @access		public
+	 * @param		none		
+	 * @var			
+	 * @return		none
+	 * @example
+	 * @see
+	 * 
+	 * @author 		Damiano Venturin
+	 * @copyright 	2V S.r.l.
+	 * @license	GPL
+	 * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+	 * @since		Jun 24, 2012
+	 * 
+	 */
 	function index() {
-
+		
 		$this->_post_handler();
-
+		
 		$this->redir->set_last_index();
 
 		$params = array(
@@ -29,162 +46,177 @@ class Tasks extends Admin_Controller {
 		);
 
 		$data = array(
-			'tasks'					=>	$this->mdl_tasks->get($params),
+			'tasks'					=>	$this->mdl_tasks->getAll(), //$this->mcbsb->task->readAll(), //$this->mdl_tasks->get($params),
 			'show_task_selector'	=>	TRUE
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['table'] = $this->plenty_parser->parse('table.tpl', $data, true, 'smarty', 'tasks');
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'tasks');				
 		$this->load->view('index', $data);
 
 	}
 
+	//TODO rename in EDIT
 	function form() {
 
+		$this->redir->set_last_index();
+
+		$data = array();
+		
 		$this->_post_handler();
 
-		$task_id = uri_assoc('task_id', 3);
-
-		if (!$this->mdl_tasks->validate()) {
-
-			$this->load->helper('form');
-
-			$this->load->helper('text');
-
-			$this->load->model('clients/mdl_clients');
-
-			if (!$_POST AND $task_id) {
-
-				$this->mdl_tasks->prep_validation($task_id);
-
-			}
-
-			elseif (!$_POST AND !$task_id) {
-
-				$this->mdl_tasks->set_form_value('start_date', format_date(time()));
-
-			}
-
-			$data = array(
-				'clients'	=>	$this->mdl_clients->get()
-			);
-
-			$this->load->view('form', $data);
-
+		if ($_POST) { 	//it's an update or a new task
+				
+			//is it a validated submit? (i.e. are all the rules respected?)
+			if ($this->mdl_tasks->validate()) {
+				
+				if(empty($this->mcbsb->task->task_id)) {
+					
+					//it's a new task
+					if($this->mcbsb->task->create()) {
+						$this->mcbsb->system_messages->success = 'Task has been successfully created';
+					} else {
+						$this->mcbsb->system_messages->error = 'Task has not been created';
+					}
+				
+				} else {
+				
+					//it's an update
+					if($this->mcbsb->task->update()) {
+						$this->mcbsb->system_messages->success = 'The task has been successfully updated';
+					} else {
+						$this->mcbsb->system_messages->error = 'The task has not been updated';
+					}
+				}
+				
+				redirect('tasks');
+				
+			} else {
+				$this->mcbsb->system_messages->error = 'The task has been successfully created';
+			}			
 		}
+		
+		if($task_id = uri_assoc('task_id', 3)) {
+			
+			//it's an old task to be edit
+			
+			$this->mcbsb->task->task_id = $task_id;
+			if($this->mdl_tasks->get()) { //this populates $this->mcbsb->task with contact information 
+			
+				//task and contact have been found.				
 
-		else {
-
-			$this->mdl_tasks->save();
-
-			if (!$task_id) {
-
-				$task_id = $this->db->insert_id();
-
+				$data['task'] = $this->mcbsb->task;
+												
+			} else {
+				//contact not found. That's a huge error
+				//TODO system message
+				//TODO redirect
 			}
+		} else {
+						
+			//it's a new task
+			
+			$values = retrieve_uid_oid();
+			if(isset($values['client_id'])) $this->mcbsb->task->client_id = $values['client_id'];
+			if(isset($values['client_id_key'])) $this->mcbsb->task->client_id_key = $values['client_id_key'];
 
-			if ($this->input->post('btn_submit_and_create_invoice')) {
-
-				redirect('tasks/create_invoice/task_id/' . $task_id . '/client_id/' . $this->input->post('client_id'));
-
+			if(! $this->mdl_tasks->retrieve_contact_name($this->mcbsb->task)) {
+				//TODO do something
 			}
-
-			else {
-
-				$this->redir->redirect('tasks');
-
-			}
-
+			
+			$this->mcbsb->task->start_date = now();
+			$data['task'] = $this->mcbsb->task;
 		}
-
+		
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'tasks');
+		$this->load->view('form', $data);
 	}
 
 	function create_invoice() {
-
-		$this->load->model('invoices/mdl_invoices');
-
-		if (!$this->mdl_invoices->validate_create()) {
-
-			if (!$_POST) {
-
-				$this->mdl_invoices->client_id = uri_assoc('client_id', 3);
-
-			}
-
-			$this->load->module('invoices');
-
-			$this->invoices->display_create_invoice();
-
-		}
-
-		else {
-
-			$task_id = uri_assoc('task_id', 3);
-
-			$task_ids = uri_assoc('task_ids', 3);
-
-			$invoice_items = array();
-
-			if ($task_id) {
-
-				$task = $this->mdl_tasks->get(array('where'=>array('mcb_tasks.task_id'=>$task_id)));
-
+		
+		$this->redir->set_last_index();
+		
+		if($task_id = uri_assoc('task_id', 3)) {
+			$this->mcbsb->task->task_id = $task_id;
+			if($this->mdl_tasks->get()) { //this populates $this->mcbsb->task with contact information
+					
+				//task and contact have been found.
+		
+				$this->load->model('invoices/mdl_invoices');
+				
+				if(!$this->mcbsb->task->complete_date) {
+					//TODO system message
+					redirect($this->session->userdata('last_index'));
+				}
+				$invoice_items = array();
 				$invoice_items[] = array(
-					'item_name'			=>	$task->title,
-					'item_description'	=>	$task->description,
-					'item_qty'			=>	1,
-					'item_price'		=>	0
-				);
-
-			}
-
-			elseif ($task_ids) {
-
-				$task_ids = explode('-', $task_ids);
-
-				foreach ($task_ids as $task_id) {
-
-					$task = $this->mdl_tasks->get(array('where'=>array('mcb_tasks.task_id'=>$task_id)));
-
-					$invoice_items[] = array(
-						'item_name'			=>	$task->title,
-						'item_description'	=>	$task->description,
+						'item_name'			=>	$this->mcbsb->task->title,
+						'item_description'	=>	$this->mcbsb->task->description,
 						'item_qty'			=>	1,
 						'item_price'		=>	0
-					);
+				);
 
+				$package = array(
+						'client_id'				=>	$this->mcbsb->task->client_id,
+						'client_id_key'			=>	$this->mcbsb->task->client_id_key,
+						'invoice_date_entered'	=>	$this->mcbsb->task->complete_date,
+						'invoice_is_quote'		=>	0,
+						'invoice_group_id'		=>	1,//$this->input->post('invoice_group_id'),
+						'invoice_items'			=>	$invoice_items
+				);
+				
+				if($invoice_id = $this->mdl_invoices->create_invoice($package)) {
+				
+					$this->mdl_tasks->save_invoice_relation($invoice_id, $task_id);
+					
+					redirect('invoices/edit/invoice_id/' . $invoice_id);
+				} else {
+					//TODO system message
+					redirect('tasks');
 				}
-
+								
+			} else {
+				//contact not found. That's a huge error
+				//TODO system message
+				redirect('tasks');
 			}
-
-			$package = array(
-				'client_id'				=>	$task->client_id,
-				'invoice_date_entered'	=>	$this->input->post('invoice_date_entered'),
-				'invoice_is_quote'		=>	($this->input->post('invoice_is_quote') ? 1 : 0),
-				'invoice_group_id'		=>	$this->input->post('invoice_group_id'),
-				'invoice_items'			=>	$invoice_items
-			);
-
-			$invoice_id = $this->mdl_invoices->create_invoice($package);
-
-			$this->mdl_tasks->save_invoice_relation($invoice_id, $task_id);
-
-			redirect('invoices/edit/invoice_id/' . $invoice_id);
-
+				
+		} else {
+			//no task_id in the url
+			//TODO system message
+			redirect('tasks');
 		}
-
+		
 	}
+	
 
 	function delete() {
 
-		if (uri_assoc('task_id', 3)) {
+		if ($task_id = uri_assoc('task_id', 3)) {
 
-			$this->mdl_tasks->delete(array('task_id'=>uri_assoc('task_id', 3)));
-
+			$this->mcbsb->task->task_id = $task_id;
+			if($this->mdl_tasks->get()) {
+				
+				//TODO if is not invoiced ...
+				
+				if($this->mcbsb->task->delete()) {
+					//TODO system message
+				} else {
+					//TODO system message
+				}
+			}
+			//$this->mdl_tasks->delete(array('task_id'=>uri_assoc('task_id', 3)));
+		} else {
+			//TODO system message
 		}
 
 		$this->redir->redirect('tasks');
 
 	}
 
+	
 	function save_settings() {
 
 		if ($this->input->post('dashboard_show_open_tasks')) {
@@ -201,6 +233,7 @@ class Tasks extends Admin_Controller {
 
 	}
 
+	/*
 	function dashboard_widget() {
 
 		if ($this->mdl_mcb_data->setting('dashboard_show_open_tasks') == "TRUE") {
@@ -222,40 +255,15 @@ class Tasks extends Admin_Controller {
 
 	}
 
+	*/
+	
 	function _post_handler() {
-
-		if ($this->input->post('btn_add')) {
-
-			redirect('tasks/form');
-
-		}
-
-		elseif ($this->input->post('btn_cancel')) {
+		
+		if ($this->input->post('btn_cancel')) {
 
 			redirect('tasks/index');
 
 		}
-
-		elseif ($this->input->post('btn_create_mti')) {
-
-			$task_id = $this->input->post('task_id');
-
-			$task_ids = implode('-', $task_id);
-
-			$params = array(
-				'where'	=>	array(
-					'mcb_tasks.task_id'	=>	$task_id[0]
-				)
-			);
-
-			$task = $this->mdl_tasks->get($params);
-
-			$client_id = $task->client_id;
-
-			redirect('tasks/create_invoice/task_ids/' . $task_ids . '/client_id/' . $client_id);
-
-		}
-
 	}
 
 }
