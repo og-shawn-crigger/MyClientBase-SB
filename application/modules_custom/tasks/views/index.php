@@ -1,6 +1,6 @@
 <?php $this->load->view('header'); ?>
 
-<?php $this->load->view('jquery_tasks'); ?>
+<?php $this->load->view('tasks/jquery_tasks'); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -14,9 +14,7 @@
 
 		<div class="content toggle no_padding">
 
-			<?php //$this->load->view('table');
-				echo $table;
-			?>
+			<?php echo $table;	?>
 
 		</div>
 

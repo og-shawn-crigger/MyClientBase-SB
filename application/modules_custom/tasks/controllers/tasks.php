@@ -46,7 +46,7 @@ class Tasks extends Admin_Controller {
 		);
 
 		$data = array(
-			'tasks'					=>	$this->mdl_tasks->getAll(), //$this->mcbsb->task->readAll(), //$this->mdl_tasks->get($params),
+			'tasks'					=>	$this->mdl_tasks->getAll(), 
 			'show_task_selector'	=>	TRUE
 		);
 
@@ -233,7 +233,7 @@ class Tasks extends Admin_Controller {
 
 	}
 
-	/*
+	
 	function dashboard_widget() {
 
 		if ($this->mdl_mcb_data->setting('dashboard_show_open_tasks') == "TRUE") {
@@ -255,7 +255,6 @@ class Tasks extends Admin_Controller {
 
 	}
 
-	*/
 	
 	function _post_handler() {
 		

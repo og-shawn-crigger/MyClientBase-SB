@@ -35,8 +35,8 @@ class Mdl_Tasks extends MY_Model {
 
 	public function getAll($skip_contact_info = false) {
 		
-		//TODO add limit and pagination
-		if($tasks = $this->mcbsb->task->readAll()) {
+		//TODO add limit, order, pagination and filter
+		if($tasks = $this->getTasks()) {
 			
 			if(!$skip_contact_info){
 
@@ -48,6 +48,32 @@ class Mdl_Tasks extends MY_Model {
 			return $tasks;		
 		}
 		
+		return false;
+	}
+
+	public function getAllOpen($skip_contact_info = false) {
+	
+		$params = array('where' => array('complete_date' => ''));
+		if($tasks = $this->getTasks($params)) {
+				
+			if(!$skip_contact_info){
+	
+				foreach ($tasks as $task) {
+					$this->retrieve_contact_name($task);
+				}
+			}
+				
+			return $tasks;
+		}
+	
+		return false;
+	}	
+	
+	
+	private function getTasks(array $params = null ) {
+	
+		if($tasks = $this->mcbsb->task->readAll($params)) return $tasks;
+	
 		return false;
 	}
 	
@@ -175,52 +201,6 @@ class Mdl_Tasks extends MY_Model {
 		}
 	}
 	
-	function get_old(array $params = null) {				
-		
-		if(is_null($params)) {
-			if(!empty($this->id)) { 
-				$params = array($this->primary_key => $this->id);
-			} else {
-				return false;
-			}
-		}
-		
-		$skip_contact_retrieve = false;
-		
-		if(isset($params['skip_contact_retrieve'])) { 
-			$skip_contact_retrieve = $params['skip_contact_retrieve'];
-			unset($params['skip_contact_retrieve']);
-		}
-		
-		if($results = parent::get($params)){
-			
-			if($skip_contact_retrieve) return $results;
-			
-			$this->load->model('contact/mdl_contacts','contacts');
-			
-			//retrieves contact information
-			if(is_array($results)) {
-				foreach ($results as $key => $task) {
-					$input = array($task->client_id_key => $task->client_id);
-					
-	 				if($client = $this->contacts->get($input)) {
-	 					if(strtolower($client->objName) == 'person') $task->client_name = $client->cn;
-	 					if(strtolower($client->objName) == 'organization') $task->client_name = $client->o;
-					}
-				}
-			} else {
-				//only one results => it's an object
-				$task = $results;
-				$input = array($task->client_id_key => $task->client_id);
-					
-				if($client = $this->contacts->get($input)) {
-					if(strtolower($client->objName) == 'person') $task->client_name = $client->cn;
-					if(strtolower($client->objName) == 'organization') $task->client_name = $client->o;
-				}
-			}
-		}
-		return $results;
-	}
 	
 	function save() {
 
