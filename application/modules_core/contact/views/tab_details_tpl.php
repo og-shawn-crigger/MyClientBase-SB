@@ -58,7 +58,7 @@
 
 <div style="clear: both;">&nbsp;</div>
 
-<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
 <input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
 <div style="clear: both;">&nbsp;</div>

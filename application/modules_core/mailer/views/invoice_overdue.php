@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<div class="grid_11" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
     <form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
@@ -8,7 +8,7 @@
 
             <h3 class="title_black"><?php echo $this->lang->line('select_invoices'); ?></h3>
 
-            <div class="content toggle no_padding">
+            <div class="content toggle no_padding" style="min-height: 0px;">
 
                 <table style="width: 100%;">
                     <tr>
@@ -91,11 +91,12 @@
 					</dd>
 				</dl>
 
+				<div style="float: right; margin-right: 10px; margin-bottom: 0px;">
+                	<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('send_email'); ?>" />
+                	<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				
                 <div style="clear: both;">&nbsp;</div>
-
-                <input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('send_email'); ?>" />
-                <input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-
             </div>
 
         </div>
@@ -103,5 +104,5 @@
     </form>
 
 </div>
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php echo $actions_panel; ?>
+<?php $this->load->view('footer'); ?>

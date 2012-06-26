@@ -365,7 +365,7 @@ $config['proxy_ips'] = '';
 | Define where HMVC modules are stored
 |
 */
-$config['modules_locations'] = array(
+$config['modules_locations'] = array(	
 APPPATH.'modules_core/' => '../modules_core/',
 APPPATH.'modules_custom/' => '../modules_custom/');
 

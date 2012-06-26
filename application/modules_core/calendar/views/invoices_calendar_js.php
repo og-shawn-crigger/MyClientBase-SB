@@ -85,7 +85,7 @@
 			height: 350,
 			
 			eventSources:[
-				
+
 				{
 					url: "calendar/jquery_get_invoices/overdue",
           			color: 'red',
@@ -102,7 +102,7 @@
 					url: "calendar/jquery_get_invoices/quotes",
 					color: 'green',
 					textColor: 'white'
-				},				
+				}				
 				
 
 			],

@@ -13,8 +13,9 @@ class Cron extends Cron_Controller {
     }
 
     function email_overdue($cron_key) {
-
-    	//TODO delme
+		
+    	return true; //TODO delme
+    	
         //$this->load->library('session');
 
         $this->_check_auth($cron_key);

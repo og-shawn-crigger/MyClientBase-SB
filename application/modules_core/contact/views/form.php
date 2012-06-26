@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <script type="text/javascript">
 	$(function(){
@@ -6,7 +6,7 @@
 	});
 </script>
 
-<?php $this->load->view('dashboard/jquery_clear_password'); ?>
+<?php $this->load->view('jquery_clear_password'); ?>
 
 <!-- $actions_panel contains form.tpl -->
 <?php echo $form; ?>
@@ -14,6 +14,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php //$this->load->view('dashboard/sidebar', array('side_block'=>'contact/sidebar')); ?>
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>'calendar/header_insert')); ?>
+<?php $this->load->view('header', array('header_insert'=>'calendar/invoices_calendar_js')); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -20,4 +20,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

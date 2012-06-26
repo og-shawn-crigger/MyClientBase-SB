@@ -302,11 +302,11 @@ class Mdl_Location extends MY_Model {
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
 	
 		if($this->crr->has_no_errors) {
-			$this->mcbsb->success = 'location_updated';
+			$this->mcbsb->system_messages->success = 'location_updated';
 			return true; 
 		}
 		
-		$this->mcbsb->success = 'location_not_updated';
+		$this->mcbsb->system_messages->success = 'location_not_updated';
 		
 		return false;
 	}
@@ -319,11 +319,11 @@ class Mdl_Location extends MY_Model {
 		
 		if($this->crr->has_no_errors) {
 			$this->locId = $this->crr->data['locId'];
-			$this->mcbsb->success = 'location_created';
+			$this->mcbsb->system_messages->success = 'location_created';
 			return true;
 		}
 		
-		$this->mcbsb->error = 'location_not_created';
+		$this->mcbsb->system_messages->error = 'location_not_created';
 		
 		return false;		
 	}	

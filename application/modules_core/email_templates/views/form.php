@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="grid_11" id="content_wrapper">
 
@@ -27,7 +27,7 @@
 
                 <div style="clear: both;">&nbsp;</div>
 
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
 				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
 			</form>
@@ -38,4 +38,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

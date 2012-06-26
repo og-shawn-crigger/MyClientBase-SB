@@ -1,45 +1,38 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class Mcbsb {
+class System_Messages extends CI_Model {
 	
 	private $CI;
 	
-	protected $error;
-	protected $success;
-	protected $warning;
-	protected $system_messages;
+	protected $error = '';
+	protected $success = '';
+	protected $warning = '';
+	protected $all = array();
+	
+	private $system_message_types = array('success','warning','error');
 	
 	public function __construct() {
+		parent::__construct();
 		$this->CI = &get_instance();
-		
-		$this->error = '';
-		$this->success = '';
-		$this->warning = '';
-		$this->system_messages = array();
-
 	}
 	
 	public function __destruct() {
-		//this is executed after the controller has been unloaded
-		
-		//TODO I think I can load the header from here
+
 	}
 	
 	public function __set($attribute, $value) {
-		if($attribute == 'system_messages') return false;
-		
-		$system_message_types = array('success','warning','error');
+		if($attribute == 'all') return false;
 		
 		if (!isset($this->$attribute)) return false;
 		
-		if(in_array($attribute, $system_message_types)) {
+		if(in_array($attribute, $this->system_message_types)) {
 			$this->set_system_message($attribute, $value);
 		}
 		return true;
 	}
 	
 	public function __get($attribute) {
-		if($attribute == 'system_messages') 
+		if($attribute == 'all') 
 			return $this->get_system_messages();
 		
 		return isset($this->$attribute) ? $this->$attribute : null;
@@ -50,12 +43,13 @@ class Mcbsb {
 		if(!is_string($text)) return false;
 		
 		//retrieve messages from session
-		$tmp = $this->CI->session->flashdata('system_messages');
-		if(isset($tmp[$type])) $this->system_messages[$type] = $tmp[$type];
+ 		$tmp = $this->CI->session->flashdata('system_messages');
+	
+		if(isset($tmp[$type])) $this->all[$type] = $tmp[$type];
 		
 		//update with the new message
-		$this->system_messages[$type][] = $text;
-		$this->CI->session->set_flashdata('system_messages',$this->system_messages);
+		$this->all[$type][] = $text;
+		$this->CI->session->set_flashdata('system_messages',$this->all);
 	}
 
 	private function get_system_messages() {
@@ -63,26 +57,26 @@ class Mcbsb {
 		//retrieve messages from session
 		$tmp = $this->CI->session->flashdata('system_messages');
 		if(is_array($tmp)) {
-			$this->system_messages = $tmp;
+			$this->all = $tmp;
 		} else {
 			return array();
 		}
 		
 		//translate if possible otherwise show as it is
-		foreach ($this->system_messages as $type => $messages) {
+		foreach ($this->all as $type => $messages) {
 			foreach ($messages as $key => $message) {
 				if($translation = $this->CI->lang->line($message)) {
-					$this->system_messages[$type][$key] = $translation;
+					$this->all[$type][$key] = $translation;
 				} 
 			}	
 		}
 		
 		//join all the messages in one line by group
-		foreach ($this->system_messages as $type => $messages) {			
-			$this->system_messages[$type] = implode(' - ', $messages);
+		foreach ($this->all as $type => $messages) {			
+			$this->all[$type] = implode(' - ', $messages);
 		}
 		
-		return $this->system_messages;
+		return $this->all;
 	}
 	
 	public function display_menu() {

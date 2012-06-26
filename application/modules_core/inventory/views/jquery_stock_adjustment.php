@@ -9,7 +9,7 @@
 			autoOpen: false,
 			title: '<?php echo $this->lang->line('adjust_stock'); ?>',
 			buttons: {
-				'<?php echo $this->lang->line('submit'); ?>': function() {
+				'<?php echo $this->lang->line('save'); ?>': function() {
 					$(this).dialog('close');
 					adjust_stock();
 				},

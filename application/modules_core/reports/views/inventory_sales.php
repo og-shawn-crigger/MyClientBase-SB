@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
 <script type="text/javascript">
 
@@ -74,7 +74,7 @@
 
                 <?php $this->load->view('partial_output_type'); ?>
 
-				<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+				<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
 
 			</form>
 			<div style="clear: both;">&nbsp;</div>
@@ -89,4 +89,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

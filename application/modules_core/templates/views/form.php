@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -37,10 +37,12 @@
 
 				<textarea name="template_content" style="width: 730px; height: 650px;"><?php echo $this->mdl_templates->form_value('template_content'); ?></textarea>
 
-				<div style="clear: both;">&nbsp;</div>
-
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />&nbsp;<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-
+				<div style="float: right; margin-top: 10px; margin-right: 10px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				
+				<div style="clear: both;">&nbsp;</div>				
 			</form>
 
 			<?php } ?>
@@ -54,4 +56,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

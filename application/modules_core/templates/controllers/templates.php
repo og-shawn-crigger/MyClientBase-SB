@@ -39,7 +39,16 @@ class Templates extends Admin_Controller {
 		);
 
 		$data['site_url'] = site_url($this->uri->uri_string());
-		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
+		switch ($this->type){
+			case 'payment_receipts':
+			case 'invoices':
+				$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+			break;
+							
+			default:
+				$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
+			break;
+		}
 		
 		$this->load->view('index', $data);
 
@@ -62,7 +71,17 @@ class Templates extends Admin_Controller {
 			);
 			
 			$data['site_url'] = site_url($this->uri->uri_string());
-			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
+			
+			switch ($this->type){
+				case 'payment_receipts':
+				case 'invoices':
+					$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				break;
+							
+				default:
+					$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'templates');
+				break;
+			}			
 
 			$this->load->view('form', $data);
 

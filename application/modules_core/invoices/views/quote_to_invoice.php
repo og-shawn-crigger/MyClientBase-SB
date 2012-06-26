@@ -1,8 +1,8 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -30,11 +30,13 @@
 						</select>
 					</dd>
 				</dl>
-
+                
+                <div style="float: right; margin-top: 10px; margin-right: 10px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('create_invoice'); ?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				
                 <div style="clear: both;">&nbsp;</div>
-
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('create_invoice'); ?>" />
-				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
 			</form>
 
@@ -44,6 +46,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>'invoices/sidebar')); ?>
+<?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

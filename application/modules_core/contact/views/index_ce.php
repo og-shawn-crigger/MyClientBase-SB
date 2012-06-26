@@ -1,13 +1,13 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <?php echo $js_autofocus; ?>
 
-<div class="grid_14" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
-	<div class="section_wrapper" style="background-color: transparent;">
-		<?php echo $middle; ?>
-	</div>
+	<?php echo $middle; ?>
 
 </div>
+<!-- $actions_panel contains actions_panel.tpl -->
+<?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

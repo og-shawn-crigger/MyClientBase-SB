@@ -18,7 +18,9 @@ class Fields extends Admin_Controller {
 			'fields'	=>	$this->mdl_fields->get(),
 			'objects'	=>	$this->mdl_fields->objects
 		);
-
+		
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'fields');
 		$this->load->view('index', $data);
 
 	}
@@ -39,7 +41,9 @@ class Fields extends Admin_Controller {
 				'objects'	=>	$this->mdl_fields->objects,
 				'field_id'	=>	$field_id
 			);
-
+			
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'fields');
 			$this->load->view('form', $data);
 
 		}

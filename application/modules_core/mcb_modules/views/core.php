@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<div class="grid_11" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -14,9 +14,8 @@
 					<th scope="col" class="first"><?php echo $this->lang->line('name'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('description'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('version'); ?></th>
-					<th scope="col"><?php echo $this->lang->line('module_home_page'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('status'); ?></th>
-					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
+					<th scope="col" class="last"  style="text-align: center;"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 
 				<?php
@@ -38,7 +37,6 @@
 							echo $module->module_version;
 						} ?>
 					</td>
-					<td><a href="<?php echo $module->module_homepage; ?>"><?php echo $module->module_homepage; ?></a></td>
 					<td><?php 
 						if($module->module_enabled) {
 							echo $this->lang->line('enabled');
@@ -46,13 +44,13 @@
 							echo $this->lang->line('disabled');
 						}
 					?></td>
-					<td class="last">
+					<td class="last" style="text-align: center;">
 					<?php 
 					if($module->module_change_status == "1") {
 						if($module->module_enabled) {
-							echo anchor('mcb_modules/disable/' . $module->module_path, $this->lang->line('disable'));
+							echo anchor('mcb_modules/disable/' . $module->module_path, icon('delete'));						
 						} else {
-							echo anchor('mcb_modules/enable/' . $module->module_path, $this->lang->line('enable'));
+							echo anchor('mcb_modules/enable/' . $module->module_path, icon('check'));
 						}
 					} else {
 						echo '--';
@@ -69,5 +67,5 @@
 	</div>
 
 </div>
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php echo $actions_panel; ?>
+<?php $this->load->view('footer'); ?>

@@ -30,6 +30,9 @@ class Users extends Admin_Controller {
             'users' =>	$this->mdl_users->get($params)
         );
 
+        $data['site_url'] = site_url($this->uri->uri_string());
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'users');
+        
         $this->load->view('index', $data);
 
     }
@@ -57,6 +60,9 @@ class Users extends Admin_Controller {
 				'tax_rates'		=>	$this->mdl_tax_rates->get()
             );
 
+            $data['site_url'] = site_url($this->uri->uri_string());
+            $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'users');
+            
             $this->load->view('form', $data);
 
         }

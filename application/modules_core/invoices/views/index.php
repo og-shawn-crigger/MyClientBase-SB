@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('dashboard/jquery_date_picker', 'invoices/jquery_client_ac'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('jquery_date_picker', 'invoices/jquery_client_ac'))); ?>
 
 <?php echo modules::run('invoices/widgets/generate_dialog'); ?>
 
@@ -31,7 +31,7 @@
 						</td>
 						<td>
 							<label style="height: 20px;">&nbsp;
-							<input type="submit" id="btn_submit_search" name="btn_submit_search" class="uibutton"  value="<?php echo $this->lang->line('submit'); ?>" /></label>
+							<input type="submit" id="btn_submit_search" name="btn_submit_search" class="uibutton"  value="<?php echo $this->lang->line('save'); ?>" /></label>
 						</td>
 					</tr>
 				</table>
@@ -64,4 +64,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

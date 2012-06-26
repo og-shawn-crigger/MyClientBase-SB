@@ -1,5 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+function isAssociativeArray(array $arr) {
+	return (bool)count(array_filter(array_keys($arr), 'is_string'));
+}
+
 /**
  * Transforms and returs the given string. Spaces are replaced with underscores and only characters and numbers are left
  * 
@@ -16,7 +21,6 @@
  * @since		Feb 5, 2012
  * 
  */
-
 function retrieve_uid_oid(){
 	$CI = &get_instance();
 	$uid = uri_assoc('uid');
@@ -32,9 +36,28 @@ function retrieve_uid_oid(){
 		}
 	}
 	 
-	if($uid) $params = array('uid' => $uid);
-	if($oid) $params = array('oid' => $oid);
-	if(isset($client_id) && $client_id) $params = array('client_id' => $client_id);
+	if($uid) {
+		$params = array(
+				'uid' => $uid,
+				'client_id' => $uid,
+				'client_id_key' => 'uid'
+		);
+	}
+	
+	if($oid) {
+		$params = array(
+				'oid' => $oid,
+				'client_id' => $oid,
+				'client_id_key' => 'oid'
+		);
+				
+	}
+		
+	if(isset($client_id) && $client_id) {
+		$params = array(
+				'client_id' => $client_id
+		);
+	}
 	
 	return isset($params) ? $params : null;	
 }
@@ -79,6 +102,36 @@ function saveUploadedFile()
 		$output = array('error' => $error, 'data' => $data);
 		return $output;
 	}	
+}
+
+/**
+ * in_array case insensitive: it will return a match if the needle is found in the haystack 
+ * 
+ * @access		public
+ * @param		$needle String
+ * @param		$haystack Array
+ * @var			
+ * @return		boolean
+ * @example
+ * @see
+ * 
+ * @author 		Damiano Venturin
+ * @copyright 	2V S.r.l.
+ * @license		GPL
+ * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+ * @since		Jun 22, 2012
+ * 
+ * @todo		
+ */
+ 
+function in_arrayi($needle, array $haystack) {
+	$needle = strtolower($needle);
+	
+	$haystack_flipped = array_flip($haystack);
+	$haystack_flipped_lower = array_change_key_case($haystack_flipped);
+	$haystack = array_flip($haystack_flipped_lower);
+	
+	return in_array($needle, $haystack);
 }
 
 /* End of file mcbsb_helper.php */

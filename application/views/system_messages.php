@@ -5,10 +5,6 @@
 <?php } ?>
 
 <?php 
-	$system_messages = $this->mcbsb->system_messages;
-	foreach ($system_messages as $type => $message) {
-		echo '<div class="' . $type . '">' . $message . '</div>';
-	}
 	if ($this->session->flashdata('success_save')) { 
 ?>
 <div class="success"><?php echo $this->lang->line('this_item_has_been_saved'); ?></div>

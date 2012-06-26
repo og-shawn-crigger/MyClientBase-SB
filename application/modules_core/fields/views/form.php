@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<div class="grid_11" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -10,6 +10,7 @@
 
 			<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 
+				<div class="left_box">
 				<?php if (!$field_id) { ?>
 				<dl>
 					<dt><label>* <?php echo $this->lang->line('object'); ?>: </label></dt>
@@ -33,16 +34,21 @@
 				</dl>
 
 				<?php } ?>
-
+				</div>
+				
+				<div class="left_box">
 				<dl>
 					<dt><label>* <?php echo $this->lang->line('field_name'); ?>: </label></dt>
 					<dd><input type="text" name="field_name" id="field_name" value="<?php echo $this->mdl_fields->form_value('field_name'); ?>" /></dd>
 				</dl>
+				</div>
 
+				<div style="margin-top: 0px; float: right; margin-right: 5px; margin-top: 0px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				    				
                 <div style="clear: both;">&nbsp;</div>
-
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
-				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
 			</form>
 
@@ -51,5 +57,5 @@
 	</div>
 
 </div>
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php echo $actions_panel; ?>
+<?php $this->load->view('footer'); ?>

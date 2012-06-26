@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/jquery_table_dnd'); ?>
+<?php $this->load->view('jquery_table_dnd'); ?>
 
 <table style="width: 100%;" id="dnd">
 

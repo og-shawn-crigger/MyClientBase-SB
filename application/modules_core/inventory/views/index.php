@@ -1,16 +1,10 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('inventory/jquery_stock_adjustment'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('inventory/jquery_stock_adjustment'))); ?>
 
 <div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('inventory_items'); ?>
-		<span style="font-size: 60%;">
-		<?php 
-			//$this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add'))); 
-		?>
-		</span>
-		</h3>
+		<h3 class="title_black"><?php echo $this->lang->line('inventory_items'); ?></h3>
 
 		<div class="content toggle no_padding">
 
@@ -61,11 +55,6 @@
 </div>
 
 <!-- $actions_panel contains actions_panel.tpl -->
-<?php 
-	//$this->load->view('dashboard/sidebar', array('side_block'=>'inventory/sidebar'));
-	echo $actions_panel; 
-?>
+<?php echo $actions_panel; ?>
 	
-	 
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <?php echo modules::run('invoices/widgets/generate_dialog'); ?>
 
@@ -8,7 +8,7 @@
 
 		<h3 class="title_black"><?php echo $this->lang->line('invoice_search'); ?>
 			<span style="font-size: 60%;">
-				<?php $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_invoice', 'btn_value'=>$this->lang->line('create_invoice'))); ?>
+				<?php $this->load->view('btn_add', array('btn_name'=>'btn_add_invoice', 'btn_value'=>$this->lang->line('create_invoice'))); ?>
 			</span>
 
 		</h3>
@@ -23,4 +23,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

@@ -12,7 +12,7 @@
     </head>
     <body>
 
-        <?php $this->load->view('dashboard/jquery_set_focus', array('id'=>'username')); ?>
+        <?php $this->load->view('jquery_set_focus', array('id'=>'username')); ?>
 
         <div class="container_10" id="center_wrapper">
 
@@ -22,7 +22,7 @@
 
                     <h3 class="title_black"><?php echo application_title() . ' ' . $this->lang->line('password_recovery'); ?></h3>
 
-                    <?php $this->load->view('dashboard/system_messages'); ?>
+                    <?php $this->load->view('system_messages'); ?>
 
                     <div class="content toggle">
 

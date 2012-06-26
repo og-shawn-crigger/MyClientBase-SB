@@ -223,6 +223,8 @@ class Plenty_parser extends CI_Driver_Library {
             }
         }
         
+        if($this->ci->smarty_view_path) $template = $this->ci->smarty_view_path . $template;
+        
         // Call the driver parse function
         return $this->{$this->_current_driver}->parse($template, $data, $return);
     }

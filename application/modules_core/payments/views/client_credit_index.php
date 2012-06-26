@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <?php echo modules::run('payments/payment_widgets/generate_dialog'); ?>
 
@@ -8,7 +8,7 @@
 
 		<h3 class="title_black"><?php echo $this->lang->line('account_deposits'); ?>
 		<span style="font-size: 60%;">
-		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('enter_deposit'))); ?>
+		<?php $this->load->view('btn_add', array('btn_value'=>$this->lang->line('enter_deposit'))); ?>
 		</span>
 		</h3>
 
@@ -22,4 +22,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

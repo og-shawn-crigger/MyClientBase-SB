@@ -19,7 +19,7 @@ class Invoice_Search extends Admin_Controller {
 			$this->load->model('invoice_statuses/mdl_invoice_statuses');
 
             $client_params = array(
-                'select'    =>  'mcb_clients.client_id, mcb_clients.client_name'
+                //'select'    =>  'mcb_clients.client_id, mcb_clients.client_name'
             );
 
 			$data = array(

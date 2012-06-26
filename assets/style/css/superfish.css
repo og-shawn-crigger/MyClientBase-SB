@@ -2,7 +2,6 @@
 /*** ESSENTIAL STYLES ***/
 .sf-menu, .sf-menu * {
 	margin:			0;
-
 	padding:		0;
 	list-style:		none;
 }
@@ -84,8 +83,7 @@ ul.sf-menu li li li.sfHover ul {
 	background:		#141414;
 }
 #navigation.sf-menu li a:active {
-/*	padding:		0 15px;*/
-color: #ffffff;
+	color: #ffffff;
 }
 #navigation.sf-menu li ul a {
 	display:		block; 

@@ -12,6 +12,10 @@ class Mcb_Modules extends Admin_Controller {
 	}
 
 	function index() {
+		redirect('mcb_modules/core');
+	}
+	
+	function custom() {
 
 		$this->mdl_mcb_modules->refresh();
 
@@ -19,7 +23,9 @@ class Mcb_Modules extends Admin_Controller {
 			'modules'	=>	$this->mdl_mcb_modules->custom_modules
 		);
 
-		$this->load->view('index', $data);
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'mcb_modules');
+		$this->load->view('custom', $data);
 
 	}
 
@@ -32,6 +38,8 @@ class Mcb_Modules extends Admin_Controller {
 				'modules'	=>	$this->mdl_mcb_modules->core_modules
 		);
 	
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'mcb_modules');
 		$this->load->view('core', $data);
 	
 	}

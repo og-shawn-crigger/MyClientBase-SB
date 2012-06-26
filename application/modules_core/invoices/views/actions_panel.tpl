@@ -23,7 +23,7 @@ $(document).ready(function() {
 	<h3 class="title_black">{t}Main Actions{/t}</h3>
 
 	<ul class="quicklinks content toggle" >
-{* siteurl:{$site_url} *}
+{* siteurl:{$site_url} *} 
 		{* global items: these items are always visible except the page destination of the link *}
 			{if !{preg_match pattern="\/invoices\/index$" subject=$site_url}}
 				<li><a href="/invoices/index">{t}Show Invoices{/t}</a></li>
@@ -54,6 +54,14 @@ $(document).ready(function() {
 					<li><a href="/contact/details/oid/{$contact_id}">{t}Go back to contact's profile{/t}</a></li>
 				{/if}				
 			{/if}
+		{else}
+			{if isset($contact_id) and isset($contact_id_key)}
+				<li><a href="/contact/details/{$contact_id_key}/{$contact_id}">{t}Go back to contact's profile{/t}</a></li>
+			{else}
+				{if isset($invoice) and isset($invoice->client_id) and isset($invoice->client_id_key)}
+					<li><a href="/contact/details/{$invoice->client_id_key}/{$invoice->client_id}">{t}Contact's profile{/t}</a></li>
+				{/if}
+			{/if}
 		{/if}
 		
 		{* Go back to invoice *}
@@ -72,25 +80,30 @@ $(document).ready(function() {
 			{/if}
 		{/if}
 		
-		{*
-		{if isset($invoice) or {preg_match pattern="\/calendar" subject=$site_url} or {preg_match pattern="\/invoices\/create" subject=$site_url} or {preg_match pattern="\/payments\/" subject=$site_url}}
-
-		{/if}		
-        
-		{if isset($invoices)}
-				{if {preg_match pattern="\/is_quote\/1" subject=$site_url}}
-					<li><a href="/invoices/index">{t}Show Invoices{/t}</a></li>
-				{else}
-					<li><a href="/invoices/index/is_quote/1">{t}Show Quotes{/t}</a></li>	
-				{/if}
-				<li><a id="btn_calendar_view" href="{$site_url}?btn_calendar_view=true">{t}Calendar View{/t}</a></li>		
-				<li><a id="show_search" href="#">{t}Search{/t}</a></li>
+		{if {preg_match pattern="\/payments\/payment_methods\/form" subject=$site_url}}
+			<li><a href="/payments/payment_methods">{t}Show Payment Methods{/t}</a></li>
 		{/if}
-		*}		
+
+		{if {preg_match pattern="\/templates\/form\/type\/payment_receipts\/template_name" subject=$site_url}}
+			<li><a href="/templates/index/type/payment_receipts">{t}Show Receipts Templates{/t}</a></li>
+		{/if}
+		
+		{if {preg_match pattern="\/invoice_statuses\/form" subject=$site_url}}
+			<li><a href="/invoice_statuses/index">{t}Show Invoice Statuses{/t}</a></li>
+		{/if}
+
+		{if {preg_match pattern="\/invoices\/invoice_groups\/form" subject=$site_url}}
+			<li><a href="/invoices/invoice_groups/index">{t}Show Invoice Groups{/t}</a></li>
+		{/if}		
+
+		{if {preg_match pattern="\/templates\/form\/type\/invoices\/template_name" subject=$site_url}}
+			<li><a href="/templates/index/type/invoices">{t}Show Invoice Templates{/t}</a></li>
+		{/if}		
+		
 	</ul>
 </div>
 
-{if isset($invoice) and !{preg_match pattern="\/items\/form\/" subject=$site_url}}
+{if isset($invoice) and !{preg_match pattern="\/items\/form\/" subject=$site_url} and !{preg_match pattern="\/invoices\/quote_to_invoice\/invoice_id\/" subject=$site_url}}
 <div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
 	<h3 class="title_black">{t}Invoice Actions{/t}</h3>
 
@@ -153,5 +166,53 @@ $(document).ready(function() {
 		<li><a href="/payments/payment_methods/form">{t}Add Payment Method{/t}</a></li>		
 	</ul>
 
+</div>
+{/if}
+
+{* Payment Receipts *}
+{if {preg_match pattern="\/templates\/index\/type\/payment_receipts" subject=$site_url}}
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+
+	<h3 class="title_black">{t}Payment Method Actions{/t}</h3>
+
+	<ul class="quicklinks content toggle" >
+		<li><a href="/templates/form/type/payment_receipts/template_name">{t}Add Payment Receipt Template{/t}</a></li>		
+	</ul>
+</div>
+{/if}
+
+{* Invoice Statuses *}
+{if {preg_match pattern="\/invoice_statuses\/index$" subject=$site_url} or {preg_match pattern="\/invoice_statuses$" subject=$site_url}}
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+
+	<h3 class="title_black">{t}Invoice Statuses Actions{/t}</h3>
+
+	<ul class="quicklinks content toggle" >
+		<li><a href="/invoice_statuses/form">{t}Add Invoice Status{/t}</a></li>		
+	</ul>
+</div>
+{/if}
+
+{* Invoice Groups *}
+{if {preg_match pattern="\/invoices\/invoice_groups$" subject=$site_url} or {preg_match pattern="\/invoices\/invoice_groups\/index$" subject=$site_url}}
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+
+	<h3 class="title_black">{t}Invoice Groups Actions{/t}</h3>
+
+	<ul class="quicklinks content toggle" >
+		<li><a href="/invoices/invoice_groups/form">{t}Add Invoice Group{/t}</a></li>		
+	</ul>
+</div>
+{/if}
+
+{* Invoice Templates *}
+{if {preg_match pattern="\/templates\/index\/type\/invoices$" subject=$site_url}}
+<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+
+	<h3 class="title_black">{t}Invoice Templates Actions{/t}</h3>
+
+	<ul class="quicklinks content toggle" >
+		<li><a href="/templates/form/type/invoices/template_name/">{t}Add Invoice Template{/t}</a></li>		
+	</ul>
 </div>
 {/if}

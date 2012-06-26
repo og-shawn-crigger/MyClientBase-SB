@@ -29,10 +29,9 @@ class Mdl_Fields extends MY_Model {
 		$this->object_tables = array(
 			1	=>	'mcb_invoices',
 			2	=>	'mcb_invoice_items',
-			//3	=>	'mcb_clients',
-			3	=>	'mcb_contacts',
-			4	=>	'mcb_payments',
-            5   =>  'mcb_users'
+			//3	=>	'mcb_contacts',
+			3	=>	'mcb_payments',
+            4   =>  'mcb_users'
 		);
 
 		$this->column_prefixes = array(

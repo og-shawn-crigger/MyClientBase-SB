@@ -1,8 +1,8 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <?php $this->load->view('inventory/inventory_select'); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -87,10 +87,10 @@
 				</dl>
 				<?php } ?>
 
-				<span style="float: right">
-						<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" name="btn_submit_item" id="btn_submit" value="<?php echo $this->lang->line('save_item'); ?>" />
-						<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" name="btn_cancel" id="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-				</span>
+				<div style="float: right; margin-top: 10px; margin-right: 10px;">
+						<input class="uibutton" type="submit" name="btn_submit_item" id="btn_submit" value="<?php echo $this->lang->line('save_item'); ?>" />
+						<input class="uibutton" type="submit" name="btn_cancel" id="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
 			</form>
 
 		</div>
@@ -102,4 +102,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

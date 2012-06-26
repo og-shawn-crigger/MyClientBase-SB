@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('invoices/jquery_client_ac'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('invoices/jquery_client_ac'))); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
 <script type="text/javascript">
 
@@ -70,7 +70,7 @@
 
 				<?php $this->load->view('partial_output_type'); ?>
 
-				<input type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+				<input type="button" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
 
 				<div style="clear: both;">&nbsp;</div>
 
@@ -87,4 +87,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

@@ -8,7 +8,7 @@ class Admin_Controller extends MX_Controller {
 		
 		parent::__construct();
 			
-		$a = get_class($this);
+		//$a = get_class($this);
 		
         $this->load->helper('url');
         
@@ -19,7 +19,6 @@ class Admin_Controller extends MX_Controller {
         if (!$user_id) {
 
             redirect('sessions/login');
-
         }
 
 		if (!isset(self::$is_loaded)) {

@@ -198,10 +198,6 @@ class Mdl_Invoices extends MY_Model {
 
 	public function get($params = NULL) {
 
-// 		if (isset($params['active_clients_only']) and $params['active_clients_only']) {
-// 			$this->db->where('mcb_clients.client_active', 1);
-// 		}
-
 		$tmp_invoices = parent::get($params);
 
 		if (is_array($tmp_invoices)) {
@@ -237,20 +233,18 @@ class Mdl_Invoices extends MY_Model {
 		$params = array(
 			'limit'	=>	$limit,
 			'where'	=>	array(
-				$this->table_name . '.invoice_status_type'	=>	1,
+				//$this->table_name . '.invoice_status_id'	=>	1,
+				'mcb_invoice_statuses.invoice_status_id'	=>	1,
 				$this->table_name . '.invoice_is_quote'		=>	0
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	0
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
-		if (!$this->session->userdata('global_admin')) {
-
-			$params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-
-		}
+// 		if (!$this->session->userdata('global_admin')) {
+// 			$params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
+// 		}
 
 		return $this->get($params);
 
@@ -261,10 +255,10 @@ class Mdl_Invoices extends MY_Model {
 		$params = array(
 			'limit'	=>	$limit,
 			'where'	=>	array(
-				'invoice_status_type'	=>	2,
+				//'invoice_status_type'	=>	2,
+				'mcb_invoice_statuses.invoice_status_id'	=>	2,
 				'invoice_is_quote'		=>	0
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -282,10 +276,10 @@ class Mdl_Invoices extends MY_Model {
 		$params = array(
 			'limit'	=>	$limit,
 			'where'	=>	array(
-				'invoice_status_type'	=>	3,
+				//'invoice_status_type'	=>	3,
+				'mcb_invoice_statuses.invoice_status_id'	=>	3,
 				'invoice_is_quote'		=>	0
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -307,8 +301,7 @@ class Mdl_Invoices extends MY_Model {
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	1
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -330,8 +323,7 @@ class Mdl_Invoices extends MY_Model {
 			),
 			'having'	=>	array(
 				'invoice_is_overdue'	=>	0
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -352,8 +344,7 @@ class Mdl_Invoices extends MY_Model {
 			),
 			'having'    =>  array(
 				'invoice_is_overdue'    =>  1
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		if (!$this->session->userdata('global_admin')) {
@@ -371,8 +362,7 @@ class Mdl_Invoices extends MY_Model {
 		$params = array(
 			'where'	=>	array(
 				'invoice_is_quote'	=>	1
-			),
-			//'active_clients_only'	=>	1
+			)
 		);
 
 		return $this->get($params);
@@ -1037,9 +1027,6 @@ class Mdl_Invoices extends MY_Model {
 
 	public function delete_orphans() {
 
-		//$this->db->query('DELETE FROM mcb_invoices WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
-		//$this->db->query('DELETE FROM mcb_contacts WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
-		//$this->db->query('DELETE FROM mcb_client_data WHERE client_id NOT IN (SELECT client_id FROM mcb_clients)');
 		$this->db->query('DELETE FROM mcb_inventory_stock WHERE inventory_id NOT IN (SELECT inventory_id FROM mcb_inventory)');
 		$this->db->query('DELETE FROM mcb_invoice_amounts WHERE invoice_id NOT IN (SELECT invoice_id FROM mcb_invoices)');
 		$this->db->query('DELETE FROM mcb_invoice_history WHERE invoice_id NOT IN (SELECT invoice_id FROM mcb_invoices)');

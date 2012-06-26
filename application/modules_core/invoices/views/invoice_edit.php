@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('invoices/invoice_edit_header'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('invoices/invoice_edit_header'))); ?>
 
 <?php 
 	echo modules::run('invoices/widgets/generate_dialog'); 
@@ -6,7 +6,7 @@
 
 <?php echo modules::run('payments/payment_widgets/generate_dialog'); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/jquery/jquery.relcopy.js"></script>
 
@@ -83,4 +83,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

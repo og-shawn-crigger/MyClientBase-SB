@@ -7,14 +7,14 @@
         <th scope="col"><?php echo $table_headers['due_date']; ?></th>
         <th scope="col" class="client"><?php echo $this->lang->line('contact'); ?></th>
         <th scope="col" class="col_amount"><?php echo $table_headers['amount']; ?></th>
-		<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
+		<th scope="col" class="last" style="text-align: center;"><?php echo $this->lang->line('actions'); ?></th>
         <?php } else { ?>
         <th scope="col"><?php echo (!uri_assoc('is_quote') ? $this->lang->line('invoice_number') : $this->lang->line('quote_number')); ?></th>
         <th scope="col"><?php echo $this->lang->line('date'); ?></th>
         <th scope="col"><?php echo $this->lang->line('due_date'); ?></th>
         <th scope="col" class="client"><?php echo $this->lang->line('contact'); ?></th>
         <th scope="col" class="col_amount"><?php echo $this->lang->line('amount'); ?></th>
-		<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
+		<th scope="col" class="last" style="text-align: center;"><?php echo $this->lang->line('actions'); ?></th>
         <?php } ?>
     </tr>
     <?php foreach ($invoices as $invoice) { ?>
@@ -28,7 +28,7 @@
         <td><?php echo format_date($invoice->invoice_due_date); ?></td>
         <td class="client"><?php echo anchor('contact/details/' . $invoice->client_id_key .'/'. $invoice->client_id, character_limiter($invoice->client_name, 20)); ?></td>
         <td class="col_amount"><?php echo display_currency($invoice->invoice_total); ?></td>
-        <td class="last">
+        <td class="last" style="text-align: center;">
             <a href="<?php echo site_url('invoices/edit/invoice_id/' . $invoice->invoice_id); ?>" title="<?php echo $this->lang->line('edit'); ?>">
             <?php echo icon('edit'); ?>
             </a>

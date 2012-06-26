@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('invoices/jquery_client_ac', 'dashboard/jquery_date_picker'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('invoices/jquery_client_ac', 'jquery_date_picker'))); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -35,7 +35,7 @@
 
             <div style="clear: both;">&nbsp;</div>
 
-			<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
+			<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
 			<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
         </form>
@@ -49,4 +49,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

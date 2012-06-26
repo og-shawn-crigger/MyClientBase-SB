@@ -1,6 +1,8 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php 
+//TODO this view should be unified with core.php
+$this->load->view('header'); ?>
 
-<div class="grid_11" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -14,8 +16,8 @@
 					<th scope="col" class="first"><?php echo $this->lang->line('name'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('description'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('version'); ?></th>
-					<th scope="col"><?php echo $this->lang->line('author'); ?></th>
-					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
+					<th scope="col"><?php echo $this->lang->line('status'); ?></th>
+					<th scope="col" class="last"  style="text-align: center;"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 
 				<?php foreach ($modules as $module) { ?>
@@ -31,8 +33,24 @@
 							echo $module->module_version;
 						} ?>
 					</td>
-					<td><a href="<?php echo $module->module_homepage; ?>"><?php echo $module->module_author; ?></a></td>
-					<td class="last"><?php if($module->module_enabled) {echo anchor('mcb_modules/uninstall/' . $module->module_path, $this->lang->line('uninstall'));}else {echo anchor('mcb_modules/install/' . $module->module_path, $this->lang->line('install'));} ?></td>
+					<td>
+					<?php 
+						if($module->module_enabled) {
+							echo $this->lang->line('enabled');
+						} else {
+							echo $this->lang->line('disabled');
+						}
+					?>					
+					</td>
+					<td class="last"  style="text-align: center;">
+						<?php 
+							if($module->module_enabled) {
+								echo anchor('mcb_modules/uninstall/' . $module->module_path, icon('delete'));
+							} else {
+								echo anchor('mcb_modules/install/' . $module->module_path, icon('check'));
+							} 
+						?>
+					</td>
 				</tr>
 
 				<?php } ?>
@@ -44,5 +62,5 @@
 	</div>
 
 </div>
-
-<?php $this->load->view('dashboard/footer'); ?>
+<?php echo $actions_panel; ?>
+<?php $this->load->view('footer'); ?>

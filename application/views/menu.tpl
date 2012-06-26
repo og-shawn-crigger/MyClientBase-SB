@@ -30,3 +30,4 @@
 		</li>
 	{/foreach}	
 {/if}
+<li><a href="/sessions/logout">{t}Logout{/t}</a></li>

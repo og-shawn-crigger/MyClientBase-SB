@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('dashboard/jquery_date_picker','invoices/jquery_choose_client','invoices/jquery_client_ac'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('jquery_date_picker','invoices/jquery_choose_client','invoices/jquery_client_ac'))); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -42,11 +42,13 @@
                 
                 <?php } ?>
 
-                <div style="clear: both;">&nbsp;</div>
 
-                <input type="submit" id="btn_submit" name="btn_submit" value="<?php echo ($this->uri->segment(5) <> 'quote') ? $this->lang->line('create_invoice') : $this->lang->line('create_quote'); ?>" />
-                <input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-
+				<div style="float: right; margin-right: 10px;">
+                	<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo ($this->uri->segment(5) <> 'quote') ? $this->lang->line('create_invoice') : $this->lang->line('create_quote'); ?>" />
+                	<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				
+                <div style="clear: both;">&nbsp;</div>                
             </form>
 
         </div>
@@ -59,4 +61,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

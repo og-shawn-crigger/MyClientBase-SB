@@ -13,7 +13,7 @@ form fieldset {
 	border:1px solid #dadada;
 }
 
-form fieldset legend {font-size:1.4em; padding:0 5px;}
+form fieldset legend { font-size:1.4em; padding:0 5px; }
 
 form input[type=text], form input[type=email], form input[type=url], form input[type=password] {
 	-moz-border-radius: 5px;

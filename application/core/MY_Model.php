@@ -101,7 +101,7 @@ class MY_Model extends CI_Model {
 
     }
 
-	public function get($params = NULL) {
+	public function get(array $params = NULL) {
 
 		// prepare the query segments
 		$this->_prep_params($params);
@@ -125,8 +125,7 @@ class MY_Model extends CI_Model {
 		if (isset($params['where']) and is_array($params['where']) and isset($params['where'][$this->primary_key])) {
 
 			// return a single row if the primary key exists in the where element
-			$a = $query->row();
-			return $a; //$query->row();
+			return $query->row();
 
 		}
 
@@ -554,23 +553,39 @@ class MY_Model extends CI_Model {
 
 	}
 
+	/**
+	 * This method will return the initial values to populate a form on an edit 
+	 * 
+	 * @access		public
+	 * @param		
+	 * @var			
+	 * @return		
+	 * @example
+	 * @see
+	 * 
+	 * @author 		Damiano Venturin
+	 * @copyright 	2V S.r.l.
+	 * @license		GPL
+	 * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+	 * @since		Jun 22, 2012
+	 * 
+	 */
 	public function prep_validation($id) {
 
-		// this function will return the initial values to populate a form on an edit
+		// this function 
 		$result = $this->get(array('where'=>array($this->primary_key => $id)));
 
-		foreach ($result as $key  => $value) {
+		foreach ($result as $key => $value) {
 
 			$this->form_values[$key] = $value;
-
 		}
-
 	}
 
 	public function validate($obj = NULL) {
 
-		foreach ($_POST as $key=>$value) {
+		foreach ($_POST as $key => $value) {
 
+			//TODO apply some filters to value!!
 			$this->form_values[$key] = $value;
 
 		}
@@ -582,7 +597,7 @@ class MY_Model extends CI_Model {
 		}
 
 		else {
-
+			//check the rules
 			return $this->form_validation->run();
 
 		}

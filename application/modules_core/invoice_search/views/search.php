@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header', array('header_insert'=>array('dashboard/jquery_date_picker', 'invoices/jquery_client_ac'))); ?>
+<?php $this->load->view('header', array('header_insert'=>array('jquery_date_picker', 'invoices/jquery_client_ac'))); ?>
 
 <div class="grid_11" id="content_wrapper">
 
@@ -98,4 +98,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

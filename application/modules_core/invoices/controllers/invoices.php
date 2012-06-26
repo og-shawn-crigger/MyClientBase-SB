@@ -28,7 +28,6 @@ class Invoices extends Admin_Controller {
 				'limit'					=>	$this->mdl_mcb_data->setting('results_per_page'),
 				'page'					=>	uri_assoc('page'),
 				'where'					=>	array(),
-				//'active_clients_only'	=>	1
 		);
 		
 		//contains the info sent to the view
@@ -230,12 +229,10 @@ class Invoices extends Admin_Controller {
 //             $params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
 //         }
 
-		$invoice = $this->mdl_invoices->get($params);
-
-		if (!$invoice) {
-
-			redirect('dashboard/record_not_found');
-
+		
+		if (!$invoice = $this->mdl_invoices->get($params)) {
+			$this->mcbsb->system_messages->error = 'Invoice not found';
+			redirect('invoices');
 		}
 
 		$user_params = array(
@@ -337,8 +334,6 @@ class Invoices extends Admin_Controller {
 		if (!$this->mdl_invoices->validate_quote_to_invoice()) {
 
 			$this->load->model('mdl_invoice_groups');
-
-			//$invoice = $this->mdl_invoices->get_by_id($invoice_id);
 			
 			$params = array('where' => array('mcb_invoices.invoice_id' => $invoice_id));
 			
@@ -351,6 +346,9 @@ class Invoices extends Admin_Controller {
 				'invoice'			=>  $invoice
 			);
 
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				
 			$this->load->view('quote_to_invoice', $data);
 
 		}
@@ -497,7 +495,7 @@ class Invoices extends Admin_Controller {
 			'invoice_groups'	=>	$this->mdl_invoice_groups->get()
 		);
 
-		$this->load->view('invoices/choose_client', $data);
+		//$this->load->view('invoices/choose_client', $data);
 
 	}
 

@@ -1,28 +1,22 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('invoice_statuses'); ?>
-		<span style="font-size: 60%;">
-		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add_invoice_status'))); ?>
-		</span>
-		</h3>
+		<h3 class="title_black"><?php echo $this->lang->line('invoice_statuses'); ?></h3>
 
 		<div class="content toggle no_padding">
 
-			<table>
+			<table style="width: 100%;">
 				<tr>
-					<th scope="col" class="first"><?php echo $this->lang->line('id'); ?></th>
-					<th scope="col"><?php echo $this->lang->line('invoice_status'); ?></th>
+					<th scope="col" class="first"><?php echo $this->lang->line('invoice_status'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('invoice_status_type'); ?></th>
 					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 				<?php foreach ($invoice_statuses as $invoice_status) { ?>
 				<tr class="hoverall">
-					<td class="first"><?php echo $invoice_status->invoice_status_id; ?></td>
-					<td><?php echo $invoice_status->invoice_status; ?></td>
+					<td class="first"><?php echo $invoice_status->invoice_status; ?></td>
 					<td><?php echo $this->mdl_invoice_statuses->status_types[$invoice_status->invoice_status_type]; ?></td>
 					<td class="last">
 						<a href="<?php echo site_url('invoice_statuses/form/invoice_status_id/' . $invoice_status->invoice_status_id); ?>" title="<?php echo $this->lang->line('edit'); ?>">
@@ -48,6 +42,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('invoice_statuses/sidebar'))); ?>
+<?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

@@ -2,18 +2,16 @@
 
 $config = array(
     'mcb_menu'  =>  array(
+    	'dashboard' =>  array(
+    			'title' =>  'dashboard',
+    			'href'  =>  'dashboard'
+    	),    		
 		'contact'   =>  array(
 		 	'title'     =>  'contacts',
 		    'href'      =>  'contact/index',
 		),
-    	/*    		       
-    	'assignments'   =>  array(
-    		'title'     =>  'assignments',
-    		'href'      =>  'assignments/index',
-    	),
-    	*/    		
         'invoices'  =>  array(
-            'title'     =>  'invoices&quotes',
+            'title'     =>  'invoices & quotes',
             'href'      =>  'invoices/index',
         ),
         'inventory' =>  array(
@@ -22,32 +20,21 @@ $config = array(
         ),
         'reports'   =>  array(
             'title'         =>  'reports',
-            'submenu'       =>  array(
-            	/*
-				'dashboard' =>  array(
-				            'title' =>  'dashboard',
-				            'href'  =>  'dashboard'
-				),            
-                'client_list'   =>  array(
-                    'title' =>  'client_list',
-                    'href'  =>  'reports/client_list'
-                ),
-                */
-            		
+            'submenu'       =>  array(            		
             	'contacts_by_location'  =>  array(
-            					'title' =>  'contacts_by_location',
+            					'title' =>  'contacts by location',
             					'href'  =>  'contact/by_location'
             	),            	
                 'client_statement'  =>  array(
-                    'title' =>  'client_statement',
+                    'title' =>  'client statement',
                     'href'  =>  'reports/client_statement'
                 ),
                 'inventory_history' =>  array(
-                    'title' =>  'inventory_history',
+                    'title' =>  'inventory history',
                     'href'  =>  'reports/inventory_history'
                 ),
                 'inventory_sales'   =>  array(
-                    'title' =>  'inventory_sales',
+                    'title' =>  'inventory sales',
                     'href'  =>  'reports/inventory_sales'
                 )
             )
@@ -58,54 +45,49 @@ $config = array(
             'global_admin'  =>  TRUE,
             'submenu'       =>  array(
 				'mcb_core_modules'   =>  array(
-				                    'title'         =>  'core_modules',
+				                    'title'         =>  'handle modules',
 				                    'href'          =>  'mcb_modules/core',
 				                    'global_admin'  =>  TRUE,
 				),                
-                'mcb_modules'   =>  array(
-                    'title'         =>  'custom_modules',
-                    'href'          =>  'mcb_modules/index',
-                    'global_admin'  =>  TRUE,
-                ),
                 'fields'    =>  array(
-                    'title'         =>  'custom_fields',
+                    'title'         =>  'custom fields',
                     'href'          =>  'fields/index',
                     'global_admin'  =>  TRUE,
                 ),
             	'invoices/templates'   =>  array(
-            		'title'         =>  'invoice_templates',
+            		'title'         =>  'invoice templates',
             		'href'          =>  'templates/index/type/invoices'
             	),		 
                 'invoices/invoice_groups'   =>  array(
-                    'title'         =>  'invoice_groups',
+                    'title'         =>  'invoice groups',
                     'href'          =>  'invoices/invoice_groups'
                 ),
                 'invoice_statuses'  =>  array(
-                    'title'         =>  'invoice_statuses',
+                    'title'         =>  'invoice statuses',
                     'href'          =>  'invoice_statuses/index',
                     'global_admin'  =>  TRUE,
                 ),
             	'payments/payment_methods'  =>  array(
-            			'title'         =>  'payment_methods',
+            			'title'         =>  'payment methods',
             			'href'          =>  'payments/payment_methods',
             			'global_admin'  =>  TRUE
             	),            		
             	'templates/index/type/payment_receipts' =>  array(
-            			'title'         =>  'payment_receipt_templates',
+            			'title'         =>  'payment receipt templates',
             			'href'          =>  'templates/index/type/payment_receipts',
             			'global_admin'  =>  TRUE
             	),            		
                 'settings'  =>  array(
-                    'title'         =>  'system_settings',
+                    'title'         =>  'system settings',
                     'href'          =>  'settings/index',
                     'global_admin'  =>  TRUE,
                 ),
                 'tax_rates' =>  array(
-                    'title'         =>  'tax_rates',
+                    'title'         =>  'tax rates',
                     'href'          =>  'tax_rates/index'
                 ),
                 'users' =>  array(
-                    'title'         =>  'user_accounts',
+                    'title'         =>  'user accounts',
                     'href'          =>  'users/index',
                     'global_admin'  =>  TRUE,
                 )

@@ -133,6 +133,12 @@ class Modules
 			return;
 		}
 
+		/* DAM autoload models classes */
+// 		if(is_file($location = APPPATH.'models/'.$class.EXT)) {
+// 			include_once $location;
+// 			return;
+// 		}
+				
 		/* autoload library classes */
 		if(is_file($location = APPPATH.'libraries/'.$class.EXT)) {
 			include_once $location;
@@ -154,7 +160,7 @@ class Modules
 			
 			//DAM
 			//include_once $location;
-			if(file_exists($location)) include_once $location;  //maybe it can show an error if not found
+			if(file_exists($location)) include_once $location; 
 			
 		} else {
 

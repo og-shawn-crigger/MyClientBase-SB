@@ -159,48 +159,9 @@ class Mdl_Users extends MY_Model {
 	}
 
 	public function delete($user_id) {
-
-		if ($user_id) {
-
-			if ($user_id == $this->session->userdata('user_id')) {
-
-				$this->session->set_flashdata('custom_error', $this->lang->line('cannot_delete_user_account') . '.');
-
-			}
-
-			else {
-
-				parent::delete(array('user_id'=>$user_id));
-
-				$this->load->model('invoices/mdl_invoices');
-
-				$this->db->where('client_user_id', $user_id);
-				$this->db->delete('mcb_clients');
-
-				$this->db->where('tax_rate_user_id', $user_id);
-				$this->db->delete('mcb_tax_rates');
-
-				$this->db->where('invoice_group_user_id', $user_id);
-				$this->db->delete('mcb_invoice_groups');
-
-				$this->db->where('user_id', $user_id);
-				$this->db->delete('mcb_invoices');
-
-				$this->db->where('inventory_user_id', $user_id);
-				$this->db->delete('mcb_inventory');
-
-				$this->db->where('inventory_type_user_id', $user_id);
-				$this->db->delete('mcb_inventory_types');
-
-				$this->db->where('mcb_userdata_user_id', $user_id);
-				$this->db->delete('mcb_userdata');
-
-				$this->mdl_invoices->delete_orphans();
-
-			}
-
-		}
-
+		//TODO Implement something to disable a user
+		//TODO a user can be deleted only if there are no record around with his ID
+		return false;
 	}
 
 }

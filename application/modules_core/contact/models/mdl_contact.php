@@ -85,6 +85,7 @@ class Mdl_Contact extends MY_Model {
     		 
     	if($this->crr->has_no_errors) {
     		if($this->crr->results_got_number == '1') {
+    			/*
     			if(!empty($this->crr->data['0']['uid'])) {
     				$this->person->arrayToObject($this->crr->data['0']);
     				//$this->person->prepareShow(); //TODO maybe this can come in handy
@@ -94,10 +95,17 @@ class Mdl_Contact extends MY_Model {
     				$this->organization->arrayToObject($this->crr->data['0']);
     				//$this->organization->prepareShow();  //TODO maybe this can come in handy
     			}
-    			return true;
+    			*/
+    			
+    			return $this->arrayToObject($this->crr->data['0']);
+    			    			
+    			//return true;
+    		} else {
+    			
+    			return false;
     		}
     		    		
-    		if($this->crr->results_got_number == '0') return false;
+    		//if($this->crr->results_got_number == '0') return false;
     	}
     	
     	return false;
@@ -356,10 +364,10 @@ class Mdl_Contact extends MY_Model {
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
 	
 		if($this->crr->has_no_errors) {
-			$this->mcbsb->success = 'contact_updated';
+			$this->mcbsb->system_messages->success = 'contact_updated';
 			return true; 
 		}
-		$this->mcbsb->error = 'contact_not_updated';
+		$this->mcbsb->system_messages->error = 'contact_not_updated';
 		return false;
 	}
 	
@@ -370,11 +378,11 @@ class Mdl_Contact extends MY_Model {
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
 		
 		if($this->crr->has_no_errors) {
-			$this->mcbsb->success = 'contact_created';
+			$this->mcbsb->system_messages->success = 'contact_created';
 			return true;
 		}
 
-		$this->mcbsb->error = 'contact_not_created';
+		$this->mcbsb->system_messages->error = 'contact_not_created';
 		return false;
 	}	
 	

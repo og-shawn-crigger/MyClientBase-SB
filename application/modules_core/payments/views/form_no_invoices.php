@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="grid_11" id="content_wrapper">
 
@@ -18,4 +18,4 @@
 
 <?php $this->load->view('dashboard/sidebar'); ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

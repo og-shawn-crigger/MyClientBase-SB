@@ -8,13 +8,13 @@ function display_currency($amount, $standardize_number = TRUE) {
 
 	if ($CI->mdl_mcb_data->setting('currency_symbol_placement') == 'before') {
 
-		$amount = $CI->mdl_mcb_data->setting('currency_symbol') . $amount;
+		$amount = $CI->mdl_mcb_data->setting('currency_symbol') . ' ' . $amount;
 
 	}
 
 	else {
 		
-		$amount = $amount . $CI->mdl_mcb_data->setting('currency_symbol');
+		$amount = $amount .' ' . $CI->mdl_mcb_data->setting('currency_symbol');
 
 	}
 

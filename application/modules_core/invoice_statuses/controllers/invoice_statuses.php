@@ -26,6 +26,9 @@ class Invoice_Statuses extends Admin_Controller {
 			'invoice_statuses' =>	$this->mdl_invoice_statuses->get($params)
 		);
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');		
+		
 		$this->load->view('index', $data);
 
 	}
@@ -40,7 +43,11 @@ class Invoice_Statuses extends Admin_Controller {
 
 			}
 
-			$this->load->view('form');
+			$data = array();
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+				
+			$this->load->view('form',$data);
 
 		}
 

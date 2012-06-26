@@ -35,6 +35,8 @@ body {
 	line-height: 38px;
 	position: relative; /*--Set relative positioning on the unordered list itself - not on the list item--*/
 	width: 980px !important;
+	margin-left: 0px;
+	padding-left: 60px;	
 }
 
 #navigation li {
@@ -270,7 +272,7 @@ div.left-block {
 	margin-left: 0px;
 	margin-right: 0px;
 	background-color: white;
-	width: 540px;
+	width: 385px;
 }
 
 div.right-block {
@@ -279,7 +281,7 @@ div.right-block {
 	margin-left: 0px;
 	margin-right: 0px;
 	background-color: white;
-	width: 540px;	
+	width: 385px;	
 }
 
 div.contact_search {
@@ -293,24 +295,32 @@ div.contact_search {
 	font-size: 20px;
 	font-weight: bold;
 	position: relative;
+	
 	/*--Top right rounded corner--*/
-	border-top-right-radius: 5px;
+/* 	border-top-right-radius: 5px;
 	-moz-border-radius-topright: 5px;
 	-khtml-border-radius-topright: 5px;
 	-webkit-border-top-right-radius: 5px;
+ */
 	/*--Top left rounded corner--*/
-	border-top-left-radius: 5px;
+/* 	border-top-left-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	-khtml-border-radius-topleft: 5px;
 	-webkit-border-top-left-radius: 5px;
+ */	
 	/*--Bottom left rounded corner--*/
+	/*
 	border-bottom-left-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	-khtml-border-radius-topleft: 5px;
 	-webkit-border-top-left-radius: 5px;
+	*/
+	
 	/*--Bottom right rounded corner--*/
+	/*
 	border-bottom-right-radius: 5px;
 	-moz-border-radius-topright: 5px;
 	-khtml-border-radius-topright: 5px;
-	-webkit-border-top-right-radius: 5px;		
+	-webkit-border-top-right-radius: 5px;
+	*/		
 }

@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -43,9 +43,6 @@
 </div>
 
 <!-- $actions_panel contains actions_panel.tpl -->
-<?php 
-	//$this->load->view('dashboard/sidebar', array('side_block'=>'inventory/sidebar'));
-	echo $actions_panel; 
-?>
+<?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

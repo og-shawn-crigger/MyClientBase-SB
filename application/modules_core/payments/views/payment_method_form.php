@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="container_10" id="center_wrapper">
 
@@ -17,13 +17,13 @@
 					<dd><input type="text" name="payment_method" id="payment_method" value="<?php echo $this->mdl_payment_methods->form_value('payment_method'); ?>" /></dd>
 				</dl>
 
-                <div style="clear: both;">&nbsp;</div>
-
-				<span style="float: right">
-					<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('submit'); ?>" />
-					<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
-				</span>
-			             
+				<div style="float: right; margin-right: 10px; margin-top: 10px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save'); ?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+				
+				<div style="clear: both;">&nbsp;</div>
+							             
 				</form>
 
 			</div>
@@ -36,4 +36,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

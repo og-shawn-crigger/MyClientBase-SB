@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<div class="grid_7" id="content_wrapper">
+<div class="grid_8" id="content_wrapper">
 
 	<div class="section_wrapper">
 
@@ -8,17 +8,15 @@
 
 		<div class="content toggle no_padding">
 
-			<table>
+			<table style="width: 100%;">
 				<tr>
-					<th scope="col" class="first"><?php echo $this->lang->line('id'); ?></th>
-					<th scope="col"><?php echo $this->lang->line('tax_rate_name'); ?></th>
+					<th scope="col" class="first"><?php echo $this->lang->line('tax_rate_name'); ?></th>
 					<th scope="col"><?php echo $this->lang->line('tax_rate_percent'); ?></th>
 					<th scope="col" class="last"><?php echo $this->lang->line('actions'); ?></th>
 				</tr>
 				<?php foreach ($tax_rates as $tax_rate) { ?>
 				<tr class="hoverall">
-					<td class="first"><?php echo $tax_rate->tax_rate_id; ?></td>
-					<td><?php echo $tax_rate->tax_rate_name; ?></td>
+					<td  class="first"><?php echo $tax_rate->tax_rate_name; ?></td>
 					<td><?php echo format_number($tax_rate->tax_rate_percent, TRUE, $this->mdl_mcb_data->setting('decimal_taxes_num')); ?>%</td>
 					<td class="last">
 						<a href="<?php echo site_url('tax_rates/form/tax_rate_id/' . $tax_rate->tax_rate_id); ?>" title="<?php echo $this->lang->line('edit'); ?>">
@@ -44,6 +42,6 @@
 
 </div>
 
-<?php $this->load->view('dashboard/sidebar', array('side_block'=>array('tax_rates/sidebar'))); ?>
+<?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

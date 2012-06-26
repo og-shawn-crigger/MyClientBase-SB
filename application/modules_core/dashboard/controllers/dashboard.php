@@ -97,12 +97,6 @@ class Dashboard extends Admin_Controller {
 
 	}
 
-	function record_not_found() {
-
-		$this->load->view('record_not_found');
-
-	}
-
 	function _post_handler() {
 
 		if ($this->input->post('btn_add_invoice')) {

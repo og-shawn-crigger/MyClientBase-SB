@@ -1,20 +1,23 @@
-{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
-	{$contact_ref = $contact->cn}
-	{$contact_id = $contact->uid}
-	{$contact_id_key = "uid"}
-	{$object_type = 'person'}
-{/if}		
-
-{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
-	{$contact_ref = $contact->o}
-	{$contact_id = $contact->oid}
-	{$contact_id_key = "oid"}
-	{$object_type = 'organization'}
-{/if}					
+{if isset($contact)}
+	{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
+		{$contact_ref = $contact->cn}
+		{$contact_id = $contact->uid}
+		{$contact_id_key = "uid"}
+		{$object_type = 'person'}
+	{/if}		
+	
+	{if {preg_match pattern="dueviOrganization" subject=$contact->objectClass}}
+		{$contact_ref = $contact->o}
+		{$contact_id = $contact->oid}
+		{$contact_id_key = "oid"}
+		{$object_type = 'organization'}
+	{/if}					
+{/if}
 
 <script type="text/javascript">
 	$(document).ready(function() {
 
+		
 		$("#show_organization_link").click(function(){
 			toggle_animate('search_organization','input_search', '-5');
 		});
@@ -23,8 +26,9 @@
 			search({ 'procedure':'personToOrganizationMembership', 'form_name': 'search_organization_form', 'form_type':'search','object_name':'organization','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','url':'/ajax/associate/','hash':'set_here_the_hash' });
 			return false;
 		});
-
+		
 		$("#show_add_person_link").click(function(){
+			console.log('pd');
 			toggle_animate('add_person','first_name', '-10');
 		});
 
@@ -80,9 +84,11 @@
 <div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: gray;">
 	
 	<h3 class="title_black">{t}Main Actions{/t}</h3>
+	
 	<ul class="quicklinks content toggle" >
-		<li><a id="back_to_profile" href="/contact/">{t}Search contact{/t}</a></li>
-		
+		{if !{preg_match pattern="\/contact\/index$" subject=$site_url} and !{preg_match pattern="\/contact$" subject=$site_url}}
+			<li><a id="back_to_profile" href="/contact/">{t}Search contact{/t}</a></li>
+		{/if}
 		<li>
 			<a id="show_add_person_link" href="#">{t}Add a person{/t}</a>
 			<div id="add_person" title="Form" style="display: none;">		
@@ -108,42 +114,50 @@
 	</ul>
 
 </div>
-<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
-	<h3 class="title_black">{t}Contact Actions{/t}</h3>
-
-	<ul class="quicklinks content toggle" >
-		
-		{if !$profile_view}<li><a id="back_to_profile" href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
-		
-		{if $profile_view && $contact_id != ""}
-			<li> <a id="edit_profile" href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">{t}Edit profile{/t}</a></li>
-		{/if}
-		
-		{if $profile_view && $contact_id != ""}
-			<li><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Add location{/t}</a></li>
-		{/if}
-		
-		{if $object_type == 'person'}
-			<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
-			<div id="search_organization" title="Form" style="display: none;">
-				<form id="search_organization_form" style="background-color: white;">
-					<input title="{t}search for name, vat, phone, email, website{/t}" style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
-					<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
-				</form>
-			</div>
-		{/if}
-		
-		<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
-		<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
-		<!--
-		<li>
-				<form method="post" action="" style="display: inline;">
-				<input type="submit" name="btn_edit_client" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='edit_client'}" />
-                <input type="submit" name="btn_add_invoice" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_invoice'}" />
-				<input type="submit" name="btn_add_quote" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_quote'}" />
-				</form>
-		</li>
-		 -->						
-	</ul>
+{if isset($contact_id)}
+	<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
+		<h3 class="title_black">{t}Contact Actions{/t}</h3>
 	
-</div>
+		<ul class="quicklinks content toggle" >
+			
+			{if !$profile_view}<li><a id="back_to_profile" href="/index.php/contact/details/{$contact_id_key}/{$contact_id}">{t}Back to profile{/t}</a></li>{/if}
+			
+			{if $profile_view && $contact_id != ""}
+				<li> <a id="edit_profile" href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">{t}Edit profile{/t}</a></li>
+			{/if}
+			
+			{if $profile_view && $contact_id != ""}
+				<li><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Add location{/t}</a></li>
+			{/if}
+			
+			{if $object_type == 'person'}
+				<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
+				<div id="search_organization" title="Form" style="display: none;">
+					<form id="search_organization_form" style="background-color: white;">
+						<input title="{t}search for name, vat, phone, email, website{/t}" style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
+						<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
+					</form>
+				</div>
+			{/if}
+			
+			{if isset($invoice_module_is_enabled)}
+				<li><a href="/tasks/form/{$contact_id_key}/{$contact_id}?btn_add=true">{t}Create a task{/t}</a></li>
+			{/if}
+			
+			{if isset($invoice_module_is_enabled)}
+				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
+				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
+			{/if}
+			<!--
+			<li>
+					<form method="post" action="" style="display: inline;">
+					<input type="submit" name="btn_edit_client" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='edit_client'}" />
+	                <input type="submit" name="btn_add_invoice" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_invoice'}" />
+					<input type="submit" name="btn_add_quote" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_quote'}" />
+					</form>
+			</li>
+			 -->						
+		</ul>
+		
+	</div>
+{/if}

@@ -1,6 +1,6 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
-<?php $this->load->view('dashboard/jquery_date_picker'); ?>
+<?php $this->load->view('jquery_date_picker'); ?>
 
 <div class="grid_8" id="content_wrapper">
 
@@ -66,7 +66,7 @@
 			<?php } ?>
 
 			<span style="float: right">
-				<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_single_payment" value="<?php echo $this->lang->line('submit'); ?>" />
+				<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit" name="btn_submit_single_payment" value="<?php echo $this->lang->line('save'); ?>" />
 				<input class="uibutton" style="margin-top: 10px; margin-right: 10px;" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 			</span>
 			
@@ -83,4 +83,4 @@
 <!-- $actions_panel contains actions_panel.tpl -->
 <?php echo $actions_panel; ?>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

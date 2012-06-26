@@ -55,11 +55,8 @@ class MCB_Menu extends Admin_Controller {
                         if (isset($sub_item['global_admin'])) {
 
                             unset($menu_items[$key]['submenu'][$sub_key]);
-
                         }
-
                     }
-
                 }
             }
         }
@@ -83,35 +80,8 @@ class MCB_Menu extends Admin_Controller {
         			        
         return $menu_items;
     }
-
-    /*
-    //TODO I'm commenting this on purpose to see what breaks
-	function generate_control_center() {
-
-		$control_center = $this->config->item('control_center');
-
-		foreach ($control_center as $key=>$item) {
-
-			if (!$this->session->userdata('global_admin')) {
-
-				if (isset($item['global_admin'])) {
-
-					unset($control_center[$key]);
-
-				}
-
-			}
-
-		}
-
-		return $control_center;
-
-	}
-	*/
     
 	function display($params = null) {
- 
-		$a = '';
 		
 		$data = array(
 			'menu_items'    =>  $this->generate()
@@ -121,26 +91,7 @@ class MCB_Menu extends Admin_Controller {
 		$plenty_parser = new Plenty_parser();	
 		$plenty_parser->parse('menu.tpl', $data, false, 'smarty');
 		
-		//$this->load->view($params['view'], $data);
-		
 	}
-
-	/*
-	 //TODO I'm commenting this on purpose to see what breaks
-	function display_control_center($params) {
-
-		if ($this->uri->segment(1) == 'dashboard') {
-
-			$data = array(
-				'menu_items'    =>  $this->generate_control_center()
-			);
-
-			$this->load->view($params['view'], $data);
-
-		}
-
-	}
-	*/
 	
 	function check_permission($uri_string, $global_admin) {
 
@@ -149,11 +100,11 @@ class MCB_Menu extends Admin_Controller {
         	//DAM
 			$status_items = $this->get_core_modules_status();
 			
-        	//if the requested page is part of a disabled module, than redirects to the dashboard
+        	//if the requested page is part of a disabled module, than redirect
         	foreach ($status_items as $key => $status)        
         	if(preg_match_all('/^'.$key.'/', $uri_string, $matches) && $status=="disabled")	
         	{
-        		redirect('dashboard');
+        		redirect('contact');
         		break;
         	}
 			//\DAM
@@ -162,7 +113,7 @@ class MCB_Menu extends Admin_Controller {
 
 				if (isset($menu_item['global_admin']) and !$global_admin) {
 
-					redirect('dashboard');
+					redirect('contact');
 
 				}
 
@@ -176,26 +127,12 @@ class MCB_Menu extends Admin_Controller {
 
 						if (isset($sub_item['global_admin']) and !$global_admin) {
 
-							redirect('dashboard');
+							redirect('contact');
 
 						}
 
 					}
 
-
-				}
-
-			}
-
-		}
-
-		foreach ($this->config->item('control_center') as $menu_item) {
-
-			if (strpos($menu_item['href'], $uri_string) === 0) {
-
-				if (isset($menu_item['global_admin']) and !$global_admin) {
-
-					redirect('dashboard');
 
 				}
 

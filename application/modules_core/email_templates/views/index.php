@@ -1,4 +1,4 @@
-<?php $this->load->view('dashboard/header'); ?>
+<?php $this->load->view('header'); ?>
 
 <div class="grid_11" id="content_wrapper">
 
@@ -7,7 +7,7 @@
 		<h3 class="title_black"><?php echo $this->lang->line('email_templates'); ?>
 		<?php //TODO what's this ?>
 		<span style="font-size: 60%;">
-		<?php $this->load->view('dashboard/btn_add', array('btn_value'=>$this->lang->line('add'))); ?>
+		<?php $this->load->view('btn_add', array('btn_value'=>$this->lang->line('add'))); ?>
 		</span>
 		</h3>
 
@@ -48,4 +48,4 @@
 
 </div>
 
-<?php $this->load->view('dashboard/footer'); ?>
+<?php $this->load->view('footer'); ?>

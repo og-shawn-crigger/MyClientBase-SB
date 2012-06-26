@@ -376,14 +376,15 @@ class Contact extends Admin_Controller {
     	}
     	    	
     	//template workaround to allow the usage of Smarty
-    	//$data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
     	$data['baseurl'] = site_url();
     	$data['pager'] = $this->mdl_contacts->page_links;
-    	if($search) $data['searched_string'] = $search;
-    	if($search) $data['made_search'] = true;
+    	if($search) {
+    		$data['searched_string'] = $search;
+    		$data['made_search'] = true;
+    	}
     	
     	//loading Smarty template
-    	$data['js_autofocus'] = $this->load->view('dashboard/jquery_set_focus', array('id'=>'search-box'), true);
+    	$data['js_autofocus'] = $this->load->view('jquery_set_focus', array('id'=>'search-box'), true);
     	$data['middle'] = $this->plenty_parser->parse('by_location.tpl', $data, true, 'smarty', 'contact');
     	
     	$this->load->view('index_ce', $data);
@@ -423,10 +424,10 @@ class Contact extends Admin_Controller {
         }
         
         $params = array(
-                   			'paginate'		=>	TRUE,
-                            'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
-                            'wanted_page'	=>	$wanted_page,
-                            'search'		=>  $search,
+                   		'paginate'		=>	TRUE,
+                        'items_page'	=>	$this->mdl_mcb_data->setting('results_per_page'),
+                        'wanted_page'	=>	$wanted_page,
+                        'search'		=>  $search,
         				);
         if(isset($uid)) $params['uid'] = $uid;
         if(isset($oid)) $params['oid'] = $oid;
@@ -454,16 +455,17 @@ class Contact extends Admin_Controller {
             'contacts'	=>	$this->mdl_contacts->get($params),
         );
         
-        //template workaround to allow the usage of Smarty
-        $data['button_add'] = $this->load->view('dashboard/btn_add', array('btn_name'=>'btn_add_client', 'btn_value'=>$this->lang->line('add_client')),true);
         $data['baseurl'] = site_url();
         $data['pager'] = $this->mdl_contacts->page_links;
-        if($search) $data['searched_string'] = $search;
-        //if($search || $uid || $oid) $data['made_search'] = true;
-        if($search) $data['made_search'] = true;
+        if($search) {
+        	$data['searched_string'] = $search;
+        	$data['made_search'] = true;
+        }
         
         //loading Smarty template
-        $data['js_autofocus'] = $this->load->view('dashboard/jquery_set_focus', array('id'=>'search-box'), true);
+        $data['js_autofocus'] = $this->load->view('jquery_set_focus', array('id'=>'search-box'), true);
+        $data['site_url'] = site_url($this->uri->uri_string());
+        $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');        
         $data['middle'] = $this->plenty_parser->parse('index_ce.tpl', $data, true, 'smarty', 'contact');
         
         $this->load->view('index_ce', $data);
@@ -698,19 +700,14 @@ class Contact extends Admin_Controller {
     	
         $this->redir->set_last_index();
 
-        $this->load->model(
-        		array(
-        				'invoices/mdl_invoices',
-        				'templates/mdl_templates'
-        		)
-        );
+        $this->load->model('templates/mdl_templates');
         
         //array sent to the view
         $data = array();
         
         //set the focus of the tab
         if ($this->session->flashdata('tab_index')) {
-        
+        	        
         	$tab_index = $this->session->flashdata('tab_index');
         
         } else {
@@ -729,44 +726,7 @@ class Contact extends Admin_Controller {
 		} else {
 			//TODO redirect somewhere
 		}
-		
-		//getting the invoices for the contact
-		if(in_array('Invoices',$this->enabled_modules['all'])) {
 			
-	        $tmpdata = array();
-			
-			$invoice_params = array(
-	            'where'	=>	array(
-	                'mcb_invoices.client_id'        =>	$contact->client_id,
-	                'mcb_invoices.invoice_is_quote' =>  0
-	            )
-	        );
-	
-	        //TODO is this necessary?
-	        //prevents common useres from seeing the invoices made by someonelse
-// 	        if (!$this->session->userdata('global_admin')) {
-// 	            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
-// 	        }
-	
-	         $invoices = $this->mdl_invoices->get($invoice_params);
-	         $tmpdata['invoices'] = $invoices;
-	         $data['invoices'] = $invoices;
-	         $data['invoices_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
-	         
-	         $quote_params = array(
-	         		'where'	=>	array(
-	         				'mcb_invoices.client_id'        =>	$contact->client_id,
-	         				'mcb_invoices.invoice_is_quote' =>  1
-	         		)
-	         );
-	         	         
-	         $quotes = $this->mdl_invoices->get($quote_params);
-	         $tmpdata['invoices'] = $quotes;
-	         $data['quotes'] = $quotes;
-	         $data['quotes_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
-	         
-		}
- 
         //getting Locations
         if(isset($contact->locRDN)) $locs = explode(",", $contact->locRDN);
         if(isset($locs) && is_array($locs))
@@ -900,6 +860,64 @@ class Contact extends Admin_Controller {
         $location_model = clone $this->location;
         $data['location_model'] = $location_model;
         
+        
+        //getting invoices and quotes
+        if(in_arrayi('invoices',$this->enabled_modules['all'])) {
+        	$this->load->model('invoices/mdl_invoices');
+        		
+        	$data['invoice_module_is_enabled'] = true;
+        		
+        	$tmpdata = array('invoices/mdl_invoices');  //TODO is this necessary?
+        		
+        	$invoice_params = array(
+        			'where'	=>	array(
+        					'mcb_invoices.client_id'        =>	$contact->client_id,
+        					'mcb_invoices.invoice_is_quote' =>  0
+        			)
+        	);
+        
+        	//TODO is this necessary?
+        	//prevents common useres from seeing the invoices made by someonelse
+        	// 	        if (!$this->session->userdata('global_admin')) {
+        	// 	            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
+        	// 	        }
+        
+        	$invoices = $this->mdl_invoices->get($invoice_params);
+        	$tmpdata['invoices'] = $invoices;
+        	$data['invoices'] = $invoices;
+        	$data['invoices_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
+        
+        	$quote_params = array(
+        			'where'	=>	array(
+        					'mcb_invoices.client_id'        =>	$contact->client_id,
+        					'mcb_invoices.invoice_is_quote' =>  1
+        			)
+        	);
+        
+        	$quotes = $this->mdl_invoices->get($quote_params);
+        	$tmpdata['invoices'] = $quotes;
+        	$data['quotes'] = $quotes;
+        	$data['quotes_html'] = $this->load->view('invoices/invoice_table',$tmpdata,true);
+        
+        }         
+        
+        //allows creations of tasks for the contact
+        if(in_arrayi('tasks',$this->enabled_modules['all'])) {
+        		
+        	$this->mcbsb->load('tasks/task','task');
+        
+        	//TODO add a filter to get only the tasks of this contact
+        	$params = array();
+        	$params['where']['client_id'] = $contact->client_id;
+        	if(strtolower($contact->objName) == 'person') $params['where']['client_id_key'] = 'uid';
+        	if(strtolower($contact->objName) == 'organization') $params['where']['client_id_key'] = 'oid';
+        	
+        	if($tasks = $this->mcbsb->task->readAll($params)) {
+        		$data['tasks'] = $tasks;
+        		$data['tasks_html'] = $this->plenty_parser->parse('tasks_table.tpl', array('tasks' => $tasks), true, 'smarty', 'contact');
+        	}
+        }
+                
         if(isset($contact_locs)) $data['contact_locs'] = $contact_locs;
         if(isset($contact_orgs)) $data['contact_orgs'] = $contact_orgs;
         if(isset($members))
@@ -915,6 +933,7 @@ class Contact extends Admin_Controller {
         }
         
         //loading Smarty templates
+        $data['site_url'] = site_url($this->uri->uri_string());
         $data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'contact');
         $data['details']	= $this->plenty_parser->parse('details.tpl', $data, true, 'smarty', 'contact');
         

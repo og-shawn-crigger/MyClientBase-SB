@@ -24,7 +24,9 @@ class Tax_Rates extends Admin_Controller {
 		$data = array(
 			'tax_rates' =>	$this->mdl_tax_rates->get($params),
 		);
-
+		
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'tax_rates');
 		$this->load->view('index', $data);
 
 	}
@@ -38,8 +40,10 @@ class Tax_Rates extends Admin_Controller {
 				$this->mdl_tax_rates->prep_validation(uri_assoc('tax_rate_id'));
 
 			}
-
-			$this->load->view('form');
+			$data = array();
+			$data['site_url'] = site_url($this->uri->uri_string());
+			$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'tax_rates');
+			$this->load->view('form',$data);
 
 		}
 
