@@ -65,6 +65,9 @@ class Dashboard extends Admin_Controller {
 
 		}
 
+		$data['site_url'] = site_url($this->uri->uri_string());
+		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
+		
 		$this->load->view('dashboard', $data);
 
 	}

@@ -93,6 +93,8 @@
 
 </div>
 
+<?php echo $actions_panel; ?>
+
 <?php
 $this->load->view('dashboard/sidebar',
 	array(
