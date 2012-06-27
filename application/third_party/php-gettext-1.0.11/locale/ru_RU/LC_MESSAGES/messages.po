@@ -1,0 +1,294 @@
+# Sample translation for PHP-gettext 1.0
+# Copyright (c) 2003 Damiano Venturin <dam@venturin.net>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: myclientbase-sm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-25 11:50+0200\n"
+"PO-Revision-Date: 2011-10-25 23:40+0100\n"
+"Last-Translator: Damiano Venturin <dam@venturin.net>\n"
+"Language-Team: Italian (sr) <dam@venturin.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+#"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "last search"
+msgstr "последний поиск"
+
+msgid "people"
+msgstr "persone"
+
+msgid "organizations"
+msgstr "organizzazioni"
+
+msgid "search"
+msgstr "поиск"
+
+msgid "No person found"
+msgstr "Non trovo nessuna persona"
+
+msgid "No organization found"
+msgstr "Non trovo nessuna organizzazione"
+
+msgid "view"
+msgstr "mostra"
+
+msgid "invoice"
+msgstr "fattura"
+
+msgid "quote"
+msgstr "preventivo"
+
+msgid "edit"
+msgstr "modifica"
+
+msgid "produced"
+msgstr "ha prodotto"
+
+msgid "results"
+msgstr "risultati"
+
+msgid "Add"
+msgstr "Aggiungi"
+
+msgid "Location"
+msgstr "Sede"
+
+msgid "Locations"
+msgstr "Sedi"
+
+msgid "Member of"
+msgstr "Membro di"
+
+msgid "Member"
+msgstr "Membro"
+
+msgid "Members"
+msgstr "Membri"
+
+msgid "Search contact"
+msgstr "Cerca contatto"
+
+msgid "Edit profile"
+msgstr "Modifica profilo"
+
+msgid "Add location"
+msgstr "Aggiungi sede"
+
+msgid "Associate Organization"
+msgstr "Associa organizzazione"
+
+msgid "Last Name"
+msgstr "Cognome"
+
+msgid "First Name"
+msgstr "Nome"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Zip"
+msgstr "Cap"
+
+msgid "City"
+msgstr "Citta"
+
+msgid "State"
+msgstr "Provincia"
+
+msgid "Country"
+msgstr "Nazione"
+
+msgid "Mobile"
+msgstr "Cellulare"
+
+msgid "Home Phone"
+msgstr "Telefono Residenza"
+
+msgid "enabled"
+msgstr "abilitato"
+
+msgid "Enabled"
+msgstr "Abilitato"
+
+msgid "TRUE"
+msgstr "SI"
+
+msgid "Description"
+msgstr "Descrizione"
+
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgid "Land-Line"
+msgstr "Telefono fisso"
+
+msgid "Created by"
+msgstr "Creato da"
+
+msgid "Updatedb by"
+msgstr "Aggiornato da"
+
+msgid "Home"
+msgstr "Residenza"
+
+msgid "Organization"
+msgstr "Organizzazione"
+
+msgid "Organization Type"
+msgstr "Tipo Organizzazione"
+
+msgid "Activity"
+msgstr "Settore"
+
+msgid "Client Base"
+msgstr "Clientela"
+
+msgid "Vat Number"
+msgstr "Partita Iva"
+
+msgid "Po-Box"
+msgstr "Casella Postale"
+
+msgid "Telephone"
+msgstr "Telefono"
+
+msgid "Website"
+msgstr "Sito Web"
+
+msgid "Make administrator"
+msgstr "Rendi amministratore"
+
+msgid "Delete Association"
+msgstr "Disassocia"
+
+msgid "Remove administration"
+msgstr "Rimuovi amministrazione"
+
+msgid "manager"
+msgstr "amministratore"
+
+msgid "means mandatory field"
+msgstr "indica campo obbligatorio"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "Home Fax"
+msgstr "Fax Residenza"
+
+msgid "Organization Phone"
+msgstr "Telefono Organizzazione"
+
+msgid "Organization Fax"
+msgstr "Fax Organizzazione"
+
+msgid "Manager Name"
+msgstr "Nome Supervisore"
+
+msgid "Assistant Name"
+msgstr "Nome Assistente"
+
+msgid "Assistant Phone"
+msgstr "Telefono Assistente"
+
+msgid "Online Calendar"
+msgstr "Calendario Online"
+
+msgid "Spoken Language"
+msgstr "Lingua parlata"
+
+msgid "Birthdate"
+msgstr "Data di nascita"
+
+msgid "Photo"
+msgstr "Foto"
+
+msgid "submit"
+msgstr "invia"
+
+msgid "cancel"
+msgstr "cancella"
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Back to profile"
+msgstr "Torna al profilo"
+
+msgid "search for name, vat, phone, email, website"
+msgstr "cerca nome, partita iva, telefono, email, sitoweb"
+
+msgid "Search for name, organization name, vat number, phone, email, website"
+msgstr "Cerca per nome, nome organizzazione, partita iva, telefono, sitoweb"
+
+msgid "Edit"
+msgstr "Modifica"
+
+msgid "Delete"
+msgstr "Elimina"
+
+msgid "Larger Map"
+msgstr "Mappa Ingrandita"
+
+msgid "city"
+msgstr "citta"
+
+msgid "state"
+msgstr "provincia"
+
+msgid "statistics"
+msgstr "statistiche"
+
+msgid "Search"
+msgstr "Cerca"
+
+msgid "add one"
+msgstr "aggiungi"
+
+msgid "Reset"
+msgstr "Reimposta"
+
+msgid "You can safely add this contact"
+msgstr "Puoi tranquillamente aggiungere questo contatto"
+
+msgid "Add a person"
+msgstr "Aggiungi persona"
+
+msgid "Add an organization"
+msgstr "Aggiungi organizzazione"
+
+msgid "Updated by"
+msgstr "Aggiornato da"
+
+msgid "updated by"
+msgstr "aggiornato da"
+
+msgid "Maybe the contact you are trying to add is already present in the system"
+msgstr "Forse il contatto che stai aggiungendo é giá presente nel sistema"
+ 
+msgid "If you are sure that this contact is not yet in the system, please click"
+msgstr "Se sei sicuro che il contatto non é presente nel sistema, clicca"
+
+msgid "Displaying"
+msgstr "Mostro"
+
+msgid "on"
+msgstr "su"
+
+msgid "person"
+msgstr "persona"
+
+msgid "Actions Panel"
+msgstr "Pannello Azioni"
+
+msgid "found"
+msgstr "trovate"
