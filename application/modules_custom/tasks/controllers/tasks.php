@@ -147,9 +147,10 @@ class Tasks extends Admin_Controller {
 				$this->load->model('invoices/mdl_invoices');
 				
 				if(!$this->mcbsb->task->complete_date) {
-					//TODO system message
-					redirect($this->session->userdata('last_index'));
+					$this->mcbsb->task->complete_date = now();
+					$this->mcbsb->task->update();
 				}
+				
 				$invoice_items = array();
 				$invoice_items[] = array(
 						'item_name'			=>	$this->mcbsb->task->title,
@@ -158,10 +159,22 @@ class Tasks extends Admin_Controller {
 						'item_price'		=>	0
 				);
 
+				if($this->mcbsb->task->client_id_key == 'uid') {
+					$invoice_due_date = now();
+				} else {
+					//the end of the month
+					//TODO this should go in the settings
+					$current_month = date('m');
+					$current_year = date('Y');
+					$final_date = $current_year . '-' . $current_month . '-' . days_in_month($current_month,$current_year);
+					$invoice_due_date = strtotime($final_date);
+				}
+				
 				$package = array(
 						'client_id'				=>	$this->mcbsb->task->client_id,
 						'client_id_key'			=>	$this->mcbsb->task->client_id_key,
 						'invoice_date_entered'	=>	$this->mcbsb->task->complete_date,
+						//'invoice_due_date'		=>	$invoice_due_date,
 						'invoice_is_quote'		=>	0,
 						'invoice_group_id'		=>	1,//$this->input->post('invoice_group_id'),
 						'invoice_items'			=>	$invoice_items

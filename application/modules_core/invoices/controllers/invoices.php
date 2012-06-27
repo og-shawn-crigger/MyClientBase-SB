@@ -207,15 +207,13 @@ class Invoices extends Admin_Controller {
 
 		$this->redir->set_last_index();
 
-		$this->load->model(
-			array(
-			//'clients/mdl_clients',
-			'payments/mdl_payments',
-			'tax_rates/mdl_tax_rates',
-			'invoice_statuses/mdl_invoice_statuses',
-			'templates/mdl_templates',
-			'users/mdl_users'
-			)
+		$this->load->model( array(
+								'payments/mdl_payments',
+								'tax_rates/mdl_tax_rates',
+								'invoice_statuses/mdl_invoice_statuses',
+								'templates/mdl_templates',
+								'users/mdl_users'
+							)
 		);
 
 		$params = array(
@@ -235,6 +233,7 @@ class Invoices extends Admin_Controller {
 			redirect('invoices');
 		}
 
+		//TODO what is this?
 		$user_params = array(
 			'where' =>  array(
 				'mcb_users.user_client_id'   =>  0
@@ -246,7 +245,8 @@ class Invoices extends Admin_Controller {
             $user_params['where']['user_id'] = $this->session->userdata('user_id');
 
         }
-
+		//end of "what is this"
+        
 		$data = array(
 			'invoice'			=>	$invoice,
 			'payments'          =>  $this->mdl_invoices->get_invoice_payments($invoice->invoice_id),

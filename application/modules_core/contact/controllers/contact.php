@@ -588,6 +588,10 @@ class Contact extends Admin_Controller {
     	//it's not a form submit 
     	if($obj) { 		
     		
+    		//unset the errors found during the validation step, otherwise when a new contact is being created it gets errors
+    		$form_validation_obj =& _get_validation_object();
+    		$form_validation_obj->reset_errors();
+    		
     		//the contact is set so it's an early stage update and it needs to fill the form with the contact's data
     		$contact_id = $this->$obj->uid ? $this->$obj->uid : $this->$obj->oid;
 
@@ -595,9 +599,6 @@ class Contact extends Admin_Controller {
     			//it's not an update but a new contact creation
     			$form = $this->input->post('form');
 
-    			 
-    			
-    			
     			switch ($this->$obj->objName) {
     				case 'person':
     					if(empty($form)) {
@@ -629,6 +630,7 @@ class Contact extends Admin_Controller {
     			$this->mdl_contacts->form_values[$key] = $this->$obj->$key;
     		} 
     		
+    		//for test purposes
     		$o = $this->$obj;    		
     		
     		//sets form submit url

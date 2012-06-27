@@ -46,9 +46,11 @@
 					<dd><textarea id="description" name="description" rows="10" cols="50"><?php echo $task->description; ?></textarea></dd>
 				</dl>
 
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save');?>" />
-				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel');?>" />
-
+				<div style="float: right; margin-right: 5px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save');?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel');?>" />
+				</div>
+				
 			</form>
 
 		</div>

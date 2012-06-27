@@ -38,7 +38,7 @@
 	<h3 class="title_black">{t}Task Actions{/t}</h3>
 
 	<ul class="quicklinks content toggle" >
-		{if !empty($task->task_id) and !empty($task->complete_date)}
+		{if !empty($task->task_id)}
 		<li><a id="btn_create_mti" href="/tasks/create_invoice/task_id/{$task->task_id}">{t}Create Invoice{/t}</a></li>
 		{/if}
 	</ul>

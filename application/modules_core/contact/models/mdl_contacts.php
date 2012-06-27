@@ -59,10 +59,8 @@ class Mdl_Contacts extends MY_Model {
     		}
     	} else {
     		//looking for a specific contact
-    		if(!empty($params['uid'])) 
-    		{
-    			$input['filter'] = '(uid='.$params['uid'].')';
-    		}
+    		if(!empty($params['uid'])) $input['filter'] = '(uid='.$params['uid'].')';
+    		
     		if(!empty($params['oid'])) $input['filter'] = '(oid='.$params['oid'].')';
     	}
     	

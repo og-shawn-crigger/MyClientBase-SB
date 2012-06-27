@@ -119,7 +119,7 @@ class Mdl_Invoices extends MY_Model {
 	 */
 	private function fill_invoice_contact(stdClass $invoice){
 	
-		if(! empty($invoice->client_id)) {
+		if(! empty($invoice->client_id) and !empty($invoice->client_id_key)) {
 			$params = array($invoice->client_id_key => $invoice->client_id);
 	
 			if($contact = $this->get_contact($params))
@@ -172,14 +172,13 @@ class Mdl_Invoices extends MY_Model {
 		);
 				
 
-		if(strtolower($contact->objName) == "person") {
-			foreach ($mandatory_attributes[strtolower($contact->objName)] as $attribute => $ldap_attribute) {
-				$invoice->$attribute = '';
-				if($ldap_attribute and isset($contact->$ldap_attribute)) {
-					$invoice->$attribute = $contact->$ldap_attribute;
-				}
-			}				
-		}
+		foreach ($mandatory_attributes[strtolower($contact->objName)] as $attribute => $ldap_attribute) {
+			$invoice->$attribute = '';
+			if($ldap_attribute and isset($contact->$ldap_attribute)) {
+				$invoice->$attribute = $contact->$ldap_attribute;
+			}
+		}				
+		
 
 		return $invoice;
 	}
@@ -211,8 +210,11 @@ class Mdl_Invoices extends MY_Model {
 			}
 
 		} else {
-			$invoices = $this->set_invoice_additional($tmp_invoices, $params);
-
+			if(is_object($tmp_invoices)) {
+				$invoices = $this->set_invoice_additional($tmp_invoices, $params);
+			} else {
+				return false;
+			}
 		}
 
 		return $invoices;
@@ -371,12 +373,13 @@ class Mdl_Invoices extends MY_Model {
 
 	public function save($client_id, $client_id_key, $date_entered, $invoice_is_quote = 0, $strtotime = TRUE) {
 
-		if ($strtotime) {
-
+		//TODO strtotime is no more necessary
+		
+		//test if date_entered is a timestamp or a human format
+		if(strtotime($date_entered)) {
 			$date_entered = strtotime(standardize_date($date_entered));
-
 		}
-
+		
 		$db_array = array(
 			'client_id'					=>	$client_id,
 			'client_id_key'				=>	$client_id_key,
