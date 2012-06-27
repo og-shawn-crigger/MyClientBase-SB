@@ -463,7 +463,6 @@ $lang['inventory_type_in_use'] = 'The Inventory Type specified is already in use
 $lang['account_deposits'] = 'Account Deposits';
 $lang['apply_credit'] = 'Apply Credit';
 $lang['calendar_view'] = 'Calendar View';
-$lang['control_center'] = 'Control Center';
 $lang['copy'] = 'Copy';
 $lang['credit_amount'] = 'Credit Amount';
 $lang['dashboard_show_quotes'] = 'Show Quotes';
@@ -603,4 +602,7 @@ $lang['assignments'] = 'Assignments';
 $lang['module_home_page'] = 'Module Home Page';
 $lang['mcbsb_manager'] = 'MCB-SB Manager';
 $lang['disabled'] = 'disabled';
+$lang['client_id_key'] = 'Contact ID key';
+$lang['save'] = 'Save';
+$lang['handle_modules'] = 'Handle Modules';
 ?>
