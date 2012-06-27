@@ -7,8 +7,7 @@
 			<th scope="col" class="col_amount"><?php echo $table_headers['amount']; ?></th>
 			<th scope="col" class="last" style="text-align: center;"><?php echo $this->lang->line('actions'); ?></th>
 		<?php } else { ?>
-			<th scope="col" class="first"><?php echo $this->lang->line('id'); ?></th>
-			<th scope="col"><?php echo $this->lang->line('date'); ?></th>
+			<th scope="col" class="first"><?php echo $this->lang->line('date'); ?></th>
 			<th scope="col"><?php echo $this->lang->line('invoice_number'); ?></th>
 			<th scope="col"><?php echo $this->lang->line('client'); ?></th>
 			<th scope="col" class="col_amount"><?php echo $this->lang->line('amount'); ?></th>

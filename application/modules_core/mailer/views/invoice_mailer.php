@@ -63,10 +63,12 @@
 					</dd>
 				</dl>
 
+				<div style="float: right; margin-right: 5px;">
+					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('send_email'); ?>" />
+					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+				</div>
+						
                 <div style="clear: both;">&nbsp;</div>
-
-				<input type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('send_email'); ?>" />
-				<input type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
 
 			</form>
 
