@@ -199,6 +199,10 @@ class Mdl_Invoices extends MY_Model {
 
 		$tmp_invoices = parent::get($params);
 
+		//for test purposes
+// 		$sql = $this->db->last_query();
+// 		echo '<hr/><br/>'.$sql;
+				
 		if (is_array($tmp_invoices)) {
 
 			$invoices = array();
@@ -216,7 +220,7 @@ class Mdl_Invoices extends MY_Model {
 				return false;
 			}
 		}
-
+		
 		return $invoices;
 
 	}

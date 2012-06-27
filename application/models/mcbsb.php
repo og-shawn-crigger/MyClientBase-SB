@@ -8,6 +8,7 @@ class Mcbsb  extends CI_Model {
 	public $system_messages;
 	
 	public $_enabled_modules;
+	public $_total_rows;
 	public $_user;
 	
 	public function __construct() {

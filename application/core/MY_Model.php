@@ -109,6 +109,8 @@ class MY_Model extends CI_Model {
 		// set up the joins
 		$this->_prep_joins($params);
 
+		$this->mcbsb->_total_rows = $a = $this->_prep_pagination($params);
+		
 		// execute the query
 		$query = $this->db->get($this->table_name);
 
@@ -119,8 +121,6 @@ class MY_Model extends CI_Model {
 			exit;
 
 		}
-
-		$this->_prep_pagination($params);
 
 		if (isset($params['where']) and is_array($params['where']) and isset($params['where'][$this->primary_key])) {
 
@@ -356,14 +356,19 @@ class MY_Model extends CI_Model {
 		}
 
 		// should the results be paginated?
-		if (isset($params['paginate']) AND $params['paginate'] == TRUE AND (isset($params['limit']) OR isset($this->limit))) {
+		if (isset($params['limit']) OR isset($this->limit)) {
 
-            $this->offset = (isset($params['page'])) ? $params['page'] : 0;
+			//if pagination is set true the limit will be added in the _prep_pagination method
+			if(isset($params['paginate']) AND $params['paginate'] == TRUE) {
 
-            $this->limit = (isset($params['limit'])) ? $params['limit'] : $this->limit;
+				$this->offset = (isset($params['page'])) ? $params['page'] : 0;
+			
+			} else {
 
-			$this->db->limit($this->limit, $this->offset);
+            	$this->limit = (isset($params['limit'])) ? $params['limit'] : $this->limit;
 
+				$this->db->limit($this->limit, $this->offset);
+			}
 		}
 
 		elseif (isset($params['limit']) AND (!isset($params['paginate']) OR $params['paginate'] == FALSE)) {
@@ -422,18 +427,38 @@ class MY_Model extends CI_Model {
 
 		if (isset($params['paginate']) AND $params['paginate'] == TRUE) {
 
+			//pagination can not work properly if the sql statement contains a LIMIT parameter
+			//so it's necessary to run first a query without the limit parameter and then run
+			//the query again with the limit parameter
+			$query = $this->db->get($this->table_name);
+			
+			//for test purposes
+// 			$sql = $this->db->last_query();
+// 			echo $sql;
+			
 			$query = $this->db->query('SELECT FOUND_ROWS() AS total_rows');
 
 			$this->total_rows = $query->row()->total_rows;
-
+			
+			
+			if (isset($params['limit'])) {
+				$limit = $params['limit'];
+			} else {
+				if (isset($this->limit)) $limit = $this->limit;
+			}
+			if(!isset($limit) or $limit == 0) $limit = 1;
+			
+			if(isset($this->offset)) $offset = $this->offset;
+			if(!isset($offset) or $offset == 0) $offset = 1;
+			
+			
 			$this->load->library('pagination');
-
 			if (!isset($this->page_config)) {
 
 				$config = array(
 					'base_url'			=>	$this->_base_url(),
 					'total_rows'		=>	$this->total_rows,
-					'per_page'			=>	$this->limit,
+					'per_page'			=>	$limit,
 					'next_link'			=>	$this->lang->line('next') . ' >',
 					'prev_link'			=>	'< ' . $this->lang->line('prev'),
 					'cur_tag_open'		=>	'<span class="active_link">',
@@ -451,16 +476,29 @@ class MY_Model extends CI_Model {
 
 			$config['base_url'] = $this->_base_url();
 			$config['total_rows'] = $this->total_rows;
-			$config['per_page'] = $this->limit;
-            $config['cur_page'] = $this->offset;
+			$config['per_page'] = $limit;
+            $config['cur_page'] = $offset;
 
 			$this->pagination->initialize($config);
 			$this->page_links = $this->pagination->create_links();
-			$this->current_page = ($this->offset / $this->limit) + 1;
-			$this->num_pages = ceil($this->total_rows / $this->limit);
+			if($limit != 0) {
+				$this->current_page = ($offset / $limit) + 1;
+				$this->num_pages = ceil($this->total_rows / $limit);
+			} else {
+				$this->current_page = 1;
+				$this->num_pages = 1;
+			}
+			
+			//set up the limit parameter to the query so that it will be ready for the next run
+			unset($params['paginate']);
+			$this->_prep_params($params);
+			// set up the joins
+			$this->_prep_joins($params);
 
+			return $this->total_rows;
 		}
 
+		return false;
 	}
 
 	private function _base_url() {

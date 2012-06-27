@@ -605,4 +605,6 @@ $lang['disabled'] = 'disabled';
 $lang['client_id_key'] = 'Contact ID key';
 $lang['save'] = 'Save';
 $lang['handle_modules'] = 'Handle Modules';
+$lang['prev'] = 'Previous';
+$lang['found'] = 'found';
 ?>

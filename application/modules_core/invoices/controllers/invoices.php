@@ -22,19 +22,20 @@ class Invoices extends Admin_Controller {
 		$order = uri_assoc('order');
 		$status = uri_assoc('status');
 		$is_quote = uri_assoc('is_quote');
-				
+		if(!$page = uri_assoc('page')) $page = 1;		
+		
+		//gets the contact if specified in the url
+		if($contact = $this->retrieve_contact()) $client_id = $contact->client_id;
+		
 		$params = array(
 				'paginate'				=>	TRUE,
 				'limit'					=>	$this->mdl_mcb_data->setting('results_per_page'),
-				'page'					=>	uri_assoc('page'),
+				'page'					=>	$page,
 				'where'					=>	array(),
 		);
 		
 		//contains the info sent to the view
 		$data = array();
-		
-		//gets the contact if specified in the url
-		if($contact = $this->retrieve_contact()) $client_id = $contact->client_id;
 
 		$params['where']['mcb_invoices.invoice_is_quote'] = ($is_quote) ? 1 : 0;
 		
@@ -65,7 +66,10 @@ class Invoices extends Admin_Controller {
 
 		$invoices = $this->mdl_invoices->get($params);
 		
+		$a = $this->mdl_invoices;
+		
 		$data['invoices'] =	$invoices;
+		$data['tot_num_invoices'] =	$this->mcbsb->_total_rows;
 		$data['sort_links']	= TRUE;
 		$data['site_url'] = site_url($this->uri->uri_string());
 		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');		

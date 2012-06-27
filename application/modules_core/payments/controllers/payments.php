@@ -61,6 +61,7 @@ class Payments extends Admin_Controller {
 			'table_headers'	=>	$this->mdl_payment_table->get_table_headers()
 		);
 
+		$data['tot_num_payments'] =	$this->mcbsb->_total_rows;
 		$data['site_url'] = site_url($this->uri->uri_string());
 		$data['actions_panel'] = $this->plenty_parser->parse('actions_panel.tpl', $data, true, 'smarty', 'invoices');
 				

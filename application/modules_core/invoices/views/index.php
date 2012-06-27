@@ -47,7 +47,15 @@
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo (!uri_assoc('is_quote') ? $this->lang->line('invoices') : $this->lang->line('quotes')); ?></h3>
+		<h3 class="title_black"><?php echo (!uri_assoc('is_quote') ? $this->lang->line('invoices') : $this->lang->line('quotes')); ?>
+				<?php 
+					if(isset($tot_num_invoices)) {
+						?>
+						<span style="font-size: 11px; font-color: white; padding-left: 5px;">( <?php echo $this->lang->line('found') . ' ' . $tot_num_invoices; ?> )</span>
+						<?php 
+					}
+				?>
+		</h3>
 
 		<div class="content toggle no_padding">
 

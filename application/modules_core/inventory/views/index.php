@@ -4,7 +4,15 @@
 
 	<div class="section_wrapper">
 
-		<h3 class="title_black"><?php echo $this->lang->line('inventory_items'); ?></h3>
+		<h3 class="title_black"><?php echo $this->lang->line('inventory_items'); ?>
+			<?php 
+				if(isset($tot_num_items)) {
+					?>
+					<span style="font-size: 11px; font-color: white; padding-left: 5px;">( <?php echo $this->lang->line('found') . ' ' . $tot_num_items; ?> )</span>
+					<?php 
+				}
+			?>		
+		</h3>
 
 		<div class="content toggle no_padding">
 
