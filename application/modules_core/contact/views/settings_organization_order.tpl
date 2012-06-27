@@ -30,7 +30,7 @@
 			 
 			<p style="color:{$color}; margin-bottom: 4px; margin-left: 5px;"><b>{$attribute_name}</b>
 			{if isset($organization_aliases) and isset($attribute_name) and isset($organization_aliases.$attribute_name)}
-				<span style="font-size: 13px; color: green"> Alias: {$organization_aliases.$attribute_name}</span>
+				<span style="font-size: 13px; color: green"> {t}Alias{/t}: {$organization_aliases.$attribute_name}</span>
 			{/if}	
 			</p>
 						

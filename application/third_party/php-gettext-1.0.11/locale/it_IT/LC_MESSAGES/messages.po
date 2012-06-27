@@ -291,4 +291,70 @@ msgid "Actions Panel"
 msgstr "Pannello Azioni"
 
 msgid "found"
-msgstr "trovate"
+msgstr "trovati"
+
+msgid "set visible attributes"
+msgstr "scegli quali attributi mostrare"
+
+msgid "set attributes order"
+msgstr "imposta ordine degli attributi"
+
+msgid "set attributes aliases"
+msgstr "imposta gli pseudonimi degli attributi"
+
+msgid "organization"
+msgstr "organizzazione"
+
+msgid "location"
+msgstr "sede"
+
+msgid "Drag attributes from the left to the right to make them visible or from the right to the left to hide them"
+msgstr "Trascina gli attributi dalla sinistra alla destra per renderli visibili o dalla destra alla sinistra per nasconderli"
+
+msgid "All the changes are automatically saved"
+msgstr "Tutte le modifiche vengono salvate automaticamente"
+
+msgid "Available Attributes"
+msgstr "Attributi Disponibili"
+
+msgid "Visible Attributes"
+msgstr "Attributi Visibili"
+
+msgid "Alias"
+msgstr "Pseudonimo"
+
+msgid "No description available"
+msgstr "Nessuna descrizione disponibile"
+
+msgid "Tasks"
+msgstr "Incarichi"
+
+msgid "Logout"
+msgstr "Esci"
+
+msgid "Inventory"
+msgstr "Magazzino"
+
+msgid "Reports"
+msgstr "Rapporti"
+
+msgid "Invoices"
+msgstr "Fatture"
+
+msgid "Contact"
+msgstr "Contatto"
+
+msgid "Contacts"
+msgstr "Contatti"
+
+msgid "Invoices & Quotes"
+msgstr "Fatture & Preventivi"
+
+msgid "Dashboard"
+msgstr "Cruscotto"
+
+msgid "Mcbsb Settings"
+msgstr "Impostazioni Mcbsb"
+
+
+

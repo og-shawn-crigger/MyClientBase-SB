@@ -65,7 +65,7 @@ $lang['currency_symbol_before'] = 'Metti il simbolo di valuta prima dell\'import
 $lang['currency_symbol_placement'] = 'Posizione Simbolo Valuta';
 $lang['custom_modules'] = 'Moduli Personalizzati';
 $lang['dashboard'] = 'Pannello';
-$lang['dashboard_override'] = 'Dashboard Override';
+$lang['dashboard_override'] = 'Reindirizzamento Dashboard';
 $lang['dashboard_show_closed_invoices'] = 'Mostra Fatture Chiuse di Recente';
 $lang['dashboard_show_open_invoices'] = 'Mostra Fatture Aperte';
 $lang['dashboard_show_overdue_invoices'] = 'Mostra Fatture Scadute';
@@ -456,7 +456,70 @@ $lang['email_footer'] = 'Pi&egrave; Pagina Email';
 $lang['footer'] = 'Pi&egrave; Pagina';
 $lang['inventory_type_in_use'] = 'La categoria merceologica specificata &egrave; gi&agrave; in uso.';
 
-//FIXME delete
+/* NEW FOR 0.9.6 (0.10)*/
+//$lang['item_tax_option_0'] = 'Add to Total';
+//$lang['item_tax_option_1'] = 'Include in Total';
+$lang['account_deposits'] = 'Account Deposits';
+$lang['apply_credit'] = 'Apply Credit';
+$lang['calendar_view'] = 'Calendario';
+$lang['copy'] = 'Copia';
+$lang['credit_amount'] = 'Credito';
+$lang['dashboard_show_quotes'] = 'Mostra Preventivi';
+$lang['email_body_template'] = 'Default Body Template';
+$lang['email_footer_template'] = 'Default Footer Template';
+$lang['enter_deposit'] = 'Enter Deposit';
+$lang['initial_stock_quantity'] = 'Quantit&agrave; iniziale';
+$lang['invoice_count'] = 'Invoice Count';
+$lang['item_tax_option_0'] = 'Aggiungi all\' importo';
+$lang['item_tax_option_1'] = 'Includi nell\' importo';
+$lang['list_view'] = 'List View';
+$lang['my_profile'] = 'Mio Profilo';
+$lang['sales'] = 'Vendite Nette';
+$lang['sales_with_tax'] = 'Vendite Lorde';
+$lang['sales_by_customer'] = 'Vendite per cliente';
+
+/* Calendar */
+$lang['calendarToday'] = 'Oggi';
+$lang['calendarDay'] = 'Giorno';
+$lang['calendarWeek'] = 'Settimana';
+$lang['calendarMonth'] = 'Mese';
+$lang['months'] = array("Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre");
+$lang['monthsShort'] = array("Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic");
+$lang['days'] = array("Domenica","Lunedi","Martedi","Mercoledi","Giovedi","Venerdi","Sabato");
+$lang['daysShort'] = array("Dom","Lun","Mar","Mer","Gio","Ven","Sab");
+
+/* NEW FOR 0.11 */
+$lang['active'] = 'Attivo';
+$lang['amount_greater_than_zero'] = 'L\'importo deve essere maggiore di zero.';
+$lang['default_invoice_email_template'] = 'Default Invoice Email Template';
+$lang['default_item_tax_option'] = 'Default Item Tax Option';
+$lang['default_overdue_invoice_email_template'] = 'Default Overdue Invoice Email Template';
+$lang['default_payment_method'] = 'Default Payment Method';
+$lang['email_body'] = 'Corpo Email';
+$lang['email_footer'] = 'Piede Email';
+$lang['email_template_form'] = 'Email Template Form';
+$lang['email_template_title'] = 'Email Template Title';
+$lang['email_templates'] = 'Email Templates';
+$lang['merchant_account_id'] = 'Merchant Account ID';
+$lang['merchant_currency_code'] = 'Merchant Currency Code';
+$lang['merchant_driver'] = 'Merchant Driver';
+$lang['merchant_enabled'] = 'Merchant Enabled';
+$lang['merchant_online_payment'] = 'Online Payment';
+$lang['merchant_pay_online'] = 'Pay Online';
+$lang['merchant_payment_cancelled'] = 'Your payment has been cancelled.';
+$lang['merchant_payment_finished'] = 'Thank you for your payment.';
+$lang['merchant_test_mode'] = 'Merchant Test Mode';
+$lang['no'] = 'No';
+$lang['off'] = 'Disattivato';
+$lang['on'] = 'Attivo';
+$lang['yes'] = 'Si';
+
+/* NEW FOR 0.12 */
+$lang['clear'] = 'Clear';
+$lang['default_apply_invoice_tax'] = 'Default Apply Invoice Tax to Items';
+$lang['group_by'] = 'Group By';
+$lang['payment_entered'] = 'A payment of %s was applied';
+
 /* SMALL BUSINESS */
 $lang['mysearch'] = 'Cerca';
 $lang['lastsearch'] = 'Ultima ricerca';
@@ -510,4 +573,32 @@ $lang['core_modules'] = 'Moduli Principali';
 $lang['enable'] = 'Abilita';
 $lang['disable'] = 'Disabilita';
 $lang['by location'] = 'per posizione';
+
+/* After 2012-06-16 */
+$lang['invoices&quotes'] = 'Fatture e preventivi';
+$lang['main_actions'] = 'Azioni Principali';
+$lang['mcbsb_settings'] = 'Impostazioni MCB-SB';
+$lang['created_quote'] = 'ha creato questo preventivo';
+$lang['emailed_quote'] = 'ha inviato il preventivo via email';
+$lang['generated_quote_pdf'] = 'ha generato un PDF del preventivo';
+$lang['generated_quote_html'] = 'ha generato una pagina HTML del preventivo';
+$lang['saved_quote_options'] = 'ha salvato le opzioni del preventivo';
+$lang['contact_created'] = 'Il contatto &egrave; stato creato';
+$lang['contact_not_created'] = 'Il contatto non &egrave; stato creato';
+$lang['contact_updated'] = 'Il contatto &egrave; stato aggiornato';
+$lang['contact_not_updated'] = 'Il contatto non &egrave; stato aggiornato';
+$lang['location_created'] = 'La sede &egrave; stata creata';
+$lang['location_not_created'] = 'La sede non &egrave; stata creata';
+$lang['location_updated'] = 'La sede &egrave; stata aggiornata';
+$lang['location_not_updated'] = 'La sede non &egrave; stata aggiornata';
+$lang['contacts_by_location'] = 'Contatti per sede';
+$lang['assignments'] = 'Incarichi';
+$lang['module_home_page'] = 'Module Home Page';
+$lang['mcbsb_manager'] = 'MCB-SB Manager';
+$lang['disabled'] = 'disabilitato';
+$lang['client_id_key'] = 'Contact ID key';
+$lang['save'] = 'Salva';
+$lang['handle_modules'] = 'Handle Modules';
+$lang['prev'] = 'Precedente';
+$lang['found'] = 'trovato';
 ?>
