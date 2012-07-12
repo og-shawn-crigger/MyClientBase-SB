@@ -15,7 +15,8 @@ class Mdl_Users extends MY_Model {
 
 		$this->order_by = 'last_name, first_name';
 
-		$this->custom_fields = $this->mdl_fields->get_object_fields(6);
+		//TODO do not uncomment this line: it breaks mcbsb load
+		//$this->custom_fields = $this->mdl_fields->get_object_fields(6);
 
 	}
 
@@ -148,6 +149,16 @@ class Mdl_Users extends MY_Model {
 
 	}
 
+	public function get_full_name($user_id) {
+	
+		$this->db->select('last_name','first_name');
+	
+		$this->db->where('user_id', $user_id);
+	
+		return $this->db->get('mcb_users')->row()->last_name . " " . $this->db->get('mcb_users')->row()->first_name;
+	
+	}	
+	
 	public function get_email_address($user_id) {
 
 		$this->db->select('email_address');

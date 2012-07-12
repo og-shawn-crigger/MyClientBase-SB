@@ -5,7 +5,7 @@ class Mcbsb  extends CI_Model {
 	protected $_error;
 	protected $_success;
 	protected $_warning;
-	public $system_messages;
+	public $system_messages;  //equal to: $this->load->model('system_messages');
 	
 	public $_enabled_modules;
 	public $_total_rows;
@@ -18,7 +18,6 @@ class Mcbsb  extends CI_Model {
 		$this->load->model('record_descriptor');
 		$this->load->model('field_descriptor');
 		$this->load->model('db_obj');
-		//$this->load->model('system_messages');
 		
 		$this->initialize();
 		
@@ -28,6 +27,9 @@ class Mcbsb  extends CI_Model {
 		$this->_user->first_name = $this->session->userdata('first_name');
 		$this->_user->last_name = $this->session->userdata('last_name');
 		$this->_user->is_admin = $this->session->userdata('is_admin');
+		
+		$this->load->model('users/mdl_users','users');  //mdl_users is loaded in $this->users
+
 	}
 	
 	private function initialize() {

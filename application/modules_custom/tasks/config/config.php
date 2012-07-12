@@ -14,5 +14,6 @@ $config = array(
 		'dashboard_menu'	=>	'tasks/header_menu'
 	)
 );
-
+/* End of file config.php */
+/* Location: ./application/modules_custom/tasks/config/config.php */
 ?>

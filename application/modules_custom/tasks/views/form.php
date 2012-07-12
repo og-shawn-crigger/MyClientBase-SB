@@ -8,7 +8,7 @@
 
 		<h3 class="title_black"><?php echo $this->lang->line('task_form'); ?></h3>
 
-		<div class="content toggle">
+		<div class="content toggle" style="min-height: 0; padding-bottom: 45px;">
 
 			<form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
 				<input id="task_id" type="hidden" name="task_id" value="<?php echo $task->task_id; ?>" />
@@ -43,18 +43,30 @@
 
 				<dl>
 					<dt><label><?php echo $this->lang->line('description');?>: </label></dt>
-					<dd><textarea id="description" name="description" rows="10" cols="50"><?php echo $task->description; ?></textarea></dd>
+					<dd><textarea id="description" name="description" rows="10" cols="72"><?php echo $task->description; ?></textarea></dd>
 				</dl>
 
-				<div style="float: right; margin-right: 5px;">
+				<div style="float: right; margin-right: 5px; margin-top: 5px;">
 					<input class="uibutton" type="submit" id="btn_submit" name="btn_submit" value="<?php echo $this->lang->line('save');?>" />
 					<input class="uibutton" type="submit" id="btn_cancel" name="btn_cancel" value="<?php echo $this->lang->line('cancel');?>" />
 				</div>
 				
 			</form>
-
+	
 		</div>
-
+		
+		<?php 
+			if(isset($activities)) {		
+		?>
+			<div  class="content toggle" style="min-height: 0px;">
+			<h3 class="title_black"><?php echo $this->lang->line('activities'); ?></h3>
+		<?php  
+				echo $table;
+				echo '</div>';
+			}
+		?>
+		
+				
 	</div>
 
 </div>

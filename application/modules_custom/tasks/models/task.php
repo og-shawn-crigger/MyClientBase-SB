@@ -23,7 +23,7 @@ class Task extends Db_Obj
 	protected $title = NULL ;
 	protected $description	= NULL ;
 	
-	public function __construct(){
+	public function __construct() {
 		parent::__construct();
 		
 		$this->obj_ID_field = 'task_id';  //here goes the name of the primary field identifying each record
@@ -37,52 +37,35 @@ class Task extends Db_Obj
 	
 	}
 	
-	public function create(){
+	public function create() {
 		if(!is_null($this->obj_ID_value)) return false;		
 		return parent::create();
 	}
 
-	public function read(){
+	public function read() {
 		if(is_null($this->obj_ID_value)) return false;		
 		return parent::read();
 	}
 		
-	public function update(){
+	public function update() {
 		if(is_null($this->obj_ID_value)) return false;
 		return parent::update();
 	}	
 	
-	public function delete(){
+	public function delete() {
 		if(is_null($this->obj_ID_value)) return false;
 		if(!$this->read()) return false;
 		return parent::delete();	
 	}
 	
-	/**
-	 * Description 
-	 * 
-	 * @access		public
-	 * @param		$params Array
-	 * @var			
-	 * @return		array or false
-	 * @example
-	 * @see
-	 * 
-	 * @author 		Damiano Venturin
-	 * @copyright 	2V S.r.l.
-	 * @license	GPL
-	 * @link		http://www.mcbsb.com
-	 * @since		Jun 25, 2012
-	 * 		
-	 */
-	public function readAll(array $params = null){
+	public function readAll(array $params = null) {
 
 		$where = null;
 		$logic_operator = 'AND';
 				
 		if(!is_null($params)) extract($params);
 				
-		if($results = $this->search($where,$logic_operator)){
+		if($results = $this->search($where,$logic_operator)) {
 			$tasks = array();
 			foreach ($results as $key => $id) {
 				$this->task_id = $id;
@@ -93,11 +76,10 @@ class Task extends Db_Obj
 			return $tasks;
 		}
 		
-		
 		return false;
 	}
 		
-	public function searchProvidingSql($sql){
+	public function searchProvidingSql($sql) {
 		//generally on a specific database object you don't want to perform generic queries.
 		//if you need to perform generic queries, use db_obj 
 		return false;
