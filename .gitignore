@@ -17,7 +17,10 @@ application/cache/twig/cached/*
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
+
 /trash
+/trash/*
+
 /.*
 .*
 /uploads/*
