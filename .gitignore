@@ -1,7 +1,17 @@
 .DS_Store
 
-application/cache/*
-!application/cache/index.html
+application/cache/smarty/cached/*
+!application/cache/smarty/cached/index.hmtl
+!application/cache/smarty/cached/.htaccess
+
+application/cache/smarty/compiled/*
+!application/cache/smarty/compiled/index.html
+!application/cache/smarty/compiled/.htaccess
+
+application/cache/twig/cached/*
+!application/cache/twig/cached/index.html
+!application/cache/twig/cached/.htaccess
+
 !application/cache/.htaccess
 
 application/logs/*
@@ -10,4 +20,4 @@ application/logs/*
 /trash
 /.*
 .*
-/uploads
+/uploads/*
