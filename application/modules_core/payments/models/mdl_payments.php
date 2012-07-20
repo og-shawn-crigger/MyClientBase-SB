@@ -20,7 +20,6 @@ class Mdl_Payments extends MY_Model {
 
 		$this->joins = array(
 			'mcb_invoices'			=>	'mcb_invoices.invoice_id = mcb_payments.invoice_id',
-			//'mcb_clients'			=>	'mcb_clients.client_id = mcb_invoices.client_id',
 			'mcb_payment_methods'	=>	array('mcb_payment_methods.payment_method_id = mcb_payments.payment_method_id', 'left')
 		);
 

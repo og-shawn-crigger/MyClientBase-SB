@@ -4,6 +4,9 @@ class Mdl_Sales_by_Customer extends CI_Model {
 
 	public function get($from_date = 0, $to_date = 0) {
 
+		//TODO adjust this report for the contact module
+		redirect('');
+		
 		$this->db->select('
 			mcb_clients.client_name,
 			SUM(mcb_invoice_amounts.invoice_item_subtotal) AS amt_sales,
