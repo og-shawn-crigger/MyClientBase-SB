@@ -1,0 +1,1 @@
+<li><?php echo anchor('activities', $this->lang->line('activities'));?></li>
