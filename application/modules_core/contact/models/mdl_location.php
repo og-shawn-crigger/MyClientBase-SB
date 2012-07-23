@@ -39,6 +39,9 @@ class Mdl_Location extends MY_Model {
     {	
     	if((is_null($input) || count($input) == 0) && is_null($this->locId)) return false;
     	
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+    	
     	if(empty($input['filter'])) $input['filter'] = '(locId='.$this->locId.')';
     	     	 
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
@@ -280,7 +283,7 @@ class Mdl_Location extends MY_Model {
 			
 		//validates the object before sending data to Contact Engine
 		$left = $this->validateObj($creation);
-		if(!$left || is_array($left)) {
+		if(is_array($left)) {
 			//TODO add the content of left to the notification message
 			return false;
 		}
@@ -295,8 +298,11 @@ class Mdl_Location extends MY_Model {
 			
 	}
 	 	
-	public function update($input)
+	public function update(array $input)
 	{
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));		
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
@@ -311,8 +317,11 @@ class Mdl_Location extends MY_Model {
 		return false;
 	}
 	
-	public function create($input)
+	public function create(array $input)
 	{
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
 		
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
@@ -328,8 +337,11 @@ class Mdl_Location extends MY_Model {
 		return false;		
 	}	
 
-	public function delete($input)
+	public function delete(array $input)
 	{
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
 	
 		$this->crr->importCeReturnObject($this->rest->post('delete', $input, 'serialize'));

@@ -40,7 +40,7 @@ class Mdl_Contact extends MY_Model {
         $this->load->spark('curl/1.2.0');
         
         // Load the configuration file
-        $this->load->config('rest');
+        $a = $this->load->config('rest');
          
         // Load the rest client
         $this->load->spark('restclient/2.0.0');
@@ -67,6 +67,10 @@ class Mdl_Contact extends MY_Model {
     {
     	//I need at least somethig to send as input to retrieve the contact
     	if((is_null($input) || (count($input)==0)) && is_null($this->client_id)) return false;
+    	
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+
     	
     	if(empty($input['filter'])) $input['filter'] = '(|(uid='.$this->client_id.')(oid='.$this->client_id.'))';
     	
@@ -344,8 +348,8 @@ class Mdl_Contact extends MY_Model {
 		 
 		//validates the object before sending data to Contact Engine
 		$left = $this->validateObj($creation);
-		if(!$left || is_array($left)) {
-		//TODO add the content of left to the notification message
+		if(is_array($left)) {
+			//TODO add the content of left to the notification message
 			return false;
 		}
 		 	 
@@ -357,8 +361,11 @@ class Mdl_Contact extends MY_Model {
 					
 	}	
 	
-	protected function update($input)
+	protected function update(array $input)
 	{
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));		
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
@@ -371,8 +378,12 @@ class Mdl_Contact extends MY_Model {
 		return false;
 	}
 	
-	protected function create($input)
+	protected function create(array $input)
 	{	
+		
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
 		
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
@@ -494,7 +505,8 @@ class Mdl_Contact extends MY_Model {
 		
 		//TODO send a notification
 		return true;
-	}		
+	}
+
 }
 
 ?>
