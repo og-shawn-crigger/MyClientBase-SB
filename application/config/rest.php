@@ -263,7 +263,7 @@ $config['rest_ajax_only'] = FALSE;
  |--------------------------------------------------------------------------
  |
  */
-$config['ce_key'] = '123';
+$config['ce_key'] = '';
 $config['rest_server']	= 'http://ce_github/index.php/api/'; //don't forget the trailing slash
 
 /* End of file rest.php */
