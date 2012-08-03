@@ -1,5 +1,7 @@
 .DS_Store
 
+*~
+
 application/cache/smarty/cached/*
 !application/cache/smarty/cached/index.hmtl
 !application/cache/smarty/cached/.htaccess
