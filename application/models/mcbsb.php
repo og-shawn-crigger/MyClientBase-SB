@@ -10,10 +10,15 @@ class Mcbsb  extends CI_Model {
 	public $_enabled_modules;
 	public $_total_rows;
 	public $_user;
+	public $_version;
 	
 	public function __construct() {
 		
 		parent::__construct();
+		
+		$this->config->load('mcbsb');
+		
+		$this->_version = $this->config->item('mcbsb_version'); 
 		
 		$this->load->model('record_descriptor');
 		$this->load->model('field_descriptor');

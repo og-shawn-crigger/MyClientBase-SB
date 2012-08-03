@@ -39,7 +39,7 @@
 					<div id="tab_application">
 						<dl>
 							<dt><?php echo $this->lang->line('application_version'); ?>: </dt>
-							<dd><?php echo $this->mdl_mcb_data->setting('version'); ?></dd>
+							<dd><?php echo $this->mcbsb->_version; ?></dd>
 						</dl>
 						<dl>
 							<dt><?php echo $this->lang->line('database_backup'); ?>: </dt>
