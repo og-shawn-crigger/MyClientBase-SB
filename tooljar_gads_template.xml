@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="3.1.3" id="a2aa90ae81a148c698b41b9400a2d438" rev="65b0508550844d3fbfc7fb3637ea56af">
+  <features>
+    <optional>GOOGLE_QUOTA</optional>
+    <optional>FAMILY_NAME</optional>
+    <optional>GROUP_OWNER</optional>
+    <optional>BASE64_PASSWORD</optional>
+    <optional>SKIP_USER_PROFILES</optional>
+    <optional>MD5_PASSWORD</optional>
+    <optional>SHA1_PASSWORD</optional>
+    <optional>GIVEN_NAME</optional>
+    <optional>DYNAMIC_GROUPS</optional>
+    <optional>SKIP_GROUPS</optional>
+    <optional>MULTIDOMAIN</optional>
+    <optional>GROUP_DESCRIPTION</optional>
+    <optional>SKIP_USERS</optional>
+    <optional>SKIP_SUSPENDING_ADMINS</optional>
+    <optional>SKIP_CALENDAR_RESOURCES</optional>
+    <optional>INDEPENDENT_GROUP_SYNC</optional>
+    <optional>ALIAS_SYNCHRONIZATION</optional>
+    <optional>SHARED_CONTACTS</optional>
+    <optional>SKIP_EXISTING_PASSWORDS</optional>
+    <optional>SKIP_ORGUNITS</optional>
+    <optional>NON_ADDRESS_PRIMARY_KEY</optional>
+  </features>
+  <logging>
+    <defaultLogLevel>INFO</defaultLogLevel>
+    <format>[%d{ISO8601}] [%t] [%p] [%C{3}] %m%n</format>
+    <logFile>/var/log/sync.log</logFile>
+    <maximumLogBytes>4294967296</maximumLogBytes>
+    <logFileCount>1</logFileCount>
+  </logging>
+  <notification>
+    <smtpRelay>smtp.gmail.com</smtpRelay>
+    <smtpAuthUserName>d.venturin@squadrainformatica.net</smtpAuthUserName>
+    <smtpAuthPasswordEncrypted>ooM7gb3AHPc20wd6Dp1pmJ/tyhfDxMIL</smtpAuthPasswordEncrypted>
+    <fromAddress>d.venturin@squadrainformatica.net</fromAddress>
+    <toAddress>dam@venturin.net</toAddress>
+    <toAddress>d.venturin@squadrainformatica.net</toAddress>
+    <ignoreRetrievalInfo>true</ignoreRetrievalInfo>
+    <ignoreRetrievalWarnings>true</ignoreRetrievalWarnings>
+    <ignoreRetrievalErrors>true</ignoreRetrievalErrors>
+  </notification>
+  <eventLimits>
+    <deleteUserLimitPCT>5</deleteUserLimitPCT>
+    <suspendUserLimitPCT>5</suspendUserLimitPCT>
+    <deleteGroupLimitPCT>5</deleteGroupLimitPCT>
+    <deleteOrgunitLimitPCT>5</deleteOrgunitLimitPCT>
+    <deleteSharedContactLimitPCT>5</deleteSharedContactLimitPCT>
+    <deleteCalendarResourceLimitPCT>5</deleteCalendarResourceLimitPCT>
+  </eventLimits>
+  <maxCacheLifetime>691200</maxCacheLifetime>
+  <plugins>
+    <remote>
+      <plugin class="com.google.usersyncapp.plugin.google.GooglePlugin">
+        <config version="0.2">
+          <adminEmail>google_admin_email</adminEmail>
+          <encryptedAdminPassword>google_admin_password</encryptedAdminPassword>
+          <domain>google_domain</domain>
+          <loginMethod>CLIENTLOGIN</loginMethod>
+          <googleUsersSyncThreads>30</googleUsersSyncThreads>
+          <googleProfilesSyncThreads>30</googleProfilesSyncThreads>
+          <googleContactsSyncThreads>500</googleContactsSyncThreads>
+          <nonAddressPrimaryKeyMapFile>nonAddressPrimaryKeyFile.tsv</nonAddressPrimaryKeyMapFile>
+          <passwordTimestampFile>passwordTimestampCache.tsv</passwordTimestampFile>
+        </config>
+      </plugin>
+    </remote>
+    <local>
+      <plugin class="com.google.usersyncapp.plugin.ldap.LDAPPlugin">
+        <config version="0.2">
+          <serverType>OPENLDAP</serverType>
+          <connectMethod>STANDARD</connectMethod>
+          <hostname>localhost</hostname>
+          <port>389</port>
+          <basedn>o=tj_account,dc=2v,dc=ntw</basedn>
+          <authType>SIMPLE</authType>
+          <authUser>cn=admin,dc=2v,dc=ntw</authUser>
+          <authCredentialsEncrypted>bKS8nyhtSXTzTxeN2P0Eeg==</authCredentialsEncrypted>
+          <emailAttrName>mail</emailAttrName>
+          <dominoWhiteSpaceReplaceChar>.</dominoWhiteSpaceReplaceChar>
+          <generatedPasswordLength>8</generatedPasswordLength>
+          <resultsPageSize>1000</resultsPageSize>
+          <orgunits />
+          <users />
+          <groups />
+          <sharedContacts>
+            <search>
+              <priority>1</priority>
+              <basedn>ou=users,o=tj_account,dc=2v,dc=ntw</basedn>
+              <scope>SUBTREE</scope>
+              <companyNameAttrName>o</companyNameAttrName>
+              <jobTitleAttrName>title</jobTitleAttrName>
+              <fullNameAttrName>cn</fullNameAttrName>
+              <syncKeyAttrName>uid</syncKeyAttrName>
+              <notesAttrName>note</notesAttrName>
+              <workAddressStreetAttrName>homePostalAddress</workAddressStreetAttrName>
+              <workAddressCityAttrName>mozillaHomeLocalityName</workAddressCityAttrName>
+              <workAddressStateAttrName>mozillaHomeState</workAddressStateAttrName>
+              <workAddressPostalCodeAttrName>mozillaHomePostalCode</workAddressPostalCodeAttrName>
+              <workAddressCountryAttrName>mozillaHomeCountryName</workAddressCountryAttrName>
+              <workEmailAddressesAttrName>mail</workEmailAddressesAttrName>
+              <faxNumbersAttrName>homeFacsimileTelephoneNumber</faxNumbersAttrName>
+              <homePhonesAttrName>homePhone</homePhonesAttrName>
+              <mobilePhonesAttrName>mobile</mobilePhonesAttrName>
+              <workPhonesAttrName>companyPhone</workPhonesAttrName>
+              <assistantPhoneAttrName>assistantPhone</assistantPhoneAttrName>
+              <webPageAddressesAttrName>labeledURI</webPageAddressesAttrName>
+              <filter>(enabled=TRUE)</filter>
+            </search>
+          </sharedContacts>
+          <userProfiles>
+            <search>
+              <priority>1</priority>
+            </search>
+          </userProfiles>
+          <calendarResources>
+            <search>
+              <priority>0</priority>
+            </search>
+          </calendarResources>
+          <mailingLists />
+        </config>
+      </plugin>
+    </local>
+  </plugins>
+</config>
+
