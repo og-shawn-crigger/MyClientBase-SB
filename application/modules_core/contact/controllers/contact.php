@@ -227,6 +227,12 @@ class Contact extends Admin_Controller {
     	return false;
     }
     
+    
+    public function save_settings()
+    {
+    	return true;
+    }
+    
     /**
      * This function is called by the javascript (System Settings) everytime there is an event (drag, sort, submit)
      * It updates the config file for the specific object and returns the updated html to the javascript which

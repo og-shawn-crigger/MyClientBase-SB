@@ -3,7 +3,7 @@
 $config = array(
 	'module_name'	=>	$this->lang->line('dashboard'),
 	'module_path'	=>	'dashboard',
-	'module_order'	=>	2,
+	'module_order'	=>	10,
 	'module_config'	=>	array(
 		'settings_view'	=>	'dashboard/dashboard_settings/display',
 		'settings_save'	=>	'dashboard/dashboard_settings/save'

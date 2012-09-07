@@ -607,4 +607,5 @@ $lang['save'] = 'Save';
 $lang['handle_modules'] = 'Handle Modules';
 $lang['prev'] = 'Previous';
 $lang['found'] = 'found';
+$lang['google'] = 'Google';
 ?>
