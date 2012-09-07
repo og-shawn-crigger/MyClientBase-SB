@@ -10,18 +10,8 @@ class Google extends Admin_Controller {
     function __construct() {
 
         parent::__construct();
-                
-        //$this->_post_handler();
 
-        //$this->load->model('mdl_contacts');
-        
         $this->config->load('google',false,true);
-        
-        $this->load->spark('GoogleAPIClient/0.5.0');
-        
-        require_once SPARKPATH . "GoogleAPIClient/0.5.0/src/apiClient.php";
-        
-        global $apiConfig;
         
         $this->enabled_modules = $this->mdl_mcb_modules->get_enabled();
         
@@ -41,29 +31,7 @@ class Google extends Admin_Controller {
     	$this->plenty_parser->parse('settings.tpl', $data, false, 'smarty', 'google');
     }
     
-    
-    public function oauth20() {
-
-      	
-    }
-    
-    public function api(){
-    	$client = new apiClient();    	
-    	$client->setClientId('279448382036.apps.googleusercontent.com');
-    	$client->setClientSecret('cB0Ww5XalXEUTpB-BvxqNJDW');
-    	$client->setRedirectUri('http://myclientbase-sb.com/google/oauth20');
-    	$client->setDeveloperKey('AIzaSyD_JCxAwRkev-A-zJc8qyQZJZQPhvd_S3w');
-    	$client->setApplicationName('MCBSB');
-    	$client->setScopes("http://www.google.com/m8/feeds/");    	
-        if (isset($_GET['code'])) {
-    		$client->authenticate();
-    		$_SESSION['token'] = $client->getAccessToken();
-    		header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
-    	}      	
-    	//http://myclientbase-sb.com/google/oauth20?code=4/ptBBfIlSue_Ok-504LCy9fFAaaY4.YlTOwyRKPiEQOl05ti8ZT3anhHo9cwI
-    	//header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);    	    	 
-    }
-    
+   
     public function save_settings()
     {	 
     	//update the configuration file
