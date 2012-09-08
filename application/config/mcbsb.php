@@ -1,4 +1,3 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['mcbsb_version'] = '0.13.12';
-
+$config['mcbsb_version'] = '0.13.13';
