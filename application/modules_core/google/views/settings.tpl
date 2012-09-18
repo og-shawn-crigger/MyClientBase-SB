@@ -1,17 +1,20 @@
-<p>{t}By enabling Google Contacts synchronization (GADS), all the contacts set in MCBSB will be synchronized with you Google Account{/t}</p>
+<p>{t}By enabling Google Contacts synchronization, all the contacts set in MCBSB will be synchronized with you Google Account{/t}</p>
 <p>{t}This will provide{/t}:
 <ul style="margin-left: 15px; margin-top: 0px;">
-	<li>- Email autocomplete when you write a new email</li>
-	<li>- Possibility to import any business contact into your personal contacts. Consequently you'll find all your personal contacts inside you mobile phone address book</li>
-	<li>- Possibility to import any business contact into your Google+ account </li>
-	<li>- Possibility to import any business contact into your LinkedIn account</li>
-	<li>- Capability to look for any business contact from the mobile phone even if it's not in your personal contacts</li>
-	<li>- Possibility to use <a href="http://support.google.com/a/bin/answer.py?hl=en&answer=115739&ctx=cb&src=cb&cbid=-ye89m9c89gvz&cbrank=2" target="_blank">Google Secure Data Connector</a> (SDC) to connect gadgets, applications, and spreadsheets to your data</li>
+	<li>- {t}Email autocomplete when you write a new email{/t}</li>
+	<li>- {t}Possibility to import any business contact into your personal contacts. Consequently you'll find all your personal contacts inside you mobile phone address book{/t}</li>
+	<li>- {t}Possibility to import any business contact into your Google+ account{/t}</li>
+	<li>- {t}Possibility to import any business contact into your LinkedIn account{/t}</li>
+	<li>- {t}Capability to look for any business contact from the mobile phone even if it's not in your personal contacts{/t}</li>
+	<li>- {t}Possibility to use{/t} <a href="http://support.google.com/a/bin/answer.py?hl=en&answer=115739&ctx=cb&src=cb&cbid=-ye89m9c89gvz&cbrank=2" target="_blank">Google Secure Data Connector</a> (SDC) {t}to connect gadgets, applications, and spreadsheets to your data{/t}</li>
 </ul>
 </p>
+{* //TODO $language is not set in this template *}
+{$video_code="ZdVPq6M-WKE"}
+<p>{t}Click{/t} <b><u><a href="http://youtu.be/{$video_code}" target="_blank">{t}here{/t}</u></b></a> {t}for further information{/t}</p>
 
 <dl>
-    <dt>{t}Enable Google contacts synchronization?{/t}:</dt>
+    <dt>{t}Enable Google contacts synchronization{/t}?:</dt>
     {if $google_contact_sync == "true"}
     	{$checked='checked="checked"'}
     {else}

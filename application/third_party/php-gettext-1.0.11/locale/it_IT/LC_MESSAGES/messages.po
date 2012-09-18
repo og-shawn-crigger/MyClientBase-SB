@@ -356,5 +356,224 @@ msgstr "Cruscotto"
 msgid "Mcbsb Settings"
 msgstr "Impostazioni Mcbsb"
 
+msgid "Main Actions"
+msgstr "Azioni Principali"
 
+msgid "Show Payments"
+msgstr "Mostra Pagamenti"
 
+msgid "Show Quotes"
+msgstr "Mostra Preventivi"
+
+msgid "Calendar View"
+msgstr "Vista Calendario"
+
+msgid "Show Invoices"
+msgstr "Mostra Fatture"
+
+msgid "Last"
+msgstr "Ultimo"
+
+msgid "First"
+msgstr "Primo"
+
+msgid "Show Inventory Items"
+msgstr "Mostra Pezzi a Magazzino"
+
+msgid "Show Inventory Types"
+msgstr "Mostra Categorie Merceologiche"
+
+msgid "Add Inventory Item"
+msgstr "Aggiungi Pezzo a Magazzino"
+
+msgid "Add Inventory Type"
+msgstr "Aggiungi Categoria Merceologica"
+
+msgid "Calendar Legend"
+msgstr "Legenda Calendario"
+
+msgid "overdue"
+msgstr "scaduto"
+
+msgid "open"
+msgstr "aperto"
+
+msgid "quotes"
+msgstr "preventivi"
+
+msgid "Contacts By Location"
+msgstr "Contatti Per Sede"
+
+msgid "Client Statement"
+msgstr "Situazione Cliente"
+
+msgid "Inventory History"
+msgstr "Storico Magazzino"
+
+msgid "Inventory Sales"
+msgstr "Vendite Magazzino"
+
+msgid "Handle Modules"
+msgstr "Gestisci Moduli"
+
+msgid "Custom Fields"
+msgstr "Campi Personalizzati"
+
+msgid "Invoice Templates"
+msgstr "Modelli Fattura"
+
+msgid "Invoice Groups"
+msgstr "Gruppi Fattura"
+
+msgid "Invoice Statuses"
+msgstr "Stati Fattura"
+
+msgid "Payment Methods"
+msgstr "Metodi di Pagamento"
+
+msgid "Payment Receipt Templates"
+msgstr "Modelli Ricevute Pagamento"
+
+msgid "System Settings"
+msgstr "Impostazioni Sistema"
+
+msgid "Tax Rates"
+msgstr "Percentuali Tasse"
+
+msgid "User Accounts"
+msgstr "Account utenti"
+
+msgid "Activities"
+msgstr "Attivitá"
+
+msgid "Show Calendar View"
+msgstr "Mostra Vista Calendario"
+
+msgid "Create Custom Field"
+msgstr "Crea Campo Personalizzato"
+
+msgid "Custom Fields Actions"
+msgstr "Azioni Campo Personalizzato"
+
+msgid "Invoice Templates Actions"
+msgstr "Azioni Modelli Fattura"
+
+msgid "Add Invoice Template"
+msgstr "Aggiungi Modello Fattura"
+
+msgid "Show Custom Modules"
+msgstr "Mostra Moduli Personalizzati"
+
+msgid "Show Custom Fields"
+msgstr "Mostra Campi Personalizzati"
+
+msgid "Invoice Groups Actions"
+msgstr "Azioni Gruppi Fattura"
+
+msgid "Invoice Statuses Actions"
+msgstr "Azioni Stati Fattura"
+
+msgid "Add Invoice Status"
+msgstr "Aggiungi Stato Fattura"
+
+msgid "Show Payment Methods"
+msgstr "Mostra Metodi Pagamento"
+
+msgid "Add Invoice Group"
+msgstr "Aggiungi Gruppo Fattura"
+
+msgid "Payment Method Actions"
+msgstr "Azioni Metodo Pagamento"
+
+msgid "Add Payment Method"
+msgstr "Aggiungi Metodo Pagamento"
+
+msgid "Add Payment Receipt Template"
+msgstr "Aggiungi Modello Ricevuta Pagamento"
+
+msgid "Confirm password"
+msgstr "Conferma password"
+
+msgid "By enabling Google Contacts synchronization, all the contacts set in MCBSB will be synchronized with you Google Account"
+msgstr "Abilitando la sincronizzazione dei Google Contacts, tutti i contatti salvati in MCBSB saranno sincronizzati con il tuo Google Account"
+
+msgid "for further information"
+msgstr "per ulteriori informazioni"
+
+msgid "Click"
+msgstr "Click"
+
+msgid "here"
+msgstr "qui"
+
+msgid "Email autocomplete when you write a new email"
+msgstr "Autocompletamento dell'email quando ne scrivi una nuova"
+
+msgid "This will provide"
+msgstr "Questo ti offrirá"
+
+msgid "Possibility to import any business contact into your personal contacts. Consequently you'll find all your personal contacts inside you mobile phone address book"
+msgstr "Possibilitá di importare qualunque contatto aziendale nei tuoi contatti personali. Di conseguenza troverai tutti i tuoi contatti personali nella rubrica del tuo cellulare"
+
+msgid "Possibility to import any business contact into your Google+ account"
+msgstr "Possibilitá di importare qualunque contatto aziendale nel tuo account Google+"
+
+msgid "Possibility to import any business contact into your LinkedIn account"
+msgstr "Possibilitá di importare qualunque contatto aziendale nel tuo account LinkedIn"
+
+msgid "Capability to look for any business contact from the mobile phone even if it's not in your personal contacts"
+msgstr "Possibilitá di cercare qualunque contatto aziendale dal tuo cellulare anche se non é fra i tuoi contatti personali"
+
+msgid "Possibility to use"
+msgstr "Possibilitá di usare"
+
+msgid "to connect gadgets, applications, and spreadsheets to your data"
+msgstr "per connettere gadgets, applicazioni e fogli di calcolo ai tuoi dati"
+
+msgid "Enable Google contacts synchronization"
+msgstr "Abilitare la sincronizzazione dei Google Contacts"
+
+msgid "Google business domain"
+msgstr "Dominio aziendale di Google"
+
+msgid "Admin email"
+msgstr "Email amministratore"
+ 
+msgid "Default Payment Method"
+msgstr "Metodo Pagamento Predefinito"
+
+msgid "Default Invoice Email Template"
+msgstr "Modello Predefinito Fattura via Email"
+
+msgid "Default Overdue Invoice Email Template"
+msgstr "Modello Predefinito Fattura Scaduta via Email"
+
+msgid "Default Item Tax Option"
+msgstr "Azione predefinita per la tassazione degli elementi in fattura"
+
+msgid "User Actions"
+msgstr "Azioni Utenti"
+
+msgid "Create User Account"
+msgstr "Aggiungi Account Utente"
+
+msgid "Show User Accounts"
+msgstr "Mostra Account Utenti"
+
+msgid "Tax Rate Actions"
+msgstr "Azioni Percentuali Tasse"
+
+msgid "Show Invoice Statuses"
+msgstr "Mostra Stati Fattura"
+
+msgid "Show Invoice Groups"
+msgstr "Mostra Gruppi Fattura"
+
+msgid "Open"
+msgstr "Aperto"
+
+msgid "Pending"
+msgstr "Pendente"
+
+msgid "Closed"
+msgstr "Chiuso"
