@@ -577,3 +577,32 @@ msgstr "Pendente"
 
 msgid "Closed"
 msgstr "Chiuso"
+
+msgid "Create a task"
+msgstr "Crea un incarico"
+
+msgid "Create freehand quote"
+msgstr "Crea un preventivo libero"
+
+msgid "Create a freehand invoice"
+msgstr "Crea una fattura libera"
+
+msgid "Go back to contact's profile"
+msgstr "Torna al profilo del contatto"
+
+msgid "Show Tasks"
+msgstr "Mostra Incarichi"
+
+msgid "Task Actions"
+msgstr "Azioni Incarico"
+
+msgid "Add Activity"
+msgstr "Aggiungi Attivitá"
+
+msgid "Create Invoice"
+msgstr "Crea Fattura"
+
+msgid "Activity has been successfully created"
+msgstr "L'attivitá é stata correttamente creata"
+
+

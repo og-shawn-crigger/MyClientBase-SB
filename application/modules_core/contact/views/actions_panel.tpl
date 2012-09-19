@@ -102,7 +102,7 @@
 				</p>
 			</div>
 		</li>
-		
+
 		<li>
 			<a id="show_add_organization_link" href="#" >{t}Add an organization{/t}</a>
 			<div id="add_organization" title="Form" style="display: none;">
@@ -112,8 +112,8 @@
 			</div>				
 		</li>		
 	</ul>
-
 </div>
+
 {if isset($contact_id)}
 	<div class="section_wrapper" style="clear:right; float:right; display:inline; width: 280px; background-color: #ff9c00;">
 		<h3 class="title_black">{t}Contact Actions{/t}</h3>
@@ -140,11 +140,11 @@
 				</div>
 			{/if}
 			
-			{if isset($invoice_module_is_enabled)}
+			{if $invoice_module_is_enabled}
 				<li><a href="/tasks/form/{$contact_id_key}/{$contact_id}?btn_add=true">{t}Create a task{/t}</a></li>
 			{/if}
 			
-			{if isset($invoice_module_is_enabled)}
+			{if $invoice_module_is_enabled}
 				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
 				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
 			{/if}

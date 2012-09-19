@@ -114,7 +114,9 @@ class Tasks extends Admin_Controller {
 			}
 			
 			$modules = $this->mcbsb->get_enabled_modules();
-			if(in_arrayi('activities',$modules['all'])) {
+			
+			//TODO FIXME this is no good. Somehow it translates the modules names
+			if(in_arrayi('activities',$modules['all']) || in_arrayi('attivitá',$modules['all'])) {
 				
 				//loads the Activity obj into the mcbsb obj
 				$this->load->model('activities/mdl_activities','activities');

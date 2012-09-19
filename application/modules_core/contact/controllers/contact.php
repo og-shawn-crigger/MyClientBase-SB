@@ -870,7 +870,8 @@ class Contact extends Admin_Controller {
         
         
         //getting invoices and quotes
-        if(in_arrayi('invoices',$this->enabled_modules['all'])) {
+        //TODO FIXME this is no good. Somehow it translates the modules names
+        if(in_arrayi('invoices',$this->enabled_modules['all']) || in_arrayi('fatture',$this->enabled_modules['all'])) {
         	$this->load->model('invoices/mdl_invoices');
         		
         	$data['invoice_module_is_enabled'] = true;
@@ -885,7 +886,7 @@ class Contact extends Admin_Controller {
         	);
         
         	//TODO is this necessary?
-        	//prevents common useres from seeing the invoices made by someonelse
+        	//prevents common users from seeing the invoices made by someonelse
         	// 	        if (!$this->session->userdata('global_admin')) {
         	// 	            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
         	// 	        }
@@ -910,7 +911,8 @@ class Contact extends Admin_Controller {
         }         
         
         //allows creations of tasks for the contact
-        if(in_arrayi('tasks',$this->enabled_modules['all'])) {
+        //TODO FIXME this is no good. Somehow it translates the modules names
+        if(in_arrayi('tasks',$this->enabled_modules['all']) || in_arrayi('incarichi',$this->enabled_modules['all']) ) {
         		
         	$this->mcbsb->load('tasks/task','task');
         
