@@ -27,3 +27,4 @@ application/logs/*
 .*
 uploads/*
 /installation_steps.txt
+/installation_steps_dam.txt

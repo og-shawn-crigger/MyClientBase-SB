@@ -36,14 +36,14 @@ class Sessions extends CI_Controller {
 
         $this->_load_language();
 
-        //$this->load->helper(array('url', 'form'));
-
         $this->load->model('mdl_auth');
 
         if ($this->mdl_auth->validate_login()) {
 
             if ($user = $this->mdl_auth->auth($this->input->post('username'), $this->input->post('password'))) {
 
+/*
+//dam: this shouldn't be anymore useful because MCBSB does not allow access to customers
                 if ($user->client_id) {
 
                     $object_vars = array('client_id', 'client_name');
@@ -59,7 +59,12 @@ class Sessions extends CI_Controller {
                     $this->mdl_auth->set_session($user, $object_vars, array('is_admin'=>TRUE));
 
                 }
-
+*/
+            	
+                $object_vars = array('user_id', 'last_name', 'first_name', 'global_admin');
+                
+                $this->mdl_auth->set_session($user, $object_vars, array('is_admin'=>TRUE));
+                                
                 // update the last login field for this user
                 $this->mdl_auth->update_timestamp('mcb_users', 'user_id', $user->user_id, 'last_login', time());
 

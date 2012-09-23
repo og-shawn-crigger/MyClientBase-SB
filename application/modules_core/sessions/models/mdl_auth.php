@@ -37,6 +37,9 @@ class Mdl_Auth extends MY_Model {
 
 		}
 
+		//save current base_url
+		$session_data['authenticated_for_url'] = base_url();
+		
 		if ($custom_vars) {
 
 			foreach ($custom_vars as $key=>$var) {

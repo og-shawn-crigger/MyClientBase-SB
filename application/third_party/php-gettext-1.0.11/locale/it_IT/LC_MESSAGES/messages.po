@@ -605,4 +605,260 @@ msgstr "Crea Fattura"
 msgid "Activity has been successfully created"
 msgstr "L'attivitá é stata correttamente creata"
 
+msgid "Wedding anniversary"
+msgstr "Anniversario di matrimonio"
 
+msgid "Telex Number"
+msgstr "Numero Telex"
+
+msgid "Teletex Terminal Identifier"
+msgstr "Identificativo Terminale Telex"
+
+msgid "Preferred delivery method"
+msgstr "Metodo preferito per la consegna"
+
+msgid "Physical Delivery Office Name"
+msgstr "Nome dell'ufficio per la consegna fisica"
+
+msgid "Date in which the organization or person made the last purchase"
+msgstr "Data in cui l'organizzazione o la persona ha effettuato l'ultimo acquisto"
+
+msgid "Date in which the organization or person made the last request for support"
+msgstr "Data in cui l'organizzazione o la persona ha fatto l'ultima richiesta di supporto"
+
+msgid "Full name of the user who updated the entry for the last time"
+msgstr "Nome completo dell'utente che per ultimo ha aggiornato il contatto"
+
+msgid "Full name of the user who registered the organization or the person for the first time"
+msgstr "Nome completo dell'utente che per primo ha registrato l'organizzazione o la persona"
+
+msgid "Id number which binds the organization or the person to a relational database like Mysql"
+msgstr "Numero identificativo che collega l'organizzazione o la persona a un database relazionale come Mysql"
+
+msgid "Organization name"
+msgstr "Nome dell'organizzazione"
+
+msgid "Organization type like INC LLC SPA"
+msgstr "Tipo di organizzazione come INC LLC SPA"
+
+msgid "Business category"
+msgstr "Categoria lavorativa"
+
+msgid "Describes the business activities, like production, repair, sales"
+msgstr "Descrive le attivitá lavorative, es. produzione, riparazione, vendita"
+
+msgid "Describes who are the target of the business activity, like companies, private customers, army"
+msgstr "Descrive i potenziali clienti dell'attivitá lavorativa, es. aziende, privati, esercito"
+
+msgid "VAT Number: unique identification number for an organization. Used for taxes"
+msgstr "Partita IVA: numero identificativo univoco per un'organizazzione. Usato per le tasse."
+
+msgid "Fiscal code. It applies only to italian persons and organizations"
+msgstr "Codice fiscale. Si applica solo a persone od organizzazioni italiane"
+
+msgid "Organization address: it can be a street name or a square. It does not include the city etc"
+msgstr "Indirizzo azienda: puó essere una strada o una piazza. Non include il nome della cittá ecc"
+
+msgid "Zip code"
+msgstr "Codice avviamento postale"
+
+msgid "Organization address: town, city, village"
+msgstr "Indirizzo azienda: cittadina, cittá, villaggio"
+
+msgid "Organization address: State or Province"
+msgstr "Indirizzo azienda: Stato o Provincia"
+
+msgid "Organization address: Nation"
+msgstr "Indirizzo azienda: Nazione"
+
+msgid "Post Office Box"
+msgstr "Casella Postale"
+
+msgid "Mobile number of the organization"
+msgstr "Numero di cellulare dell'organizzazione"
+
+msgid "Land line telephone number"
+msgstr "Numero di telefono della linea fissa"
+
+msgid "Company Fax Number"
+msgstr "Numero fax dell'organizzazione"
+
+msgid "URL of the official website of the organization"
+msgstr "URL del sito web ufficiale dell'organizzazione"
+
+msgid "Main email address of the organization"
+msgstr "Indirizzo email principale dell'organizzazione"
+
+msgid "Shows if an organization or a person should be considered active or deleted"
+msgstr "Mostra se un'organizzazione o una persona dovrebbero essere considerati attiva o cancellata"
+
+msgid "Shows if the person accepted the Commercial Agreement. True or false."
+msgstr "Mostra se la persona ha accettato l'Accordo Commerciale. Vero o falso."
+
+msgid "Shows if the person accepted the Privacy Statement. True or false."
+msgstr "Mostra se la persona ha accettato l'Accordo sulla Privacy. Vero o falso."
+
+msgid "Business role of the person"
+msgstr "Ruolo aziendale ricoperto dalla persona"
+
+msgid "A temporary phone to call back the contact"
+msgstr "Numero di telefono temporaneo per richiamare il contatto"
+
+msgid "Vehicle license or registration plate"
+msgstr "Numero patente di guida"
+
+msgid "Car phone telephone number of the person"
+msgstr "Numero di telefono dell'automobile della persona"
+
+msgid "Identifies a department within an organization"
+msgstr "Identifica un dipartimento aziendale"
+
+msgid "Preferred full name to be used when displaying a person"
+msgstr "Nome completo preferito da visualizzare quando si mostra la persona"
+
+msgid "Identifies an employee within an organization"
+msgstr "Numero identificativo del dipendente"
+
+msgid "Type of employment for a person"
+msgstr "Tipo di impiego per la persona"
+
+msgid "Date in which the organization or the person has been created"
+msgstr "Data in cui l'organizzazione o la persona é stata creata"
+
+msgid "Last date in which the organization or the person has been updated"
+msgstr "Ultima data in cui l'organizzazione o la persona é stata aggiornata"
+
+msgid "Full name of the person with your preferred order. Useful for applications like Evolution Addressbook"
+msgstr "Nome completo della persona nel tuo ordine preferito. Utile in applicazioni come Rubrica di Evolution"
+
+msgid "initials of some or all names"
+msgstr "iniziali per parte o tutti i nomi"
+
+msgid "International ISDN number"
+msgstr "Numero ISDN internazionale"
+
+msgid "Other personal fax number"
+msgstr "Altro numero di fax personale"
+
+msgid "Free field for notes about the person"
+msgstr "Campo libero per note sulla persona"
+
+msgid "Pager telephone number"
+msgstr "Numero di telefono del cercapersona"
+
+msgid "Label showing which is the preferred phone number to use to contact a person"
+msgstr "Etichetta che mostra qual é il numero di telefono preferito per contattare la persona"
+
+msgid "Full name of the partner"
+msgstr "Nome completo del partner"
+
+msgid "Title associated with the contact like Mr. Mrs. Eng."
+msgstr "Titolo appellativo della persona come Sig. Sig.ra Ing."
+
+msgid "Last name"
+msgstr "Cognome"
+
+msgid "first name and all the other names but not the surname"
+msgstr "primo nome e tutti i successivi eccetto il cognome"
+
+msgid "Home address: it can be a street name or a square. It does not include the city etc"
+msgstr "Residenza abitativa: puó essere una strada o una piazza. Non include la cittá ecc"
+
+msgid "Home address: ZIP code"
+msgstr "Residenza abitativa: codice avviamento postale"
+
+msgid "Home address: town, city or village"
+msgstr "Residenza abitativa: cittadina, cittá o villaggio"
+
+msgid "Home address: State or Province"
+msgstr "Residenza abitativa: Stato o Provincia"
+
+msgid "Home address: Nation"
+msgstr "Residenza abitativa: Nazione"
+
+msgid "Mobile telephone number"
+msgstr "Numero di telefono del cellulare"
+
+msgid "Home telephone number"
+msgstr "Telefono fisso di casa"
+
+msgid "Home Fax number"
+msgstr "Numero Fax di casa"
+
+msgid "Company land line number"
+msgstr "Numero di telefono di linea fissa al lavoro"
+
+msgid "E-mail address"
+msgstr "Indirizzo e-mail"
+
+msgid "Full name of the immediate superior"
+msgstr "Numero di telefono del diretto superiore"
+
+msgid "Full name of the assistant"
+msgstr "Nome completo dell'assistente"
+
+msgid "Telephone number of the assistant"
+msgstr "Numero di telefono dell'assistente"
+
+msgid "Personal calendar URL"
+msgstr "URL del calendario personale"
+
+msgid "Personal Free-Busy calendar URL"
+msgstr "URL del calendario personale libero-impegnato"
+
+msgid "Preferred written or spoken language for a person"
+msgstr "Lingua preferita per la persona"
+
+msgid "Date of birth"
+msgstr "Data di nascita"
+
+msgid "A JPG image, usually a portrait"
+msgstr "Un'immagine JPG, tendenzialmente un ritratto"
+
+msgid "Shows if the person agreed to receive commercial communications. True or false."
+msgstr "Mostra se la persona ha acconsentito a ricevere comunicazioni commerciali. Vero o falso."
+
+msgid "Facebook URL of the person"
+msgstr "URL della pagina Facebook della persona"
+
+msgid "GitHub URL of the person"
+msgstr "URL della pagina GitHub della persona"
+
+msgid "Google Plus URL of the person"
+msgstr "URL della pagina Google Plus della persona"
+
+msgid "LinkedIn URL of the person"
+msgstr "URL della pagina LinkedIn della persona"
+
+msgid "Twitter URL of the person"
+msgstr "URL della pagina Twitter della persona"
+
+msgid "Room number"
+msgstr "Numero di stanza"
+
+msgid "Photo G3 fax"
+msgstr "Foto G3 fax"
+
+msgid "A unique identification number for the location"
+msgstr "Numero identificativo univoco della sede"
+
+msgid "Short description of the location, like house, registered office, warehouse"
+msgstr "Breve descrizione della sede, like casa, sede legale, magazzino"
+
+msgid "Street address of the location"
+msgstr "Indirizzo della sede"
+
+msgid "Zip Code of the location"
+msgstr "Codice avviamento postale della sede"
+
+msgid "City, town or village of the location"
+msgstr "Cittá, Cittadina o villaggio della sede"
+
+msgid "State or Region or Province of the location"
+msgstr "Stato o Regione o Provincia della sede"
+
+msgid "Country, Nation of the location"
+msgstr "Nazione della sede"
+
+msgid "Land line telephone number of the location"
+msgstr "Numero di telefono della linea fissa della sede"

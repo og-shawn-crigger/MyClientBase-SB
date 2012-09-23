@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','enabled','jpegPhoto');
+$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','jpegPhoto','enabled','acceptsCommercialCommunications','category','categories','businessCategory','facebookURI','githubURI','googleplusURI','linkedinURI','twitterURI');
 $config['person_attributes_aliases'] = array(
 				'title' => 'title',
 				'sn' => 'last_name',
@@ -26,5 +26,6 @@ $config['person_attributes_aliases'] = array(
 				'preferredLanguage' => 'spoken_language',
 				'birthDate' => 'birthdate',
 				'jpegPhoto' => 'photo',
+				'acceptsCommercialCommunications' => 'we_can_send_communications',
 );
 $config['person_hidden_fields'] = array('uid','client_id');

@@ -13,7 +13,8 @@ class Admin_Controller extends MX_Controller {
         $this->load->helper('url');
         
         $this->load->driver('plenty_parser');
-        
+
+        //validate login
 		$user_id = $this->session->userdata('user_id');
 
         if (!$user_id) {
@@ -21,14 +22,24 @@ class Admin_Controller extends MX_Controller {
             redirect('sessions/login');
         }
 
+        //this check is required to increase security in a multi hosting environment where different urls
+        //point to different installations of MCBSB
+        //the current base_url has to match the value stored in session
+        $this->load->config('mcbsb');
+        if($this->config->item('validate_url')) {
+        	
+        	$authenticated_for_url = $this->session->userdata('authenticated_for_url');
+        	
+        	if($authenticated_for_url != base_url()){
+        		redirect('sessions/logout');
+        	}
+        }
+        
 		if (!isset(self::$is_loaded)) {
 
 			self::$is_loaded = TRUE;
 
             $this->load->config('mcb_menu/mcb_menu');
-            
-           //DAM
-           // $this->load->config('mcb_menu/active_modules');
 
 			$this->load->database();
 
