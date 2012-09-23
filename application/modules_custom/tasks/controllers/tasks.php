@@ -105,7 +105,6 @@ class Tasks extends Admin_Controller {
 			if($this->mdl_tasks->get()) { //this populates $this->mcbsb->task with contact information 
 			
 				//task and contact have been found.				
-
 				$data['task'] = $this->mcbsb->task;
 												
 			} else {
