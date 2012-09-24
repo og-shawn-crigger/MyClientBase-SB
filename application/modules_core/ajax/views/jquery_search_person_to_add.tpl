@@ -57,18 +57,3 @@
 		<p style="margin-top: 10px; margin-bottom: 0px;">{t}Your research produced too many results: refine your search or click{/t} <a title="{t}Get more results{/t}" href="/contact/search/{$searched_value}" style="background-color: green; color: white;">{t}HERE{/t}</a> {t}to see all the results.{/t}</p>
 	{/if}	
 </div>	
-
-{*
-{if $results_number == 0}
-	{$form_id = "#$form_name"}
-	
-	<script type="text/javascript">
-		$(document).ready(function(){
-			console.log('submit: ' + "{$form_id}" + "{$form_name}");	
-//			$("{$form_id}").submit();
-//			$('#fakesubmit').submit();
-//			postFormToAjax("{$url}",'jsonp','POST',"{$form_name}","person","","","","");
-		});
-	</script>
-{/if}
-*}

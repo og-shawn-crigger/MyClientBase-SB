@@ -28,7 +28,6 @@
 		});
 		
 		$("#show_add_person_link").click(function(){
-			console.log('pd');
 			toggle_animate('add_person','first_name', '-10');
 		});
 
