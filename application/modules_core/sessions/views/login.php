@@ -35,13 +35,16 @@
 								<dt><label><?php echo $this->lang->line('password'); ?>: </label></dt>
 								<dd><input type="password" value="" id="password" name="password" /></dd>
 							</dl>
-						
-                            <dl>
-                                <dt>&nbsp;</dt>
-                                <dd><?php echo anchor('sessions/recover', $this->lang->line('trouble_logging_in'), array('style'=>'font-size: 85%;')); ?></dd>
-                            </dl>
+							<dl >
+								<dt><span style="padding-left: 30px;"><?php echo $captcha['image'];?></span></dt>
+								<dd style="vertical-align: middle;">
+									<?php echo $this->lang->line('captcha_text'); ?>
+									<input style="width: 70px; margin-top: -20px; padding-top: -20px;" type="text" value="" id="captcha" name="captcha" />
+								</dd>
+							</dl>						
 
                             <div style="float: right; margin-right: 5px;">
+                            	<?php echo anchor('sessions/recover', $this->lang->line('trouble_logging_in'), array('style'=>'font-size: 85%;')); ?>
                             	<input class="uibutton" type="submit" value="<?php echo $this->lang->line('log_in'); ?>" name="btn_submit" id="btn_submit" />
                             </div>
 						</form>

@@ -26,7 +26,7 @@
 
                     <div class="content toggle">
 
-                        <p><?php echo $this->lang->line('recover_text'); ?></p>
+                        <p style="padding-left: 10px;"><?php echo $this->lang->line('recover_text'); ?></p>
 
                         <form method="post" action="<?php echo site_url($this->uri->uri_string()); ?>">
                             
@@ -34,9 +34,9 @@
                                 <dt><label><?php echo $this->lang->line('username'); ?>: </label></dt>
                                 <dd><input type="text" value="" id="username" name="username" /></dd>
                             </dl>
-
-                            <input type="submit" value="<?php echo $this->lang->line('save'); ?>" name="btn_submit" id="btn_submit" />
-
+							<div style="float: right; margin-right: 5px;">
+                            	<input class="uibutton" type="submit" value="<?php echo $this->lang->line('save'); ?>" name="btn_submit" id="btn_submit" />
+							</div>
                         </form>
 
                         <div style="clear: both;">&nbsp;</div>
