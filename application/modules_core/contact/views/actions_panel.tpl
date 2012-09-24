@@ -126,37 +126,39 @@
 				<li> <a id="edit_profile" href="/index.php/contact/form/{$contact_id_key}/{$contact_id}">{t}Edit profile{/t}</a></li>
 			{/if}
 			
-			{if $profile_view && $contact_id != ""}
-				<li><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Add location{/t}</a></li>
-			{/if}
-			
-			{if $object_type == 'person'}
-				<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
-				<div id="search_organization" title="Form" style="display: none;">
-					<form id="search_organization_form" style="background-color: white;">
-						<input title="{t}search for name, vat, phone, email, website{/t}" style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
-						<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
-					</form>
-				</div>
-			{/if}
-			
-			{if $invoice_module_is_enabled}
-				<li><a href="/tasks/form/{$contact_id_key}/{$contact_id}?btn_add=true">{t}Create a task{/t}</a></li>
-			{/if}
-			
-			{if $invoice_module_is_enabled}
-				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
-				<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
-			{/if}
-			<!--
-			<li>
-					<form method="post" action="" style="display: inline;">
-					<input type="submit" name="btn_edit_client" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='edit_client'}" />
-	                <input type="submit" name="btn_add_invoice" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_invoice'}" />
-					<input type="submit" name="btn_add_quote" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_quote'}" />
-					</form>
-			</li>
-			 -->						
+			{if $contact->enabled=='TRUE'}
+				{if $profile_view && $contact_id != ""}
+					<li><a href="#" onClick="jqueryForm({ 'form_type':'form','object_name':'location','related_object_name':'{$object_type}','related_object_id':'{$contact_id}','hash':'set_here_the_hash' })">{t}Add location{/t}</a></li>
+				{/if}
+				
+				{if $object_type == 'person'}
+					<li><a id="show_organization_link" href="#">{t}Associate Organization{/t}</a></li>
+					<div id="search_organization" title="Form" style="display: none;">
+						<form id="search_organization_form" style="background-color: white;">
+							<input title="{t}search for name, vat, phone, email, website{/t}" style="margin-right: 5px; width: 225px;"type="text" name="input_search" id="input_search" />
+							<p style="font-size: 10px; color: gray; font-style: italic;">{t}search for name, vat, phone, email, website{/t}</p>
+						</form>
+					</div>
+				{/if}
+				
+				{if $invoice_module_is_enabled}
+					<li><a href="/tasks/form/{$contact_id_key}/{$contact_id}?btn_add=true">{t}Create a task{/t}</a></li>
+				{/if}
+				
+				{if $invoice_module_is_enabled}
+					<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}/quote/">{t}Create freehand quote{/t}</a></li>
+					<li><a href="/invoices/create/{$contact_id_key}/{$contact_id}">{t}Create freehand invoice{/t}</a></li>
+				{/if}
+				<!--
+				<li>
+						<form method="post" action="" style="display: inline;">
+						<input type="submit" name="btn_edit_client" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='edit_client'}" />
+		                <input type="submit" name="btn_add_invoice" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_invoice'}" />
+						<input type="submit" name="btn_add_quote" style="float: right; margin-top: 10px; margin-right: 10px;" value="{citranslate lang=$language text='create_quote'}" />
+						</form>
+				</li>
+				 -->
+			{/if}						
 		</ul>
 		
 	</div>

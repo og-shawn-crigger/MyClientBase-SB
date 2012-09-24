@@ -553,7 +553,6 @@ class Contact extends Admin_Controller {
     	if(!$obj) {
     		if($add_value = uri_assoc('add')) //retrieving uid from GET
     		if($add_value) $obj = $add_value;	 
-    		//$this->$obj->setFormRules();    		
     	}
 
     	if($obj) $this->$obj->setFormRules();
@@ -637,7 +636,7 @@ class Contact extends Admin_Controller {
     		} 
     		
     		//for test purposes
-    		$o = $this->$obj;    		
+    		//$o = $this->$obj;    		
     		
     		//sets form submit url
     		if(isset($this->$obj->uid) && !empty($this->$obj->uid)) $form_url = site_url()."/contact/form/uid/".$this->$obj->uid;
@@ -659,18 +658,6 @@ class Contact extends Admin_Controller {
     	
     	//TODO what is this?
 //     	$client_settings = $this->input->post('client_settings');
-    	
-//     	if(is_array($client_settings))
-//     	{    	 
-// 	    	foreach ($client_settings as $key=>$value) {
-// 	    		if ($value) {
-// 	    			$this->mdl_mcb_client_data->save($contact_id, $key, $value);
-// 	    		}
-// 	    		else {
-// 	    			$this->mdl_mcb_client_data->delete($contact_id, $key);
-// 	    		}
-// 	    	}    	
-//     	}
     	    	
     	//this retrieves other info about the contact that have nothing to do with the contact itself
     	//TODO later. MCB stuff

@@ -276,7 +276,7 @@ class Mdl_Contact extends MY_Model {
 				//all the other mandatory fields (like cn, objectClass ...  will be set in the validate method
 	
 				//FIXME figure out what to do with the enabled field: it's currently in the "settings" form, so it's not included in the "info form"
-				if(in_array($mandatoryAttribute, $this->show_fields) && $mandatoryAttribute != 'enabled')
+				if(in_array($mandatoryAttribute, $this->show_fields) && $mandatoryAttribute != 'enabled' && $mandatoryAttribute != 'category')
 				{
 					//gets the alias for the mandatory field
 					//TODO I still have to fix the localization

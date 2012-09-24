@@ -18,6 +18,9 @@
 {assign 'baseurl' $baseurl}
 {assign 'invoices_html' $invoices_html}
 
+<pre>
+{* $contact|print_r *}
+</pre>
 <div class="section_wrapper" style="background-color: #ff9c00;">
 	<div>
 		{if {preg_match pattern="dueviPerson" subject=$contact->objectClass}}
@@ -53,7 +56,7 @@
 				{/if}
 				
 				{if {preg_match pattern="dueviPerson" subject=$contact->objectClass} and {$contact_orgs|count} >0}
-					<li><a href="#tab_memberOf">{t}Member of{/t} ({$contact_orgs|count})</a></li>
+					{$already_wrote=1}<li><a href="#tab_memberOf">{t}Member of{/t} ({$contact_orgs|count})</a></li>
 				{/if}	
 				
 				{if isset($ss_contact_folder_num_items)}				
@@ -108,6 +111,16 @@
 							
 									{$already_wrote=0}
 									<!-- particular cases -->
+									{* boolean fields *}
+									{if $contact->properties[$property_name]['boolean'] == 1}
+										{if $contact->$property_name=='TRUE'}
+											{t}yes{/t}
+										{else}
+											{t}no{/t}
+										{/if}
+										{$already_wrote=1}
+									{/if}
+									
 									{if $property_name == "mail" or $property_name == "omail"}
 										<span class="marker">&gt;&gt;</span><a href="mailto:{$contact->$property_name}">{$contact->$property_name|wordwrap:60:"<br/>":true}</a>
 										{$already_wrote=1}

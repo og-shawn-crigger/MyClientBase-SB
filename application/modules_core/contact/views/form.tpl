@@ -1,7 +1,5 @@
 {* <pre>{$contact|print_r}</pre> *}
 
-{* //TODO: remember to add all the MUST fields that are not automatically populated (like cn, displayAs ..) *}
-
 {* PREPARING THE FORM CONTENT *}
 {foreach $contact->properties as $property => $details}
 	
@@ -19,7 +17,7 @@
 	{* VALUE *}
 	{* //TODO is this usefull? {$value = $mdl_contacts->form_value($property)} *}
 
-	{*
+	{* for debugging
 	<h1>{$property}</h1>
 	<pre>{$details|print_r}</pre>
 	*}
@@ -52,9 +50,9 @@
 
 	{* check if it's a boolean field and render it as a checkbox *}
 	{* {if {preg_match pattern="boolean" subject=$details['desc']}} *}
-	{if $details['boolean'] == 1}							
+	{if $details['boolean'] == 1}			
 		{$type = 'checkbox'}
-		{if $value === 'TRUE'}
+		{if $fields[$property]['value'] == 'TRUE'}
 			{$fields[$property]["checked"] = "checked"}
 		{else}
 			{$fields[$property]["checked"] = ""}
@@ -76,9 +74,6 @@
 	{$fields[$property]["type"] = $type}
 								
 {/foreach}
-
-{$settings[] = "category"}
-{$settings[] = "enabled"}
 
 <div class="container_10" id="center_wrapper">
 
@@ -107,7 +102,7 @@
 
 						<ul>
 							<li><a href="#tab_contact">{t}Info{/t}</a></li>
-                  			<li><a href="#tab_settings">{t}Settings{/t}</a></li>
+                  			{*<li><a href="#tab_settings">{t}Settings{/t}</a></li>*}
 						</ul>
 
 						<br/>
@@ -126,10 +121,10 @@
 									{/foreach}
 								{/if}							
 								
-								{* outputs the visible fields accordingly to the order provided in the settings *}
+								{* outputs the visible fields accordingly to the order provided in the system settings *}
 								{foreach $contact->show_fields as $key => $property name="foreach_property"}
-									{* output the "tab info" fields => all the fields except the ones specified in $settings *}
-									{if $fields[$property] and !in_array($property,$settings)}
+									{* output the "tab info" fields => all the fields *}
+									{if $fields[$property]}
 										{* here some GUI filters *}
 										
 										{* <dl style="float: left; width: 100%; background-color: {cycle values="#FFF,#e8e8e8"};"> *}
@@ -145,6 +140,7 @@
 											
 											{$checked = ""}
 											{if isset($fields[$property]["checked"])} 
+												{* $fields[$property]|print_r *}
 												{$checked = $fields[$property]["checked"]}
 											{/if} 
 											
@@ -161,7 +157,14 @@
 												</dd>
 											{else}
 												<dd style="margin-top: 5px; float: left; background-color: transparent;">
-													<input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} {$disabled} />
+													
+													{$field_value=$fields[$property]["value"]}
+													
+													{if $fields[$property]["type"]=="checkbox"}
+														{$field_value='TRUE'}
+													{/if}
+													
+													<input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$field_value}" {$checked} {$disabled} style="width: 350px;"/>
 
 													{* set the first not disabled field as the focused one *}
 													{if $disabled == ''}
@@ -170,6 +173,7 @@
 															{$focus_set = true}
 														{/if}
 													{/if}
+													
 												</dd>
 											{/if}
 										</dl>										
@@ -183,7 +187,7 @@
 									
 							</form>
 							
-							<div style="font-size: 12px; margin-top: 25px; margin-left: 5px;  color: gray;">
+							<div style="font-size: 12px; margin-top: 45px; margin-left: 5px;  color: gray;">
 								{if $contact_id != ""}
 									{t}ID{/t}: {$contact_id} | 
 								{/if}
@@ -198,47 +202,6 @@
 							</div>							
 						</div>	
 																
-							
-
-            			
-            			<div id="tab_settings" style="margin-bottom: 30px;">
-            				
-                       		<form method="post" action={$form_url} {$form_addon}>
-                       		
-								{* print out hidden fields regardless they are visible or not *}
-								{if is_array($contact->hidden_fields)}
-									{foreach $contact->hidden_fields as $key => $property}
-										<input type="hidden" name="{$property}" id="{$property}" value="{$contact->$property}" /> 
-									{/foreach}
-								{/if}							
-                       		 
-								{* output the "tab settings" fields *}
-								{foreach $contact->show_fields as $key => $property}
-									{if $fields[$property] and in_array($property,$settings)}
-										<dl style="float: left; width: 100%; height: 35px; margin-top: 0px;">
-											
-											{* aliases substitution *}
-											{if isset($contact->aliases) and isset($property) and isset($contact->aliases.$property)}
-												{$fieldname = $contact->aliases.$property}
-											{else}
-												{$fieldname = $property}
-											{/if}		
-											
-											<dt style="float: left; text-align: left; width: 40%;">{t}{{$fieldname}|capitalize|regex_replace:"/_/":" "}{/t}{$fields[$property]["required"]}:</dt>
-											
-											{$checked = ""}
-											{if isset($fields[$property]["checked"])} 
-												{$checked = $fields[$property]["checked"]}
-											{/if} 
-											<dd style="float: left; background-color: transparent;"><input maxlength="{$fields[$property]["max_length"]}" size="{$fields[$property]["max_length"]}" type="{$fields[$property]["type"]}" name="{$property}" id="{$property}" value="{$fields[$property]["value"]}" {$checked} /></dd>
-										</dl>								
-									{/if}
-								{/foreach}
-								<dl>
-									<input class="uibutton" style="float: right; margin-top: 10px; margin-right: 10px;" type="submit" id="btn_submit"  name="btn_submit" value="{t}submit{/t}" />
-								</dl>
-							</form>	
-		    			</div>
 					</div>				
 				</form>
 							

@@ -24,7 +24,7 @@ form input[type=text], form input[type=email], form input[type=url], form input[
 	margin-bottom:5px;
 	border:1px solid #dadada;
 	padding: 5px;
-	width: 200px;
+	width: 250px;
 }
 
 form label {
@@ -80,6 +80,7 @@ dt {
 	margin-bottom: 0px; 
 	border: 0px solid green;
 	vertical-align: middle;
+	min-height: 35px;
 }
 
 dd {
@@ -91,6 +92,6 @@ dd {
 	margin-bottom: 2px; 
 	border: 0px solid red;
 	background-color: #e8e8e8;
-	min-height: 33px;
 	vertical-align: middle;
+	min-height: 35px;
 }

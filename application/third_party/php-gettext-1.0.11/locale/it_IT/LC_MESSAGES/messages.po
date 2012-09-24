@@ -862,3 +862,29 @@ msgstr "Nazione della sede"
 
 msgid "Land line telephone number of the location"
 msgstr "Numero di telefono della linea fissa della sede"
+
+msgid "yes"
+msgstr "si"
+
+msgid "no"
+msgstr "no"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Facebook Page"
+msgstr "Pagina Facebook"
+
+msgid "Github Page"
+msgstr "Pagina GitHub"
+
+msgid "Linkedin Page"
+msgstr "Pagina LinkedIn"
+
+msgid "Twitter Page"
+msgstr "Pagina Twitter"
+
+msgid "We Can Send Communications"
+msgstr "Accetta Comunicazioni"
+
+
