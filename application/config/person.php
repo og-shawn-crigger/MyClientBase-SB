@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','enabled','acceptsCommercialCommunications','category','businessCategory','facebookURI','githubURI','googleplusURI','linkedinURI','twitterURI');
+$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','enabled','acceptsCommercialCommunications','category','businessCategory','facebookURI','githubURI','googleplusURI','linkedinURI','twitterURI','dbId');
 $config['person_attributes_aliases'] = array(
 				'title' => 'title',
 				'sn' => 'last_name',

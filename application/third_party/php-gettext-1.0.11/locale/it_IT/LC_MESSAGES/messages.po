@@ -887,4 +887,5 @@ msgstr "Pagina Twitter"
 msgid "We Can Send Communications"
 msgstr "Accetta Comunicazioni"
 
-
+msgid "Fixed a bug in MCBSB contact editor preventing to update contacts in some situations"
+msgstr "Sistemato un baco nell'editor dei contatti di MCBSB che impediva l'aggiornamento dei dati in alcune situazioni"

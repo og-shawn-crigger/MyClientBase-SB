@@ -88,28 +88,16 @@ class Mdl_Contact extends MY_Model {
     	} 
     		 
     	if($this->crr->has_no_errors) {
+    		
     		if($this->crr->results_got_number == '1') {
-    			/*
-    			if(!empty($this->crr->data['0']['uid'])) {
-    				$this->person->arrayToObject($this->crr->data['0']);
-    				//$this->person->prepareShow(); //TODO maybe this can come in handy
-    			}
-
-    			if(!empty($this->crr->data['0']['oid'])) {
-    				$this->organization->arrayToObject($this->crr->data['0']);
-    				//$this->organization->prepareShow();  //TODO maybe this can come in handy
-    			}
-    			*/
     			
     			return $this->arrayToObject($this->crr->data['0']);
-    			    			
-    			//return true;
+    			
     		} else {
     			
     			return false;
     		}
     		    		
-    		//if($this->crr->results_got_number == '0') return false;
     	}
     	
     	return false;
@@ -365,7 +353,10 @@ class Mdl_Contact extends MY_Model {
 	{
 		//sets the contactengine key which allows to set the correct baseDN
     	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
-		
+
+    	//automatically add the author of the modification
+    	$input['entryUpdatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+    	$input['entryUpdateDate'] = date("Y-m-d");
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));		
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
@@ -385,6 +376,11 @@ class Mdl_Contact extends MY_Model {
     	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
 		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
+		
+		//automatically add the author of the creation
+		$input['entryCreatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+		$input['entryCreationDate'] = date("Y-m-d");
+		$input['enabled'] = "TRUE";
 		
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
 		
