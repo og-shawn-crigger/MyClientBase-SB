@@ -39,6 +39,7 @@
 
 	<ul class="quicklinks content toggle" >
 		{if !empty($task->task_id)}
+		<li><a id="btn_create_activity" href="/activities/form/task_id/{$task->task_id}">{t}Add Activity{/t}</a></li>		
 		<li><a id="btn_create_mti" href="/tasks/create_invoice/task_id/{$task->task_id}">{t}Create Invoice{/t}</a></li>
 		{/if}
 	</ul>

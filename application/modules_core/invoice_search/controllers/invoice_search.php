@@ -14,13 +14,7 @@ class Invoice_Search extends Admin_Controller {
 
 		if (!$this->mdl_invoice_search->validate()) {
 
-			//$this->load->model('clients/mdl_clients');
-
 			$this->load->model('invoice_statuses/mdl_invoice_statuses');
-
-            $client_params = array(
-                //'select'    =>  'mcb_clients.client_id, mcb_clients.client_name'
-            );
 
 			$data = array(
 				'clients'			=>	$this->mdl_clients->get($client_params),

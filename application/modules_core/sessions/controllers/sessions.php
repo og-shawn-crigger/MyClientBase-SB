@@ -36,30 +36,23 @@ class Sessions extends CI_Controller {
 
         $this->_load_language();
 
-        //$this->load->helper(array('url', 'form'));
-
         $this->load->model('mdl_auth');
-
+        
         if ($this->mdl_auth->validate_login()) {
 
+        	$posted_captcha = strtolower($this->input->post('captcha'));
+        	$saved_captcha = strtolower($this->session->userdata('captcha'));
+        	if($posted_captcha != $saved_captcha) {
+        		redirect('/');
+        	}
+        	 
             if ($user = $this->mdl_auth->auth($this->input->post('username'), $this->input->post('password'))) {
-
-                if ($user->client_id) {
-
-                    $object_vars = array('client_id', 'client_name');
-
-                    $this->mdl_auth->set_session($user, $object_vars);
-
-                }
-
-                else {
-
-                    $object_vars = array('user_id', 'last_name', 'first_name', 'global_admin');
-
-                    $this->mdl_auth->set_session($user, $object_vars, array('is_admin'=>TRUE));
-
-                }
-
+            	
+            	
+                $object_vars = array('user_id', 'last_name', 'first_name', 'global_admin');
+                
+                $this->mdl_auth->set_session($user, $object_vars, array('is_admin'=>TRUE));
+                                
                 // update the last login field for this user
                 $this->mdl_auth->update_timestamp('mcb_users', 'user_id', $user->user_id, 'last_login', time());
 
@@ -69,7 +62,31 @@ class Sessions extends CI_Controller {
 
         }
 
-        $this->load->view('login');
+        //adds captcha
+        $this->load->helper('captcha');
+        $captcha = rand_string(5);
+        $this->session->set_userdata(array('captcha' => $captcha));
+        
+        //remove old captcha pictures
+        $jpgpath = FCPATH . 'captcha/*.jpg';
+        $files = glob($jpgpath);
+        foreach($files as $file){
+        	if(is_file($file)) unlink($file);
+        }        
+        
+        //creates captcha picture
+        $vals = array(
+        		'word'	 => $captcha,
+        		'img_path'	 => './captcha/',
+        		'img_url'	 => base_url() . 'captcha/',
+        		'img_width'	 => '115',
+        		'img_height' => 45,
+        		'expiration' => 7200
+        );
+        
+        $data = array('captcha' => create_captcha($vals));
+        
+        $this->load->view('login',$data);
 
     }
 

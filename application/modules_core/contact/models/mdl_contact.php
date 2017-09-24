@@ -40,7 +40,7 @@ class Mdl_Contact extends MY_Model {
         $this->load->spark('curl/1.2.0');
         
         // Load the configuration file
-        $this->load->config('rest');
+        $a = $this->load->config('rest');
          
         // Load the rest client
         $this->load->spark('restclient/2.0.0');
@@ -68,6 +68,10 @@ class Mdl_Contact extends MY_Model {
     	//I need at least somethig to send as input to retrieve the contact
     	if((is_null($input) || (count($input)==0)) && is_null($this->client_id)) return false;
     	
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+
+    	
     	if(empty($input['filter'])) $input['filter'] = '(|(uid='.$this->client_id.')(oid='.$this->client_id.'))';
     	
     	$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
@@ -84,28 +88,16 @@ class Mdl_Contact extends MY_Model {
     	} 
     		 
     	if($this->crr->has_no_errors) {
+    		
     		if($this->crr->results_got_number == '1') {
-    			/*
-    			if(!empty($this->crr->data['0']['uid'])) {
-    				$this->person->arrayToObject($this->crr->data['0']);
-    				//$this->person->prepareShow(); //TODO maybe this can come in handy
-    			}
-
-    			if(!empty($this->crr->data['0']['oid'])) {
-    				$this->organization->arrayToObject($this->crr->data['0']);
-    				//$this->organization->prepareShow();  //TODO maybe this can come in handy
-    			}
-    			*/
     			
     			return $this->arrayToObject($this->crr->data['0']);
-    			    			
-    			//return true;
+    			
     		} else {
     			
     			return false;
     		}
     		    		
-    		//if($this->crr->results_got_number == '0') return false;
     	}
     	
     	return false;
@@ -272,7 +264,7 @@ class Mdl_Contact extends MY_Model {
 				//all the other mandatory fields (like cn, objectClass ...  will be set in the validate method
 	
 				//FIXME figure out what to do with the enabled field: it's currently in the "settings" form, so it's not included in the "info form"
-				if(in_array($mandatoryAttribute, $this->show_fields) && $mandatoryAttribute != 'enabled')
+				if(in_array($mandatoryAttribute, $this->show_fields) && $mandatoryAttribute != 'enabled' && $mandatoryAttribute != 'category')
 				{
 					//gets the alias for the mandatory field
 					//TODO I still have to fix the localization
@@ -344,8 +336,8 @@ class Mdl_Contact extends MY_Model {
 		 
 		//validates the object before sending data to Contact Engine
 		$left = $this->validateObj($creation);
-		if(!$left || is_array($left)) {
-		//TODO add the content of left to the notification message
+		if(is_array($left)) {
+			//TODO add the content of left to the notification message
 			return false;
 		}
 		 	 
@@ -357,8 +349,14 @@ class Mdl_Contact extends MY_Model {
 					
 	}	
 	
-	protected function update($input)
+	protected function update(array $input)
 	{
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+
+    	//automatically add the author of the modification
+    	$input['entryUpdatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+    	$input['entryUpdateDate'] = date("Y-m-d");
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));		
 
 		$this->crr->importCeReturnObject($this->rest->post('update', $input, 'serialize'));
@@ -371,9 +369,18 @@ class Mdl_Contact extends MY_Model {
 		return false;
 	}
 	
-	protected function create($input)
+	protected function create(array $input)
 	{	
+		
+		//sets the contactengine key which allows to set the correct baseDN
+    	if($this->config->item('ce_key')) $input['ce_key'] = $this->config->item('ce_key');
+		
 		$this->rest->initialize(array('server' => $this->config->item('rest_server').'/exposeObj/'.$this->objName));
+		
+		//automatically add the author of the creation
+		$input['entryCreatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
+		$input['entryCreationDate'] = date("Y-m-d");
+		$input['enabled'] = "TRUE";
 		
 		$this->crr->importCeReturnObject($this->rest->post('create', $input, 'serialize'));
 		
@@ -494,7 +501,8 @@ class Mdl_Contact extends MY_Model {
 		
 		//TODO send a notification
 		return true;
-	}		
+	}
+
 }
 
 ?>

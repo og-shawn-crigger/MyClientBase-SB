@@ -105,14 +105,27 @@ class Tasks extends Admin_Controller {
 			if($this->mdl_tasks->get()) { //this populates $this->mcbsb->task with contact information 
 			
 				//task and contact have been found.				
-
 				$data['task'] = $this->mcbsb->task;
 												
 			} else {
-				//contact not found. That's a huge error
-				//TODO system message
-				//TODO redirect
+				$this->mcbsb->system_messages->error = 'The specified task can not be retrieved';
+				redirect('tasks');
 			}
+			
+			$modules = $this->mcbsb->get_enabled_modules();
+			
+			//TODO FIXME this is no good. Somehow it translates the modules names
+			if(in_arrayi('activities',$modules['all']) || in_arrayi('attivitá',$modules['all'])) {
+				
+				//loads the Activity obj into the mcbsb obj
+				$this->load->model('activities/mdl_activities','activities');
+	
+				$params = array('where' => array('task_id' => $this->mcbsb->task->task_id));
+				if($activities = $this->activities->getAll($params)) {
+					$data['activities'] = $activities;
+					$data['table'] = $this->plenty_parser->parse('table.tpl', $data, true, 'smarty', 'activities');
+				}
+			}			
 		} else {
 						
 			//it's a new task
@@ -122,7 +135,8 @@ class Tasks extends Admin_Controller {
 			if(isset($values['client_id_key'])) $this->mcbsb->task->client_id_key = $values['client_id_key'];
 
 			if(! $this->mdl_tasks->retrieve_contact_name($this->mcbsb->task)) {
-				//TODO do something
+				$this->mcbsb->system_messages->error = 'The contact related to the task can not be retrieved';
+				redirect('contact');
 			}
 			
 			$this->mcbsb->task->start_date = now();
@@ -186,19 +200,18 @@ class Tasks extends Admin_Controller {
 					
 					redirect('invoices/edit/invoice_id/' . $invoice_id);
 				} else {
-					//TODO system message
-					redirect('tasks');
+					$this->mcbsb->system_messages->error = 'The invoice can not be created';
+					redirect('tasks/form/task_id/'.$task_id);
 				}
 								
 			} else {
-				//contact not found. That's a huge error
-				//TODO system message
+				$this->mcbsb->system_messages->error = 'The specified task can not be retrieved';	
 				redirect('tasks');
 			}
 				
 		} else {
 			//no task_id in the url
-			//TODO system message
+			$this->mcbsb->system_messages->error = 'The specified task can not be retrieved';
 			redirect('tasks');
 		}
 		
@@ -215,16 +228,18 @@ class Tasks extends Admin_Controller {
 				//TODO if is not invoiced ...
 				
 				if($this->mcbsb->task->delete()) {
-					//TODO system message
+					$this->mcbsb->system_messages->success = 'Task has been successfully deleted';
 				} else {
-					//TODO system message
+					$this->mcbsb->system_messages->error = 'Task has not been deleted';
 				}
 			}
-			//$this->mdl_tasks->delete(array('task_id'=>uri_assoc('task_id', 3)));
+			
 		} else {
-			//TODO system message
-		}
-
+			
+			$this->mcbsb->system_messages->error = 'Task_id is missing';
+			
+		} 
+		
 		$this->redir->redirect('tasks');
 
 	}

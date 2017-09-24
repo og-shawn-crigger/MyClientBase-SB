@@ -64,11 +64,11 @@ class Settings extends Admin_Controller {
 
 	function optimize_db() {
 
-		$this->load->dbutil();
+// 		$this->load->dbutil();
 
-		$this->dbutil->optimize_database();
+// 		$this->dbutil->optimize_database();
 		
-		$this->session->set_flashdata('custom_success', $this->lang->line('database_optimized'));
+// 		$this->session->set_flashdata('custom_success', $this->lang->line('database_optimized'));
 		
 		redirect('settings');
 

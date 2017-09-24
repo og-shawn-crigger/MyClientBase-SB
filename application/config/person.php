@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','enabled','jpegPhoto');
+$config['person_show_fields'] = array('title','sn','givenName','codiceFiscale','homePostalAddress','mozillaHomePostalCode','mozillaHomeLocalityName','mozillaHomeState','mozillaHomeCountryName','mobile','homePhone','homeFacsimileTelephoneNumber','companyPhone','facsimileTelephoneNumber','mail','managerName','assistantName','assistantPhone','labeledURI','calendarURI','freeBusyURI','preferredLanguage','birthDate','enabled','acceptsCommercialCommunications','category','businessCategory','facebookURI','githubURI','googleplusURI','linkedinURI','twitterURI','dbId');
 $config['person_attributes_aliases'] = array(
 				'title' => 'title',
 				'sn' => 'last_name',
@@ -25,6 +25,12 @@ $config['person_attributes_aliases'] = array(
 				'freeBusyURI' => 'online_free-busy',
 				'preferredLanguage' => 'spoken_language',
 				'birthDate' => 'birthdate',
-				'jpegPhoto' => 'photo',
+				'acceptsCommercialCommunications' => 'we_can_send_communications',
+				'businessCategory' => 'business_category',
+				'facebookURI' => 'facebook_page',
+				'githubURI' => 'github_page',
+				'googleplusURI' => 'google_page',
+				'linkedinURI' => 'linkedin_page',
+				'twitterURI' => 'twitter_page',
 );
 $config['person_hidden_fields'] = array('uid','client_id');

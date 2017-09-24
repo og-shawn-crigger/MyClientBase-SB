@@ -7,13 +7,13 @@
 	<ul class="quicklinks content toggle" >
 	
 		{if !{preg_match pattern="\/inventory\/index$" subject=$site_url}}
-			<li><a id="" href="/inventory/index">{t}Show inventory items{/t}</a></li>
+			<li><a id="" href="/inventory/index">{t}Show Inventory Items{/t}</a></li>
 		{/if}	
 		{if !{preg_match pattern="\/inventory\/inventory_types$" subject=$site_url}}
-			<li><a id="" href="/inventory/inventory_types">{t}Show inventory types{/t}</a></li>
+			<li><a id="" href="/inventory/inventory_types">{t}Show Inventory Types{/t}</a></li>
 		{/if}
-		<li><a id="" href="/inventory/inventory_types/form">{t}Add inventory type{/t}</a></li>
-		<li><a id="" href="/inventory/form">{t}Add inventory item{/t}</a></li>		
+		<li><a id="" href="/inventory/inventory_types/form">{t}Add Inventory Type{/t}</a></li>
+		<li><a id="" href="/inventory/form">{t}Add Inventory Item{/t}</a></li>		
 	</ul>
 
 </div>

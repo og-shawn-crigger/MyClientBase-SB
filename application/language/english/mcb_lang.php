@@ -151,7 +151,7 @@ $lang['invoice_history'] = 'Invoice History';
 $lang['invoice_item_form'] = 'Invoice Item Form';
 $lang['invoice_items'] = 'Invoice Items';
 $lang['invoice_logo'] = 'Invoice Logo';
-$lang['invoice_number'] = 'Num #';
+$lang['invoice_number'] = 'Inv. Num #';
 $lang['invoice_options_saved'] = 'The invoice options have been saved.';
 $lang['invoice_payments'] = 'Invoice Payments';
 $lang['invoice_search'] = 'Invoice Search';
@@ -607,4 +607,6 @@ $lang['save'] = 'Save';
 $lang['handle_modules'] = 'Handle Modules';
 $lang['prev'] = 'Previous';
 $lang['found'] = 'found';
+$lang['google'] = 'Google';
+$lang['captcha_text'] = 'Insert here the text shown in the picture on the left';
 ?>

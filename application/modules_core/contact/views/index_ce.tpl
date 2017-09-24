@@ -3,67 +3,6 @@
 {assign 'total_number' $contacts.total_number}
 {assign 'language' 'en'}
 
-{*
-//TODO delme
-<script type="text/javascript">
-
-	$(document).ready(function() {
-		$("#show_add_person_link").click(function(){
-			toggle_animate('add_person','first_name', '-68');
-		});
-
-		$("#show_add_organization_link").click(function(){
-			toggle_animate('add_organization','organization_name', '-41');
-		});
-
-		$('#add_organization_form').submit(function() {
-		
-			organization_name = $('#organization_name').val();
-			searched_value = organization_name;
-			
-			search({ 
-					'searched_value': searched_value,
-					'procedure':'searchOrganizationToAdd',
-					'form_name':'add_organization_form',
-					'form_type':'search',
-					'object_name':'organization',
-					'url':'/contact/form/add/organization',
-					'hash':'set_here_the_hash' 
-					});				
-		    return false;			
-		});	
-				
-		$('#last_name').keypress(function(event){
-			
-			//this intercepts the press enter on the second input box of the person form and performs a submit
-			if (event.which == 13)
-			{
-				first_name = $('#first_name').val();
-				if(first_name == '') return false;
-				last_name = $('#last_name').val();
-				if(last_name == '') return false;
-				searched_value = first_name + ' ' + last_name;
-				 
-				search({ 
-						'searched_value': searched_value,
-						'first_name': first_name,
-						'last_name': last_name,
-						'procedure':'searchPersonToAdd',
-						'form_name':'add_person_form',
-						'form_type':'search',
-						'object_name':'person',
-						'url':'/contact/form/add/person',
-						'hash':'set_here_the_hash' 
-						});				
-			    return false;
-			}
-			else
-			   return true;
-		});
-			
-	});
-</script>
-*}
 
 <div class="grid_8" id="content_wrapper">
 	<div class="contact_search" style="background-color: red;">
@@ -86,17 +25,7 @@
 			
 			{* add new person form *}
 			<div style="width: 100%;">
-				<h3 class="title_black">{"{t}people{/t}"|capitalize} 
-				{*  //TODO delme
-					<span class="marker">&gt;&gt;</span><a id="show_add_person_link" href="#" style="font-size: 13px; color: white;">{t}add one{/t}</a>
-					<div id="add_person" title="Form" style="display: none;">
-						<form id="add_person_form" style="background-color: transparent;">
-							<input title="{t}first name{/t}" style="margin-left: 160px; margin-right: 0px; width: 155px;"type="text" name="firstname" id="first_name" />
-							<input title="{t}last name{/t}" style="margin-right: 2px; margin-left: 0px; width: 155px;"type="text" name="lastname" id="last_name"/>
-						</form>
-					</div>
-				*}	
-				</h3>
+				<h3 class="title_black">{"{t}people{/t}"|capitalize}</h3>
 			</div>
 			
 			<table class="table-clients">
@@ -129,28 +58,19 @@
 		<div class="right-block">
 			{if count($orgs) gt 0}    
 			<div style="width: 100%;">
-				<h3 class="title_black">{"{t}organizations{/t}"|capitalize}
-				{* //TODO delme
-					<!-- <input type="submit" class="mcbsb-regular-Button" name="" value="{t}Add{/t}" style="float: right; margin-top: 10px; margin-right: 10px;" />  -->
-					<span class="marker">&gt;&gt;</span><a id="show_add_organization_link" href="#" style="font-size: 13px; color: white;">{t}add one{/t}</a>
-					<div id="add_organization" title="Form" style="display: none;">
-						<form id="add_organization_form" style="background-color: transparent;">
-							<input title="{t}organization name{/t}" style="margin-left: 220px; margin-right: 0px; width: 280px;"type="text" name="organizationname" id="organization_name" />
-						</form>
-					</div>
-				*}				
-				</h3>
+				<h3 class="title_black">{"{t}organizations{/t}"|capitalize}</h3>
 			</div>
 		
-		
 			<table class="table-orgs">
+			
 			<tr class="columns_header">
 				<td class="counter" style="background-color: black;">&nbsp;</td>
 				<td class="columns_header">{t}Name{/t}</td>
 				<td class="columns_header">{t}City{/t}</td>
 				<td class="columns_header">{t}Telephone{/t}</td>
 				{* <td class="columns_header">{t}Mobile{/t}</td> *}
-			</tr>	
+			</tr>
+				
 			{foreach $orgs as $key => $organization}
 		    <tr class="hoverall">
 		    	{assign 'url' value="$baseurl/contact/details/oid/{$organization->oid}"}
@@ -161,6 +81,7 @@
 		    	{*<td class="tel">{$organization->oMobile|default:'-'}</td>*}
 		    </tr>
 		    {/foreach}
+		    
 		    </table>    
 		{else}
 			{if $made_search}

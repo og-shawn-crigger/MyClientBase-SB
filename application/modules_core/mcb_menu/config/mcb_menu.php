@@ -40,7 +40,7 @@ $config = array(
             )
         ),
         'system'    =>  array(
-            'title'         =>  'mcbsb_settings',
+            'title'         =>  'mcbsb settings',
             'href'          =>  'settings',
             'global_admin'  =>  TRUE,
             'submenu'       =>  array(

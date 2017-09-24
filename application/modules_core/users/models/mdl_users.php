@@ -15,7 +15,8 @@ class Mdl_Users extends MY_Model {
 
 		$this->order_by = 'last_name, first_name';
 
-		$this->custom_fields = $this->mdl_fields->get_object_fields(6);
+		//TODO do not uncomment this line: it breaks mcbsb load
+		//$this->custom_fields = $this->mdl_fields->get_object_fields(6);
 
 	}
 
@@ -47,12 +48,13 @@ class Mdl_Users extends MY_Model {
 		$this->form_validation->set_rules('web_address', $this->lang->line('web_address'));
 		$this->form_validation->set_rules('tax_id_number', $this->lang->line('tax_id_number'));
 
-		foreach ($this->custom_fields as $custom_field) {
-
-			$this->form_validation->set_rules($custom_field->column_name, $custom_field->field_name);
-
+		if(is_array($this->custom_fields)) {
+			foreach ($this->custom_fields as $custom_field) {
+	
+				$this->form_validation->set_rules($custom_field->column_name, $custom_field->field_name);
+	
+			}
 		}
-
 		return parent::validate($this);
 
 	}
@@ -148,6 +150,16 @@ class Mdl_Users extends MY_Model {
 
 	}
 
+	public function get_full_name($user_id) {
+	
+		$this->db->select('last_name','first_name');
+	
+		$this->db->where('user_id', $user_id);
+	
+		return $this->db->get('mcb_users')->row()->last_name . " " . $this->db->get('mcb_users')->row()->first_name;
+	
+	}	
+	
 	public function get_email_address($user_id) {
 
 		$this->db->select('email_address');

@@ -5,7 +5,9 @@ class Sales_by_Customer extends Admin_Controller {
     public function __construct() {
 
         parent::__construct();
-
+        
+        //TODO adjust this report for the contact module
+		redirect('');
     }
 
     public function index() {

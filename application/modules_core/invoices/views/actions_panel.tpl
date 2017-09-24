@@ -10,7 +10,6 @@ $(document).ready(function() {
 
 		/*
 		$("#btn_close_search").click(function() {
-			console.log('hide');
 			//$('#invoice_search').hide();
 
 		});

@@ -9,7 +9,7 @@
 			{/if}
 			
 			{* writes the parent item *}
-			<a href="/{$url}">{t}{$parent|ucwords}{/t}</a>
+			<a href="/{$url}">{t}{$item['title']|ucwords}{/t}</a>
 			
 			{if isset($item['submenu'])}
 				{$submenu = $item['submenu']}

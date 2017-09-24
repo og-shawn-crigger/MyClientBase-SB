@@ -120,8 +120,7 @@ function saveUploadedFile()
  * @license		GPL
  * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
  * @since		Jun 22, 2012
- * 
- * @todo		
+ * 		
  */
  
 function in_arrayi($needle, array $haystack) {
@@ -132,6 +131,36 @@ function in_arrayi($needle, array $haystack) {
 	$haystack = array_flip($haystack_flipped_lower);
 	
 	return in_array($needle, $haystack);
+}
+
+
+/**
+ * Returns a random string
+ * 
+ * @access		public
+ * @param		none
+ * @return		string
+ * @example
+ * @see
+ * 
+ * @author 		Damiano Venturin
+ * @copyright 	2V S.r.l.
+ * @license		GPL
+ * @link		http://www.squadrainformatica.com/en/development#mcbsb  MCB-SB official page
+ * @since		Sep 24, 2012
+ * 
+ */
+function rand_string( $length ) {
+	
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	$str = '';
+	
+	$size = strlen( $chars );
+	for( $i = 0; $i < $length; $i++ ) {
+		$str .= $chars[ rand( 0, $size - 1 ) ];
+	}
+
+	return $str;
 }
 
 /* End of file mcbsb_helper.php */

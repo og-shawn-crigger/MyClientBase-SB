@@ -28,7 +28,7 @@ function setupPhpGettext() {
 	$mcb_locale = $CI->mdl_mcb_data->get('default_language');
 	switch ($mcb_locale) {
 		case 'english':
-			$smarty_locale = 'en_EN';
+			$smarty_locale = 'en_US';
 		break;
 		
 		case 'italian':

@@ -20,7 +20,6 @@ class Mdl_Tasks extends MY_Model {
 		$this->order_by = 'mcb_tasks.due_date, mcb_tasks.task_id DESC';
 
 		$this->joins = array(
-			//'mcb_clients'	=>	'mcb_clients.client_id = mcb_tasks.client_id',
 			'mcb_users'		=>	'mcb_users.user_id = mcb_tasks.user_id'
 		);
 

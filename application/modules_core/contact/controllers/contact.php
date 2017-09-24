@@ -227,6 +227,12 @@ class Contact extends Admin_Controller {
     	return false;
     }
     
+    
+    public function save_settings()
+    {
+    	return true;
+    }
+    
     /**
      * This function is called by the javascript (System Settings) everytime there is an event (drag, sort, submit)
      * It updates the config file for the specific object and returns the updated html to the javascript which
@@ -547,7 +553,6 @@ class Contact extends Admin_Controller {
     	if(!$obj) {
     		if($add_value = uri_assoc('add')) //retrieving uid from GET
     		if($add_value) $obj = $add_value;	 
-    		//$this->$obj->setFormRules();    		
     	}
 
     	if($obj) $this->$obj->setFormRules();
@@ -631,7 +636,7 @@ class Contact extends Admin_Controller {
     		} 
     		
     		//for test purposes
-    		$o = $this->$obj;    		
+    		//$o = $this->$obj;    		
     		
     		//sets form submit url
     		if(isset($this->$obj->uid) && !empty($this->$obj->uid)) $form_url = site_url()."/contact/form/uid/".$this->$obj->uid;
@@ -653,18 +658,6 @@ class Contact extends Admin_Controller {
     	
     	//TODO what is this?
 //     	$client_settings = $this->input->post('client_settings');
-    	
-//     	if(is_array($client_settings))
-//     	{    	 
-// 	    	foreach ($client_settings as $key=>$value) {
-// 	    		if ($value) {
-// 	    			$this->mdl_mcb_client_data->save($contact_id, $key, $value);
-// 	    		}
-// 	    		else {
-// 	    			$this->mdl_mcb_client_data->delete($contact_id, $key);
-// 	    		}
-// 	    	}    	
-//     	}
     	    	
     	//this retrieves other info about the contact that have nothing to do with the contact itself
     	//TODO later. MCB stuff
@@ -864,7 +857,8 @@ class Contact extends Admin_Controller {
         
         
         //getting invoices and quotes
-        if(in_arrayi('invoices',$this->enabled_modules['all'])) {
+        //TODO FIXME this is no good. Somehow it translates the modules names
+        if(in_arrayi('invoices',$this->enabled_modules['all']) || in_arrayi('fatture',$this->enabled_modules['all'])) {
         	$this->load->model('invoices/mdl_invoices');
         		
         	$data['invoice_module_is_enabled'] = true;
@@ -879,7 +873,7 @@ class Contact extends Admin_Controller {
         	);
         
         	//TODO is this necessary?
-        	//prevents common useres from seeing the invoices made by someonelse
+        	//prevents common users from seeing the invoices made by someonelse
         	// 	        if (!$this->session->userdata('global_admin')) {
         	// 	            $invoice_params['where']['mcb_invoices.user_id'] = $this->session->userdata('user_id');
         	// 	        }
@@ -904,7 +898,8 @@ class Contact extends Admin_Controller {
         }         
         
         //allows creations of tasks for the contact
-        if(in_arrayi('tasks',$this->enabled_modules['all'])) {
+        //TODO FIXME this is no good. Somehow it translates the modules names
+        if(in_arrayi('tasks',$this->enabled_modules['all']) || in_arrayi('incarichi',$this->enabled_modules['all']) ) {
         		
         	$this->mcbsb->load('tasks/task','task');
         

@@ -14,32 +14,6 @@ class Mdl_Invoices extends MY_Model {
 
 		$this->order_by = 'mcb_invoices.invoice_date_entered DESC, mcb_invoices.invoice_id DESC';
 
-// 		$this->select_fields = "
-// 		SQL_CALC_FOUND_ROWS
-// 		mcb_invoices.*,
-// 		mcb_invoice_amounts.*,
-//      mcb_clients.*,
-// 		mcb_invoice_groups.invoice_group_name,
-// 		mcb_invoice_groups.invoice_group_prefix,
-// 		mcb_users.username,
-// 	    mcb_users.company_name AS from_company_name,
-// 	    mcb_users.last_name AS from_last_name,
-// 	    mcb_users.first_name AS from_first_name,
-// 	    mcb_users.address AS from_address,
-// 		mcb_users.address_2 AS from_address_2,
-// 	    mcb_users.city AS from_city,
-// 	    mcb_users.state AS from_state,
-// 	    mcb_users.zip AS from_zip,
-// 		mcb_users.country AS from_country,
-// 	    mcb_users.phone_number AS from_phone_number,
-// 		mcb_users.email_address AS from_email_address,
-// 		mcb_users.fax_number AS from_fax_number,
-// 		mcb_users.web_address AS from_web_address,
-// 		mcb_users.tax_id_number AS from_tax_id_number,
-// 		mcb_invoice_statuses.*,
-// 		(DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) AS invoice_days_overdue,
-// 		IF(mcb_invoice_statuses.invoice_status_type NOT IN(3,2), IF((DATEDIFF(FROM_UNIXTIME(UNIX_TIMESTAMP()),FROM_UNIXTIME(mcb_invoices.invoice_due_date))) > 0, 1, 0), 0) AS invoice_is_overdue";
-
 		$this->select_fields = "
 		mcb_invoices.*,
 		mcb_invoice_amounts.*,

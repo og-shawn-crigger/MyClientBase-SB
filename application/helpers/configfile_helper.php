@@ -60,6 +60,8 @@ function write_config($filename, array $config_items, $create=false) {
 					}
 					$string = 'array('."\n".$string.');'."\n";
 				}
+			} else {
+				$string = '"' . $new_value . '"' . ";\n";
 			}
 			$config .= '$config[\''.$item.'\'] = '.$string;
 		}

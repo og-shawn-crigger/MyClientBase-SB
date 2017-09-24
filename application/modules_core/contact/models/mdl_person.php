@@ -125,7 +125,7 @@ class Mdl_Person extends Mdl_Contact {
     					break;
     						    					
     					case 'category':
-    						$this->$mandatoryAttribute = 'unknown';
+    						$this->$mandatoryAttribute = 'contact';
     					break;
     						 
     					case 'cn':
@@ -145,7 +145,11 @@ class Mdl_Person extends Mdl_Contact {
     					break;
     	
     					case 'enabled':
-    						$this->$mandatoryAttribute = 'TRUE';  //FIXME
+    						if($this->enabled == 'TRUE') {
+    							$this->$mandatoryAttribute = 'TRUE';
+    						} else {
+    							$this->$mandatoryAttribute = 'FALSE';
+    						}
     					break;
     							
     					default:

@@ -39,24 +39,12 @@
 					<div id="tab_application">
 						<dl>
 							<dt><?php echo $this->lang->line('application_version'); ?>: </dt>
-							<dd><?php echo $this->mdl_mcb_data->setting('version'); ?></dd>
+							<dd><?php echo $this->mcbsb->_version; ?></dd>
 						</dl>
 						<dl>
 							<dt><?php echo $this->lang->line('database_backup'); ?>: </dt>
 							<dd><input type="submit" name="btn_backup" value="<?php echo $this->lang->line('database_backup'); ?>" /></dd>
 						</dl>
-						<dl>
-							<dt><?php echo $this->lang->line('optimize_database'); ?>: </dt>
-							<dd><?php echo anchor('settings/optimize_db', $this->lang->line('optimize_database')); ?></dd>
-						</dl>
-                        <dl>
-                            <dt><?php echo $this->lang->line('enable_profiler'); ?>: </dt>
-                            <dd><input type="checkbox" name="enable_profiler" value="1" <?php if ($this->mdl_mcb_data->setting('enable_profiler')) { ?>checked="checked"<?php } ?> /></dd>
-                        </dl>
-                        <dl>
-                            <dt><?php echo $this->lang->line('application_title'); ?>: </dt>
-                            <dd><input type="text" name="application_title" value="<?php echo application_title(); ?>" /></dd>
-                        </dl>
 					</div>
 
 					<?php foreach ($core_tabs as $tab) { ?>

@@ -259,73 +259,10 @@ class Mdl_Contacts extends MY_Model {
 
     public function save($obj = null) {
 		
-    	//FIXME this method is probably usefull and must rely on the obj method "save"
+    	//this is here just for retro-compatibility
     	$obj->save();
     	return ;
-    	
-    	//TODO this function is ok for the UPDATE but not for the CREATE yet
-        $data = array();
-        
-   		if(is_null($obj))
-   		{
-	        if(isset($this->form_values['uid'])) $obj = 'person';
-	        
-	        if(isset($this->form_values['oid'])) $obj = 'organization';
-   		}
-   		
-        $this->contact->getProperties($obj);
-        $properties = $this->contact->properties;
-    	
-        foreach ($this->form_values as $property => $value) {
-        	if(in_array($property, array_keys($properties)))
-        	{
-        		$data[$property] = $value;
-        	}
-        }
-        
-        //mandatory fields for ldap for both objects
-        $data['entryUpdatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
-        
-        //for person
-        if($obj == 'person')
-        {
-	        if(!isset($data['category'])) $data['category'] = 'mycategory';
-	        $data['cn'] = $data['sn'].' '.$data['givenName'];
-	        $data['displayName'] = $data['givenName'].' '.$data['sn'];
-	        $data['fileAs'] = $data['cn'];
-	        $data['userPassword'] = 'mypassword'; //TODO is this field mandatory?    
-        }        
 
-        //for organization
-        if($obj == 'organization')
-        {
-        	
-        }   
-        
-        //common mandatory fields
-        ($this->form_values->enabled == FALSE) ? $data['enabled'] = 'TRUE' : $data['enabled'] = 'FALSE';
-        
-        if($obj == 'person')
-        {
-        	if(!empty($data['uid'])) 
-        	{
-        		$this->person->update($data);
-        	} else {
-        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = $this->session->userdata('last_name').' '.$this->session->userdata('first_name');
-        		$this->person->create($data);
-        	}
-        }
-        
-        if($obj == 'organization')
-        {
-        	if(!empty($data['oid'])) 
-        	{
-        		$this->organization->update($data);
-        	} else {
-        		if(!isset($data['entryCreatedBy'])) $data['entryCreatedBy'] = 'mcb-sm';  //TODO put here the MCB user ID
-        		$this->organization->create($data);
-        	}	
-        }
     }
     
     //overrides _prep_pagination function

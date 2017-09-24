@@ -117,10 +117,12 @@
 	<dd><input type="text" name="tax_id_number" id="tax_id_number" value="<?php echo $this->mdl_users->form_value('tax_id_number'); ?>" /></dd>
 </dl>
 
-<?php foreach ($custom_fields as $custom_field) { ?>
+<?php 
+	if(is_array($custom_fields)) {
+	foreach ($custom_fields as $custom_field) { ?>
 	<dl>
 		<dt style="width: 150px;"><label><?php echo $custom_field->field_name; ?>: </label></dt>
 		<dd><input type="text" name="<?php echo $custom_field->column_name; ?>" id="<?php echo $custom_field->column_name; ?>" value="<?php echo $this->mdl_users->form_value($custom_field->column_name); ?>" /></dd>
 	</dl>
-<?php } ?>
+<?php }} ?>
 
